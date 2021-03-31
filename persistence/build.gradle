@@ -1,0 +1,16 @@
+plugins {
+    id 'com.epam.esm.java-library-conventions'
+}
+
+dependencies {
+
+    // Spring JDBC
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.4'
+
+    // Postgres JDBC Driver
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
+
+    // HikariCP JDBC Connection Pool
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
+
+}

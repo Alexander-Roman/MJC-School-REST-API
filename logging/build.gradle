@@ -1,0 +1,7 @@
+plugins {
+    id 'com.epam.esm.java-library-conventions'
+}
+
+dependencies {
+
+}

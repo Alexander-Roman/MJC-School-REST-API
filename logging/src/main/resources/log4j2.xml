@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="86400">
+
+    <Properties>
+        <property name="console_pattern">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{5} - %msg%n
+        </property>
+
+        <property name="file_pattern">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{5} - %msg%n
+        </property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${console_pattern}"/>
+        </Console>
+
+        <File name="LogFile" fileName="logs/log4j2.log" bufferedIO="true">
+            <PatternLayout pattern="${file_pattern}"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Root level="trace">
+            <!-- Only events at DEBUG level or more specific are sent to the console. -->
+            <AppenderRef ref="Console" level="debug"/>
+            <AppenderRef ref="LogFile" level="trace"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

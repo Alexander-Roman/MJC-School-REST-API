@@ -2,18 +2,30 @@ plugins {
     id 'java'
 }
 
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    constraints {
-        implementation 'org.apache.commons:commons-text:1.9'
-    }
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    // The Apache Log4j SLF4J API binding to Log4j 2 Core
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.14.1'
 
+    // Spring Context
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.4'
+
+    // Spring Beans
+    implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.4'
+
+    // Use JUnit Jupiter API for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+
+    // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
 }
 
 tasks.named('test') {

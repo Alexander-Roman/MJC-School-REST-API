@@ -1,0 +1,21 @@
+group = 'com.epam.esm'
+version '1.0.0'
+
+subprojects {
+
+    plugins.withType(JavaPlugin) {
+        project.sourceCompatibility='1.8'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    tasks.withType(Test) {
+        systemProperty "file.encoding", "UTF-8"
+    }
+}
+
+allprojects {
+    group 'com.epam.esm'
+}
