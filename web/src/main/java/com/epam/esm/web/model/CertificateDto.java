@@ -1,32 +1,42 @@
-package com.epam.esm.persistence.entity;
+package com.epam.esm.web.model;
 
+import com.epam.esm.persistence.entity.Certificate;
+import com.epam.esm.persistence.entity.Tag;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public final class Certificate {
+public final class CertificateDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final Long id;
-    private final String certificateName;
+    private final String name;
     private final String description;
     private final BigDecimal price;
     private final Integer duration;
     private final LocalDateTime createDate;
     private final LocalDateTime lastUpdateDate;
-    private final Set<Tag> tags;
+    private final Set<String> tags;
 
-    public Certificate(Long id,
-                       String certificateName,
-                       String description,
-                       BigDecimal price,
-                       Integer duration,
-                       LocalDateTime createDate,
-                       LocalDateTime lastUpdateDate,
-                       Set<Tag> tags) {
+    @JsonCreator
+    public CertificateDto(@JsonProperty("id") Long id,
+                          @JsonProperty("name") String name,
+                          @JsonProperty("description") String description,
+                          @JsonProperty("price") BigDecimal price,
+                          @JsonProperty("duration") Integer duration,
+                          @JsonProperty("createDate") LocalDateTime createDate,
+                          @JsonProperty("lastUpdateDate") LocalDateTime lastUpdateDate,
+                          @JsonProperty("tags") Set<String> tags) {
         this.id = id;
-        this.certificateName = certificateName;
+        this.name = name;
         this.description = description;
         this.price = price;
         this.duration = duration;
@@ -35,12 +45,32 @@ public final class Certificate {
         this.tags = tags;
     }
 
+    public static CertificateDto fromEntity(Certificate certificate) {
+        Set<Tag> entityTags = certificate.getTags();
+        Set<String> tags = entityTags == null
+                ? null
+                : entityTags
+                .stream()
+                .map(Tag::getName)
+                .collect(Collectors.toSet());
+        return new CertificateDto(
+                certificate.getId(),
+                certificate.getName(),
+                certificate.getDescription(),
+                certificate.getPrice(),
+                certificate.getDuration(),
+                certificate.getCreateDate(),
+                certificate.getLastUpdateDate(),
+                tags
+        );
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getName() {
-        return certificateName;
+        return name;
     }
 
     public String getDescription() {
@@ -63,7 +93,7 @@ public final class Certificate {
         return lastUpdateDate;
     }
 
-    public Set<Tag> getTags() {
+    public Set<String> getTags() {
         return tags == null
                 ? null
                 : Collections.unmodifiableSet(tags);
@@ -77,9 +107,9 @@ public final class Certificate {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Certificate that = (Certificate) o;
+        CertificateDto that = (CertificateDto) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(certificateName, that.certificateName) &&
+                Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(duration, that.duration) &&
@@ -91,7 +121,7 @@ public final class Certificate {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (certificateName != null ? certificateName.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (duration != null ? duration.hashCode() : 0);
@@ -105,7 +135,7 @@ public final class Certificate {
     public String toString() {
         return getClass().getSimpleName() + "{" +
                 "id=" + id +
-                ", certificateName='" + certificateName + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", duration=" + duration +
@@ -119,39 +149,34 @@ public final class Certificate {
     public static final class Builder {
 
         private Long id;
-        private String certificateName;
+        private String name;
         private String description;
         private BigDecimal price;
         private Integer duration;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
-        private Set<Tag> tags;
+        private Set<String> tags;
 
         public Builder() {
         }
 
-        private Builder(Certificate certificate) {
-            id = certificate.id;
-            certificateName = certificate.certificateName;
-            description = certificate.description;
-            price = certificate.price;
-            duration = certificate.duration;
-            createDate = certificate.createDate;
-            lastUpdateDate = certificate.lastUpdateDate;
-            tags = certificate.tags;
+        private Builder(CertificateDto certificateDto) {
+            id = certificateDto.id;
+            name = certificateDto.name;
+            description = certificateDto.description;
+            price = certificateDto.price;
+            duration = certificateDto.duration;
+            createDate = certificateDto.createDate;
+            lastUpdateDate = certificateDto.lastUpdateDate;
+            tags = certificateDto.tags;
         }
 
-        public static Builder from(Certificate certificate) {
-            return new Builder(certificate);
+        public static Builder from(CertificateDto certificateDto) {
+            return new Builder(certificateDto);
         }
 
-        public Builder setId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder setName(String certificateName) {
-            this.certificateName = certificateName;
+        public Builder setName(String name) {
+            this.name = name;
             return this;
         }
 
@@ -180,21 +205,22 @@ public final class Certificate {
             return this;
         }
 
-        public Builder setTags(Set<Tag> tags) {
+        public Builder setTags(Set<String> tags) {
             this.tags = tags;
             return this;
         }
 
-        public Certificate build() {
-            return new Certificate(
+        public CertificateDto build() {
+            return new CertificateDto(
                     id,
-                    certificateName,
+                    name,
                     description,
                     price,
                     duration,
                     createDate,
                     lastUpdateDate,
-                    tags);
+                    tags
+            );
         }
 
     }
