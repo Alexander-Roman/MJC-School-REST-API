@@ -9,7 +9,7 @@ import java.util.Set;
 public final class Certificate {
 
     private final Long id;
-    private final String certificateName;
+    private final String name;
     private final String description;
     private final BigDecimal price;
     private final Integer duration;
@@ -18,7 +18,7 @@ public final class Certificate {
     private final Set<Tag> tags;
 
     public Certificate(Long id,
-                       String certificateName,
+                       String name,
                        String description,
                        BigDecimal price,
                        Integer duration,
@@ -26,7 +26,7 @@ public final class Certificate {
                        LocalDateTime lastUpdateDate,
                        Set<Tag> tags) {
         this.id = id;
-        this.certificateName = certificateName;
+        this.name = name;
         this.description = description;
         this.price = price;
         this.duration = duration;
@@ -40,7 +40,7 @@ public final class Certificate {
     }
 
     public String getName() {
-        return certificateName;
+        return name;
     }
 
     public String getDescription() {
@@ -79,7 +79,7 @@ public final class Certificate {
         }
         Certificate that = (Certificate) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(certificateName, that.certificateName) &&
+                Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(duration, that.duration) &&
@@ -91,7 +91,7 @@ public final class Certificate {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (certificateName != null ? certificateName.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (duration != null ? duration.hashCode() : 0);
@@ -105,7 +105,7 @@ public final class Certificate {
     public String toString() {
         return getClass().getSimpleName() + "{" +
                 "id=" + id +
-                ", certificateName='" + certificateName + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", duration=" + duration +
@@ -119,7 +119,7 @@ public final class Certificate {
     public static final class Builder {
 
         private Long id;
-        private String certificateName;
+        private String name;
         private String description;
         private BigDecimal price;
         private Integer duration;
@@ -132,7 +132,7 @@ public final class Certificate {
 
         private Builder(Certificate certificate) {
             id = certificate.id;
-            certificateName = certificate.certificateName;
+            name = certificate.name;
             description = certificate.description;
             price = certificate.price;
             duration = certificate.duration;
@@ -150,8 +150,8 @@ public final class Certificate {
             return this;
         }
 
-        public Builder setName(String certificateName) {
-            this.certificateName = certificateName;
+        public Builder setName(String name) {
+            this.name = name;
             return this;
         }
 
@@ -188,7 +188,7 @@ public final class Certificate {
         public Certificate build() {
             return new Certificate(
                     id,
-                    certificateName,
+                    name,
                     description,
                     price,
                     duration,
@@ -202,7 +202,7 @@ public final class Certificate {
     public static final class Field {
 
         public static final String ID = "id";
-        public static final String NAME = "certificateName";
+        public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
         public static final String PRICE = "price";
         public static final String DURATION = "duration";
