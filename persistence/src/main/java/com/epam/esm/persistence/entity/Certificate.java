@@ -8,7 +8,7 @@ import java.util.Set;
 
 public final class Certificate {
 
-    private final Long certificateId;
+    private final Long id;
     private final String certificateName;
     private final String description;
     private final BigDecimal price;
@@ -17,7 +17,7 @@ public final class Certificate {
     private final LocalDateTime lastUpdateDate;
     private final Set<Tag> tags;
 
-    public Certificate(Long certificateId,
+    public Certificate(Long id,
                        String certificateName,
                        String description,
                        BigDecimal price,
@@ -25,7 +25,7 @@ public final class Certificate {
                        LocalDateTime createDate,
                        LocalDateTime lastUpdateDate,
                        Set<Tag> tags) {
-        this.certificateId = certificateId;
+        this.id = id;
         this.certificateName = certificateName;
         this.description = description;
         this.price = price;
@@ -35,8 +35,8 @@ public final class Certificate {
         this.tags = tags;
     }
 
-    public Long getCertificateId() {
-        return certificateId;
+    public Long getId() {
+        return id;
     }
 
     public String getCertificateName() {
@@ -78,7 +78,7 @@ public final class Certificate {
             return false;
         }
         Certificate that = (Certificate) o;
-        return Objects.equals(certificateId, that.certificateId) &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(certificateName, that.certificateName) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(price, that.price) &&
@@ -90,7 +90,7 @@ public final class Certificate {
 
     @Override
     public int hashCode() {
-        int result = certificateId != null ? certificateId.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (certificateName != null ? certificateName.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
@@ -104,7 +104,7 @@ public final class Certificate {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "{" +
-                "certificateId=" + certificateId +
+                "id=" + id +
                 ", certificateName='" + certificateName + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
@@ -118,7 +118,7 @@ public final class Certificate {
 
     public static final class Builder {
 
-        private Long certificateId;
+        private Long id;
         private String certificateName;
         private String description;
         private BigDecimal price;
@@ -131,7 +131,7 @@ public final class Certificate {
         }
 
         private Builder(Certificate certificate) {
-            certificateId = certificate.certificateId;
+            id = certificate.id;
             certificateName = certificate.certificateName;
             description = certificate.description;
             price = certificate.price;
@@ -145,8 +145,8 @@ public final class Certificate {
             return new Builder(certificate);
         }
 
-        public Builder setCertificateId(Long certificateId) {
-            this.certificateId = certificateId;
+        public Builder setId(Long id) {
+            this.id = id;
             return this;
         }
 
@@ -187,7 +187,7 @@ public final class Certificate {
 
         public Certificate build() {
             return new Certificate(
-                    certificateId,
+                    id,
                     certificateName,
                     description,
                     price,
@@ -201,7 +201,7 @@ public final class Certificate {
 
     public static final class Field {
 
-        public static final String ID = "certificateId";
+        public static final String ID = "id";
         public static final String NAME = "certificateName";
         public static final String DESCRIPTION = "description";
         public static final String PRICE = "price";

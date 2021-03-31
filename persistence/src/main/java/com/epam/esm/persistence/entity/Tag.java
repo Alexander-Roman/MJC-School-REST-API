@@ -4,20 +4,20 @@ import java.util.Objects;
 
 public final class Tag {
 
-    private final Long tagId;
-    private final String tagName;
+    private final Long id;
+    private final String name;
 
-    public Tag(Long tagId, String tagName) {
-        this.tagId = tagId;
-        this.tagName = tagName;
+    public Tag(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public Long getTagId() {
-        return tagId;
+    public Long getId() {
+        return id;
     }
 
-    public String getTagName() {
-        return tagName;
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -29,51 +29,51 @@ public final class Tag {
             return false;
         }
         Tag tag = (Tag) o;
-        return Objects.equals(tagId, tag.tagId) &&
-                Objects.equals(tagName, tag.tagName);
+        return Objects.equals(id, tag.id) &&
+                Objects.equals(name, tag.name);
     }
 
     @Override
     public int hashCode() {
-        int result = tagId != null ? tagId.hashCode() : 0;
-        result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "{" +
-                "tagId=" + tagId +
-                ", tagName='" + tagName + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 
 
     public static final class Builder {
-        private Long tagId;
-        private String tagName;
+        private Long id;
+        private String name;
 
         public Builder() {
         }
 
         private Builder(Tag tag) {
-            tagId = tag.tagId;
-            tagName = tag.tagName;
+            id = tag.id;
+            name = tag.name;
         }
 
         private static Builder from(Tag tag) {
             return new Builder(tag);
         }
 
-        public Builder setTagName(String tagName) {
-            this.tagName = tagName;
+        public Builder setName(String name) {
+            this.name = name;
             return this;
         }
 
         public Tag build() {
             return new Tag(
-                    tagId,
-                    tagName
+                    id,
+                    name
             );
         }
 
@@ -82,8 +82,8 @@ public final class Tag {
 
     private static final class Field {
 
-        public static final String ID = "tagId";
-        public static final String NAME = "tagName";
+        public static final String ID = "id";
+        public static final String NAME = "name";
 
     }
 
