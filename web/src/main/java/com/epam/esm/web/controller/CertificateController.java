@@ -1,15 +1,20 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.persistence.entity.Certificate;
+import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.service.logic.CertificateService;
 import com.epam.esm.service.model.FilterRequest;
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.model.FilterRequestDto;
+import com.epam.esm.web.model.SortRequestDto;
 import com.epam.esm.web.validator.CertificateDtoValidator;
+import com.epam.esm.web.validator.SortRequestDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,17 +31,23 @@ public class CertificateController {
 
     private final CertificateService certificateService;
     private final CertificateDtoValidator certificateDtoValidator;
+    private final SortRequestDtoValidator sortRequestDtoValidator;
     private final Converter<CertificateDto, Certificate> certificateDtoToEntityConverter;
+    private final Converter<SortRequestDto, SortRequest> sortRequestDtoToModelConverter;
     private final Converter<FilterRequestDto, FilterRequest> filterRequestDtoToModelConverter;
 
     @Autowired
     public CertificateController(CertificateService certificateService,
                                  CertificateDtoValidator certificateDtoValidator,
+                                 SortRequestDtoValidator sortRequestDtoValidator,
                                  Converter<CertificateDto, Certificate> certificateDtoToEntityConverter,
+                                 Converter<SortRequestDto, SortRequest> sortRequestDtoToModelConverter,
                                  Converter<FilterRequestDto, FilterRequest> filterRequestDtoToModelConverter) {
         this.certificateService = certificateService;
         this.certificateDtoValidator = certificateDtoValidator;
+        this.sortRequestDtoValidator = sortRequestDtoValidator;
         this.certificateDtoToEntityConverter = certificateDtoToEntityConverter;
+        this.sortRequestDtoToModelConverter = sortRequestDtoToModelConverter;
         this.filterRequestDtoToModelConverter = filterRequestDtoToModelConverter;
     }
 
@@ -52,9 +63,16 @@ public class CertificateController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getCertificateList(FilterRequestDto filterRequestDto) {
+    public ResponseEntity<?> getCertificateList(SortRequestDto sortRequestDto,
+                                                BindingResult bindingResult,
+                                                FilterRequestDto filterRequestDto) throws BindException {
+        sortRequestDtoValidator.validate(sortRequestDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+        SortRequest sortRequest = sortRequestDtoToModelConverter.convert(sortRequestDto);
         FilterRequest filterRequest = filterRequestDtoToModelConverter.convert(filterRequestDto);
-        List<Certificate> result = certificateService.findAll(filterRequest);
+        List<Certificate> result = certificateService.findAll(sortRequest, filterRequest);
         List<CertificateDto> resultDto = result
                 .stream()
                 .map(CertificateDto::fromEntity)

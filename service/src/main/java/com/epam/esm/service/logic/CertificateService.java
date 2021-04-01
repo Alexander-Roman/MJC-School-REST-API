@@ -1,6 +1,7 @@
 package com.epam.esm.service.logic;
 
 import com.epam.esm.persistence.entity.Certificate;
+import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.service.model.FilterRequest;
 
 import java.util.List;
@@ -10,6 +11,6 @@ public interface CertificateService {
 
     Optional<Certificate> findById(Long id);
 
-    List<Certificate> findAll(FilterRequest filterRequest);
+    List<Certificate> findAll(SortRequest sortRequest, FilterRequest filterRequest);
 
 }
