@@ -21,7 +21,7 @@ public class CertificateIdSpecification implements Specification<Certificate> {
                     "FROM certificate \n" +
                     "         LEFT JOIN certificate_tag ON certificate.id = certificate_tag.certificate_id \n" +
                     "         LEFT JOIN tag ON certificate_tag.tag_id = tag.id \n" +
-                    "WHERE certificate_id = :certificateId \n";
+                    "WHERE certificate.id = :certificateId \n";
 
     private final Long certificateId;
 
