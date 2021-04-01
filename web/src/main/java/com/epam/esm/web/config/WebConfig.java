@@ -1,6 +1,5 @@
 package com.epam.esm.web.config;
 
-import com.epam.esm.web.converter.StringToSortDtoConverter;
 import com.epam.esm.web.model.SortDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,10 +61,10 @@ public class WebConfig implements WebMvcConfigurer {
         converters.add(messageConverter);
     }
 
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        Converter<String, SortDto> stringToSortDtoConverter = new StringToSortDtoConverter();
-        registry.addConverter(stringToSortDtoConverter);
-    }
+//    @Override
+//    public void addFormatters(FormatterRegistry registry) {
+//        Converter<String, SortDto> stringToSortDtoConverter = new StringToSortDtoConverter();
+//        registry.addConverter(stringToSortDtoConverter);
+//    }
 
 }

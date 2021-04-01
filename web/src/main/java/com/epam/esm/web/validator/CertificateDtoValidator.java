@@ -15,7 +15,7 @@ public class CertificateDtoValidator implements Validator {
     private static final long MIN_ID = 1;
     private static final int MAX_NAME_LENGTH = 150;
     private static final int MAX_DESCRIPTION_LENGTH = 255;
-    private static final BigDecimal MAX_PRICE = new BigDecimal("99999,99");
+    private static final BigDecimal MAX_PRICE = new BigDecimal("99999.99");
     private static final int MIN_DURATION = 1;
     private static final int MAX_TAG_NAME_LENGTH = 50;
 
