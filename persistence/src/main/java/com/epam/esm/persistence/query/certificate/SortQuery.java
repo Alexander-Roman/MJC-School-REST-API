@@ -1,17 +1,18 @@
-package com.epam.esm.persistence.query;
+package com.epam.esm.persistence.query.certificate;
 
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.model.Sort;
 import com.epam.esm.persistence.model.SortRequest;
-import org.springframework.stereotype.Component;
+import com.epam.esm.persistence.query.SelectQuery;
+import com.epam.esm.persistence.specification.Specification;
 
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Map;
 
-@Component
-public class CertificateSqlOrderClauseFactory implements SqlOrderClauseFactory<Certificate> {
+public class SortQuery implements SelectQuery<Certificate> {
 
-    private static final String TEMPLATE_SQL_ORDER_BY_CLAUSE = "ORDER BY %s, %s \n";
+    private static final String TEMPLATE_SQL_ORDER_BY_CLAUSE = " ORDER BY %s, %s \n";
     private static final String DEFAULT_SORT_PROPERTY = "last_update_date DESC";
     private static final String DEFAULT_THEN_SORT_PROPERTY = "certificate_name ASC";
     private static final String KEYWORD_DELIMITER = " ";
@@ -23,8 +24,27 @@ public class CertificateSqlOrderClauseFactory implements SqlOrderClauseFactory<C
     private static final String COLUMN_CREATE_DATE = "create_date";
     private static final String COLUMN_LAST_UPDATE_DATE = "last_update_date";
 
+    private final SortRequest sortRequest;
+    private final Specification<Certificate> specification;
+
+    public SortQuery(SortRequest sortRequest, Specification<Certificate> specification) {
+        this.sortRequest = sortRequest;
+        this.specification = specification;
+    }
+
     @Override
-    public String getOrderClause(SortRequest sortRequest) {
+    public String getSql() {
+        String subQuery = specification.getSubQuery();
+        String orderBy = this.getOrderClause(sortRequest);
+        return subQuery.concat(orderBy);
+    }
+
+    @Override
+    public Map<String, Object> getParameters() {
+        return specification.getParameters();
+    }
+
+    private String getOrderClause(SortRequest sortRequest) {
         Deque<String> sorts = new LinkedList<>();
 
         Sort primarySort = sortRequest.getSort();

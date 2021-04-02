@@ -13,4 +13,8 @@ public interface CertificateService {
 
     List<Certificate> findAll(SortRequest sortRequest, FilterRequest filterRequest);
 
+    Certificate create(Certificate certificate);
+
+    Certificate selectiveUpdate(Certificate certificate);
+
 }

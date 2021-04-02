@@ -32,7 +32,7 @@ public class SearchSpecification implements Specification<Certificate> {
     }
 
     @Override
-    public String getQuery() {
+    public String getSubQuery() {
         return SQL_FIND_BY_SEARCH;
     }
 

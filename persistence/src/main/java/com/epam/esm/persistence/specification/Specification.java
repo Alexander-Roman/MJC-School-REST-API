@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface Specification<T> {
 
-    String getQuery();
+    String getSubQuery();
 
     Map<String, Object> getParameters();
 

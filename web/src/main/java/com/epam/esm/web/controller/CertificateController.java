@@ -15,10 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -78,6 +75,32 @@ public class CertificateController {
                 .map(CertificateDto::fromEntity)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(resultDto, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<CertificateDto> createCertificate(@RequestBody CertificateDto certificateDto,
+                                                            BindingResult bindingResult) throws BindException {
+        certificateDtoValidator.validate(certificateDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+        Certificate certificate = certificateDtoToEntityConverter.convert(certificateDto);
+        Certificate created = certificateService.create(certificate);
+        CertificateDto createdDto = CertificateDto.fromEntity(created);
+        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<CertificateDto> updateCertificate(@RequestBody CertificateDto certificateDto,
+                                                            BindingResult bindingResult) throws BindException {
+        certificateDtoValidator.validate(certificateDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+        Certificate certificate = certificateDtoToEntityConverter.convert(certificateDto);
+        Certificate created = certificateService.selectiveUpdate(certificate);
+        CertificateDto createdDto = CertificateDto.fromEntity(created);
+        return new ResponseEntity<>(createdDto, HttpStatus.OK);
     }
 
 }

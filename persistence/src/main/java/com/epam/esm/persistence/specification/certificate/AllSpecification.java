@@ -23,7 +23,7 @@ public class AllSpecification implements Specification<Certificate> {
                     "         LEFT JOIN tag ON certificate_tag.tag_id = tag.id \n";
 
     @Override
-    public String getQuery() {
+    public String getSubQuery() {
         return SQL_FIND_ALL;
     }
 

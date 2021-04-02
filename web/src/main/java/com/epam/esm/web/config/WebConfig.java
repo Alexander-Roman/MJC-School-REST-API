@@ -1,6 +1,5 @@
 package com.epam.esm.web.config;
 
-import com.epam.esm.web.model.SortDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -9,8 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -61,11 +58,5 @@ public class WebConfig implements WebMvcConfigurer {
         MappingJackson2HttpMessageConverter messageConverter = mappingJackson2HttpMessageConverter();
         converters.add(messageConverter);
     }
-
-//    @Override
-//    public void addFormatters(FormatterRegistry registry) {
-//        Converter<String, SortDto> stringToSortDtoConverter = new StringToSortDtoConverter();
-//        registry.addConverter(stringToSortDtoConverter);
-//    }
 
 }

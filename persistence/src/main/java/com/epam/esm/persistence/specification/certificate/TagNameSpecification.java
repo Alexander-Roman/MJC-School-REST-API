@@ -42,7 +42,7 @@ public class TagNameSpecification implements Specification<Certificate> {
     }
 
     @Override
-    public String getQuery() {
+    public String getSubQuery() {
         return SQL_FIND_BY_TAG_NAME;
     }
 

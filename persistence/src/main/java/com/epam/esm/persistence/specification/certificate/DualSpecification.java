@@ -22,9 +22,9 @@ public class DualSpecification implements Specification<Certificate> {
     }
 
     @Override
-    public String getQuery() {
-        String firstQuery = firstSpecification.getQuery();
-        String secondQuery = secondSpecification.getQuery();
+    public String getSubQuery() {
+        String firstQuery = firstSpecification.getSubQuery();
+        String secondQuery = secondSpecification.getSubQuery();
         return String.format(TEMPLATE_SQL_DUAL_SPECIFICATION_QUERY, firstQuery, secondQuery);
     }
 
