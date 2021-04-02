@@ -8,10 +8,4 @@ dependencies {
     // Guava libraries
     implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
 
-    // Spring Transaction
-    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.5'
-
-    // Spring AOP
-    implementation group: 'org.springframework', name: 'spring-aop', version: '5.3.5'
-
 }

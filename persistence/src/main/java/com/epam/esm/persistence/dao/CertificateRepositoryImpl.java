@@ -1,10 +1,14 @@
 package com.epam.esm.persistence.dao;
 
 import com.epam.esm.persistence.entity.Certificate;
+import com.epam.esm.persistence.exception.PersistenceException;
 import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.persistence.query.SelectQuery;
+import com.epam.esm.persistence.query.UpdateQuery;
+import com.epam.esm.persistence.query.certificate.CreateCertificateQuery;
 import com.epam.esm.persistence.query.certificate.SimpleSpecificationQuery;
 import com.epam.esm.persistence.query.certificate.SortQuery;
+import com.epam.esm.persistence.query.certificate.UpdateCertificateQuery;
 import com.epam.esm.persistence.specification.Specification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -32,6 +36,27 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     public List<Certificate> findSorted(SortRequest sortRequest, Specification<Certificate> specification) {
         SelectQuery<Certificate> query = new SortQuery(sortRequest, specification);
         return this.executeSelect(query);
+    }
+
+    @Override
+    public Certificate create(Certificate certificate) {
+        UpdateQuery<Certificate> query = new CreateCertificateQuery(certificate);
+        List<Long> keys = this.executeUpdate(query);
+        Long id = keys
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new  PersistenceException("Unexpected query result!"));
+        return Certificate.Builder
+                .from(certificate)
+                .setId(id)
+                .build();
+    }
+
+    @Override
+    public Certificate update(Certificate certificate) {
+        UpdateQuery<Certificate> query = new UpdateCertificateQuery(certificate);
+        this.executeUpdate(query);
+        return certificate;
     }
 
 }

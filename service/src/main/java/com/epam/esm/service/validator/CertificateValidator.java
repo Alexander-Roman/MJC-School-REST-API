@@ -2,6 +2,7 @@ package com.epam.esm.service.validator;
 
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -17,9 +18,9 @@ public class CertificateValidator implements Validator<Certificate> {
     private static final BigDecimal MAX_PRICE = new BigDecimal("99999.99");
     private static final int MIN_DURATION = 1;
 
-
     private final Validator<Tag> tagValidator;
 
+    @Autowired
     public CertificateValidator(Validator<Tag> tagValidator) {
         this.tagValidator = tagValidator;
     }
@@ -55,11 +56,6 @@ public class CertificateValidator implements Validator<Certificate> {
             return false;
         }
 
-        Set<Tag> tags = certificate.getTags();
-        if (tags == null) {
-            return false;
-        }
-
         LocalDateTime createDate = certificate.getCreateDate();
         if (createDate == null) {
             return false;
@@ -67,6 +63,11 @@ public class CertificateValidator implements Validator<Certificate> {
 
         LocalDateTime lastUpdateDate = certificate.getLastUpdateDate();
         if (lastUpdateDate == null) {
+            return false;
+        }
+
+        Set<Tag> tags = certificate.getTags();
+        if (tags == null) {
             return false;
         }
 

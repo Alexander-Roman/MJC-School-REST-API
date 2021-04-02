@@ -18,13 +18,14 @@ public class CertificateDtoToEntityConverter implements Converter<CertificateDto
     public Certificate convert(CertificateDto certificateDto) {
 
         Long id = certificateDto.getId();
-
         String dtoName = certificateDto.getName();
-        String name = dtoName.trim();
-
+        String name = dtoName == null
+                ? null
+                : dtoName.trim();
         String dtoDescription = certificateDto.getDescription();
-        String description = dtoDescription.trim();
-
+        String description = dtoDescription == null
+                ? null
+                : dtoDescription.trim();
         BigDecimal price = certificateDto.getPrice();
         Integer duration = certificateDto.getDuration();
         LocalDateTime createDate = certificateDto.getCreateDate();

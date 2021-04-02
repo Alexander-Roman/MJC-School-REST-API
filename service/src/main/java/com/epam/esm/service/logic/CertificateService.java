@@ -15,6 +15,8 @@ public interface CertificateService {
 
     Certificate create(Certificate certificate);
 
-    Certificate selectiveUpdate(Certificate certificate);
+    Certificate update(Certificate certificate);
+
+    Certificate selectiveUpdate(Certificate source, Certificate target);
 
 }

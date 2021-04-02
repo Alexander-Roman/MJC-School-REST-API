@@ -97,9 +97,15 @@ public class CertificateController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        Certificate certificate = certificateDtoToEntityConverter.convert(certificateDto);
-        Certificate created = certificateService.selectiveUpdate(certificate);
-        CertificateDto createdDto = CertificateDto.fromEntity(created);
+        Long id = certificateDto.getId();
+        Optional<Certificate> found = certificateService.findById(id);
+        if (!found.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Certificate does not exists! ID: " + id);
+        }
+        Certificate target = found.get();
+        Certificate source = certificateDtoToEntityConverter.convert(certificateDto);
+        Certificate updated = certificateService.selectiveUpdate(source, target);
+        CertificateDto createdDto = CertificateDto.fromEntity(updated);
         return new ResponseEntity<>(createdDto, HttpStatus.OK);
     }
 

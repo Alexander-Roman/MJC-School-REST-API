@@ -10,14 +10,12 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Properties;
 
 @Configuration
-@EnableTransactionManagement
 public class DataServiceConfig {
 
     private static final String HIKARI_PROPS = "property/hikari.properties";

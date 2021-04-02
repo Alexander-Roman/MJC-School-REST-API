@@ -20,6 +20,9 @@ dependencies {
     // Spring Beans
     implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.4'
 
+    // Spring Transaction
+    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.4'
+
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
 

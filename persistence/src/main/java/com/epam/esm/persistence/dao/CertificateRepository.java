@@ -12,4 +12,8 @@ public interface CertificateRepository {
 
     List<Certificate> findSorted(SortRequest sortRequest, Specification<Certificate> specification);
 
+    Certificate create(Certificate certificate);
+
+    Certificate update(Certificate certificate);
+
 }
