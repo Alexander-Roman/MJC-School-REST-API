@@ -19,13 +19,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(
-        basePackages = "com.epam.esm",
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ANNOTATION,
-                value = Configuration.class
-        )
-)
+@ComponentScan(basePackages = "com.epam.esm.web")
 @EnableTransactionManagement
 public class WebConfig implements WebMvcConfigurer {
 

@@ -1,11 +1,12 @@
 package com.epam.esm.web.init;
 
 import com.epam.esm.persistence.config.DataServiceConfig;
+import com.epam.esm.service.config.ServiceConfig;
 import com.epam.esm.web.config.WebConfig;
+import org.springframework.lang.NonNull;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-import org.springframework.lang.NonNull;
 
 import javax.servlet.Filter;
 
@@ -14,7 +15,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class<?>[]{
-                DataServiceConfig.class
+                DataServiceConfig.class, ServiceConfig.class
         };
     }
 
