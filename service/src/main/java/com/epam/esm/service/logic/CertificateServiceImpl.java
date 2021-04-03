@@ -115,11 +115,17 @@ public class CertificateServiceImpl implements CertificateService {
         if (!tags.isEmpty()) {
             tagService.createIfNotExist(tags);
         }
-        Certificate updated = certificateRepository.update(certificate);
+        LocalDateTime now = LocalDateTime.now();
+        Certificate dated = Certificate.Builder
+                .from(certificate)
+                .setLastUpdateDate(now)
+                .build();
+        Certificate updated = certificateRepository.update(dated);
         if (!tags.isEmpty()) {
             certificateTagRepository.resolveAddedTags(updated);
         }
         certificateTagRepository.resolveRemovedTags(updated);
+        tagService.deleteUnused();
         return updated;
     }
 
@@ -165,6 +171,15 @@ public class CertificateServiceImpl implements CertificateService {
                 .setTags(tags)
                 .build();
         return this.update(certificate);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        Preconditions.checkArgument(id != null && id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
+        certificateTagRepository.deleteByCertificateId(id);
+        certificateRepository.delete(id);
+        tagService.deleteUnused();
     }
 
 }

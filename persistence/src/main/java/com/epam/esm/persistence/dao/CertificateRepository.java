@@ -16,4 +16,6 @@ public interface CertificateRepository {
 
     Certificate update(Certificate certificate);
 
+    void delete(Long id);
+
 }

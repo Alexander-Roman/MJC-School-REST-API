@@ -9,4 +9,5 @@ public interface TagRepository {
 
     List<Long> saveIfNotExist(Set<Tag> tags);
 
+    void deleteUnused();
 }

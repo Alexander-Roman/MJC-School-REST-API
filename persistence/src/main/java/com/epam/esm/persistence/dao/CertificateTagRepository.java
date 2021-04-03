@@ -8,4 +8,6 @@ public interface CertificateTagRepository {
 
     void resolveRemovedTags(Certificate certificate);
 
+    void deleteByCertificateId(Long id);
+
 }

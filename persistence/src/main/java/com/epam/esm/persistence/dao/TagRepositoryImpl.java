@@ -2,6 +2,7 @@ package com.epam.esm.persistence.dao;
 
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.query.UpdateQuery;
+import com.epam.esm.persistence.query.tag.DeleteUnusedQuery;
 import com.epam.esm.persistence.query.tag.SaveIfNotExistQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -26,4 +27,9 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
         return this.executeUpdate(query);
     }
 
+    @Override
+    public void deleteUnused() {
+        UpdateQuery<Tag> query = new DeleteUnusedQuery();
+        this.executeUpdate(query);
+    }
 }

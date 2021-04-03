@@ -38,4 +38,8 @@ public class TagServiceImpl implements TagService {
         return tagRepository.saveIfNotExist(tags);
     }
 
+    @Override
+    public void deleteUnused() {
+        tagRepository.deleteUnused();
+    }
 }

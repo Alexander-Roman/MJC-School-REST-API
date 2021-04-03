@@ -5,10 +5,7 @@ import com.epam.esm.persistence.exception.PersistenceException;
 import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.persistence.query.SelectQuery;
 import com.epam.esm.persistence.query.UpdateQuery;
-import com.epam.esm.persistence.query.certificate.CreateCertificateQuery;
-import com.epam.esm.persistence.query.certificate.SimpleSpecificationQuery;
-import com.epam.esm.persistence.query.certificate.SortQuery;
-import com.epam.esm.persistence.query.certificate.UpdateCertificateQuery;
+import com.epam.esm.persistence.query.certificate.*;
 import com.epam.esm.persistence.specification.Specification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -45,7 +42,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
         Long id = keys
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new  PersistenceException("Unexpected query result!"));
+                .orElseThrow(() -> new PersistenceException("Unexpected query result!"));
         return Certificate.Builder
                 .from(certificate)
                 .setId(id)
@@ -57,6 +54,12 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
         UpdateQuery<Certificate> query = new UpdateCertificateQuery(certificate);
         this.executeUpdate(query);
         return certificate;
+    }
+
+    @Override
+    public void delete(Long id) {
+        UpdateQuery<Certificate> query = new DeleteByIdQuery(id);
+        this.executeUpdate(query);
     }
 
 }

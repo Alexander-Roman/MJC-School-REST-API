@@ -109,4 +109,16 @@ public class CertificateController {
         return new ResponseEntity<>(createdDto, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CertificateDto> deleteById(@PathVariable("id") Long id) {
+        Optional<Certificate> found = certificateService.findById(id);
+        if (!found.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Certificate does not exists! ID: " + id);
+        }
+        certificateService.deleteById(id);
+        Certificate certificate = found.get();
+        CertificateDto certificateDto = CertificateDto.fromEntity(certificate);
+        return new ResponseEntity<>(certificateDto, HttpStatus.OK);
+    }
+
 }

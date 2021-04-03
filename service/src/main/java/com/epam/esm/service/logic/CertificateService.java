@@ -19,4 +19,6 @@ public interface CertificateService {
 
     Certificate selectiveUpdate(Certificate source, Certificate target);
 
+    void deleteById(Long id);
+
 }

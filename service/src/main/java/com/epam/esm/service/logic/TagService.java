@@ -9,4 +9,6 @@ public interface TagService {
 
     List<Long> createIfNotExist(Set<Tag> tags);
 
+    void deleteUnused();
+
 }

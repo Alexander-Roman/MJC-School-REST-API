@@ -4,6 +4,7 @@ import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.CertificateTag;
 import com.epam.esm.persistence.query.UpdateQuery;
 import com.epam.esm.persistence.query.certificatetag.AddNewTagsQuery;
+import com.epam.esm.persistence.query.certificatetag.DeleteByCertificateIdQuery;
 import com.epam.esm.persistence.query.certificatetag.RemoveOldTagsByNamesQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -32,4 +33,11 @@ public class CertificateTagRepositoryImpl extends AbstractRepository<Certificate
         UpdateQuery<CertificateTag> query = new RemoveOldTagsByNamesQuery(certificate);
         this.executeUpdate(query);
     }
+
+    @Override
+    public void deleteByCertificateId(Long id) {
+        UpdateQuery<CertificateTag> query = new DeleteByCertificateIdQuery(id);
+        this.executeUpdate(query);
+    }
+
 }
