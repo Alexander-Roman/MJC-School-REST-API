@@ -1,12 +1,12 @@
-package com.epam.esm.persistence.dao;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.entity.Certificate;
 
 public interface CertificateTagRepository {
 
-    void resolveAddedTags(Certificate certificate);
+    void resolveAddedTagsByNames(Certificate certificate);
 
-    void resolveRemovedTags(Certificate certificate);
+    void resolveRemovedTagsByNames(Certificate certificate);
 
     void deleteByCertificateId(Long id);
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -25,7 +26,7 @@ public class TagListExtractor implements ResultSetExtractor<List<Tag>> {
             Tag tag = new Tag(id, name);
             tags.add(tag);
         }
-        return tags;
+        return Collections.unmodifiableList(tags);
     }
 
 }

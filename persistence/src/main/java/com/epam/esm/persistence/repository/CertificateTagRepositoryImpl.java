@@ -1,12 +1,12 @@
-package com.epam.esm.persistence.dao;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.CertificateTag;
 import com.epam.esm.persistence.query.UpdateQuery;
-import com.epam.esm.persistence.query.certificatetag.AddNewTagsQuery;
+import com.epam.esm.persistence.query.certificatetag.PgResolveAddedTagsByNamesQuery;
 import com.epam.esm.persistence.query.certificatetag.DeleteByCertificateIdQuery;
 import com.epam.esm.persistence.query.certificatetag.DeleteByTagIdQuery;
-import com.epam.esm.persistence.query.certificatetag.RemoveOldTagsByNamesQuery;
+import com.epam.esm.persistence.query.certificatetag.ResolveRemovedTagsByNamesQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,14 +24,14 @@ public class CertificateTagRepositoryImpl extends AbstractRepository<Certificate
     }
 
     @Override
-    public void resolveAddedTags(Certificate certificate) {
-        UpdateQuery<CertificateTag> query = new AddNewTagsQuery(certificate);
+    public void resolveAddedTagsByNames(Certificate certificate) {
+        UpdateQuery<CertificateTag> query = new PgResolveAddedTagsByNamesQuery(certificate);
         this.executeUpdate(query);
     }
 
     @Override
-    public void resolveRemovedTags(Certificate certificate) {
-        UpdateQuery<CertificateTag> query = new RemoveOldTagsByNamesQuery(certificate);
+    public void resolveRemovedTagsByNames(Certificate certificate) {
+        UpdateQuery<CertificateTag> query = new ResolveRemovedTagsByNamesQuery(certificate);
         this.executeUpdate(query);
     }
 

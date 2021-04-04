@@ -1,7 +1,7 @@
 package com.epam.esm.service.logic;
 
-import com.epam.esm.persistence.dao.CertificateRepository;
-import com.epam.esm.persistence.dao.CertificateTagRepository;
+import com.epam.esm.persistence.repository.CertificateRepository;
+import com.epam.esm.persistence.repository.CertificateTagRepository;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.model.SortRequest;
@@ -66,7 +66,7 @@ public class CertificateServiceImpl implements CertificateService {
         }
 
         Specification<Certificate> specification = CertificateSpecificationFactory.getByFilterRequest(filterRequest);
-        return certificateRepository.findSorted(sortRequest, specification);
+        return certificateRepository.find(sortRequest, specification);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class CertificateServiceImpl implements CertificateService {
         Certificate saved = certificateRepository.create(dated);
 
         if (!tags.isEmpty()) {
-            certificateTagRepository.resolveAddedTags(saved);
+            certificateTagRepository.resolveAddedTagsByNames(saved);
         }
 
         return saved;
@@ -122,9 +122,9 @@ public class CertificateServiceImpl implements CertificateService {
                 .build();
         Certificate updated = certificateRepository.update(dated);
         if (!tags.isEmpty()) {
-            certificateTagRepository.resolveAddedTags(updated);
+            certificateTagRepository.resolveAddedTagsByNames(updated);
         }
-        certificateTagRepository.resolveRemovedTags(updated);
+        certificateTagRepository.resolveRemovedTagsByNames(updated);
         tagService.deleteUnused();
         return updated;
     }

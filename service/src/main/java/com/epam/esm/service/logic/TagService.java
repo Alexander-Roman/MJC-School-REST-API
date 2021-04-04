@@ -8,13 +8,13 @@ import java.util.Set;
 
 public interface TagService {
 
-    List<Long> createIfNotExist(Set<Tag> tags);
-
     Optional<Tag> findById(Long id);
 
     List<Tag> findAll();
 
     Tag create(Tag tag);
+
+    List<Long> createIfNotExist(Set<Tag> tags);
 
     void deleteById(Long id);
 

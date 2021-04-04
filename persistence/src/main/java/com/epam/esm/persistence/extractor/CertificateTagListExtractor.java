@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -27,7 +28,7 @@ public class CertificateTagListExtractor implements ResultSetExtractor<List<Cert
             CertificateTag certificateTag = new CertificateTag(id, certificateId, tagId);
             certificateTags.add(certificateTag);
         }
-        return certificateTags;
+        return Collections.unmodifiableList(certificateTags);
     }
 
 }

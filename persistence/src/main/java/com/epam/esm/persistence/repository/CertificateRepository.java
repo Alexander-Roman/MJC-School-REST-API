@@ -1,4 +1,4 @@
-package com.epam.esm.persistence.dao;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.model.SortRequest;
@@ -10,7 +10,7 @@ public interface CertificateRepository {
 
     List<Certificate> find(Specification<Certificate> specification);
 
-    List<Certificate> findSorted(SortRequest sortRequest, Specification<Certificate> specification);
+    List<Certificate> find(SortRequest sortRequest, Specification<Certificate> specification);
 
     Certificate create(Certificate certificate);
 

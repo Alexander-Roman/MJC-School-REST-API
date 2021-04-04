@@ -10,7 +10,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class SortQuery implements SelectQuery<Certificate> {
+public class SelectSortedBySpecificationQuery implements SelectQuery<Certificate> {
 
     private static final String TEMPLATE_SQL_ORDER_BY_CLAUSE = " ORDER BY %s, %s \n";
     private static final String DEFAULT_SORT_PROPERTY = "last_update_date DESC";
@@ -27,7 +27,7 @@ public class SortQuery implements SelectQuery<Certificate> {
     private final SortRequest sortRequest;
     private final Specification<Certificate> specification;
 
-    public SortQuery(SortRequest sortRequest, Specification<Certificate> specification) {
+    public SelectSortedBySpecificationQuery(SortRequest sortRequest, Specification<Certificate> specification) {
         this.sortRequest = sortRequest;
         this.specification = specification;
     }

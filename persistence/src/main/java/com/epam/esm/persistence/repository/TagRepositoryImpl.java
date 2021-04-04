@@ -1,4 +1,4 @@
-package com.epam.esm.persistence.dao;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.exception.PersistenceException;
@@ -31,7 +31,7 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
 
     @Override
     public Tag create(Tag tag) {
-        UpdateQuery<Tag> query = new CreateTagQuery(tag);
+        UpdateQuery<Tag> query = new TagCreateQuery(tag);
         List<Long> keys = this.executeUpdate(query);
         Long id = keys
                 .stream()
@@ -45,13 +45,13 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
 
     @Override
     public void delete(Long id) {
-        UpdateQuery<Tag> query = new DeleteByIdQuery(id);
+        UpdateQuery<Tag> query = new TagDeleteByIdQuery(id);
         this.executeUpdate(query);
     }
 
     @Override
-    public List<Long> saveIfNotExist(Set<Tag> tags) {
-        UpdateQuery<Tag> query = new SaveIfNotExistQuery(tags);
+    public List<Long> createIfNotExists(Set<Tag> tags) {
+        UpdateQuery<Tag> query = new PgCreateIfNotExistsQuery(tags);
         return this.executeUpdate(query);
     }
 

@@ -68,7 +68,8 @@ public class CertificateListExtractor implements ResultSetExtractor<List<Certifi
         }
 
         Collection<Certificate> values = mappedCertificates.values();
-        return new ArrayList<>(values);
+        List<Certificate> results = new ArrayList<>(values);
+        return Collections.unmodifiableList(results);
     }
 
 }

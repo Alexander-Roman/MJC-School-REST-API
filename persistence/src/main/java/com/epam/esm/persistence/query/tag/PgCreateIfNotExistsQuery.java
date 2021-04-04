@@ -6,16 +6,16 @@ import com.epam.esm.persistence.query.UpdateQuery;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SaveIfNotExistQuery implements UpdateQuery<Tag> {
+public class PgCreateIfNotExistsQuery implements UpdateQuery<Tag> {
 
-    private static final String TEMPLATE_SQL_SAVE_IF_NOT_EXIST =
+    private static final String TEMPLATE_SQL_SAVE_IF_NOT_EXIST = "\n" +
             "INSERT INTO tag (name) VALUES %s ON CONFLICT (name) DO NOTHING \n";
     private static final String TEMPLATE_VALUE_SET = "(%s)";
     private static final String VALUE_SET_DELIMITER = ", ";
 
     private final Collection<? extends Tag> tags;
 
-    public SaveIfNotExistQuery(Collection<? extends Tag> tags) {
+    public PgCreateIfNotExistsQuery(Collection<? extends Tag> tags) {
         this.tags = tags;
     }
 

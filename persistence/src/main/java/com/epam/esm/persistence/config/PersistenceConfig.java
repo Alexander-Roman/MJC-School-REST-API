@@ -20,7 +20,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan(basePackages = "com.epam.esm.persistence")
 @EnableTransactionManagement
-public class DataServiceConfig {
+public class PersistenceConfig {
 
     private static final String HIKARI_PROPS = "property/hikari.properties";
 

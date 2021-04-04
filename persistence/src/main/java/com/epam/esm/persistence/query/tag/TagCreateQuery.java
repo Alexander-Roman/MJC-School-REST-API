@@ -7,19 +7,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateTagQuery implements UpdateQuery<Tag> {
+public class TagCreateQuery implements UpdateQuery<Tag> {
 
-    private static final String SQL_INSERT_NEW = "INSERT INTO tag (name) VALUES (:name)";
+    private static final String SQL_INSERT = "INSERT INTO tag (name) VALUES (:name)";
 
     private final Tag tag;
 
-    public CreateTagQuery(Tag tag) {
+    public TagCreateQuery(Tag tag) {
         this.tag = tag;
     }
 
     @Override
     public String getSql() {
-        return SQL_INSERT_NEW;
+        return SQL_INSERT;
     }
 
     @Override

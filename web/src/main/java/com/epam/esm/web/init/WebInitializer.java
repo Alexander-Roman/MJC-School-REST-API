@@ -1,6 +1,6 @@
 package com.epam.esm.web.init;
 
-import com.epam.esm.persistence.config.DataServiceConfig;
+import com.epam.esm.persistence.config.PersistenceConfig;
 import com.epam.esm.service.config.ServiceConfig;
 import com.epam.esm.web.config.WebConfig;
 import org.springframework.lang.NonNull;
@@ -15,7 +15,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class<?>[]{
-                DataServiceConfig.class, ServiceConfig.class
+                PersistenceConfig.class, ServiceConfig.class
         };
     }
 

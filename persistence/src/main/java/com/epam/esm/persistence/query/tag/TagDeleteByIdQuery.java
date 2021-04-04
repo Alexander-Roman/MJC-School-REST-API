@@ -7,21 +7,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeleteByIdQuery implements UpdateQuery<Tag> {
+public class TagDeleteByIdQuery implements UpdateQuery<Tag> {
 
-    private static final String SQL_DELETE_BY_ID_QUERY = "\n" +
+    private static final String SQL_DELETE_BY_ID = "\n" +
             "DELETE FROM tag \n" +
             "WHERE id = :id \n";
 
     private final Long id;
 
-    public DeleteByIdQuery(Long id) {
+    public TagDeleteByIdQuery(Long id) {
         this.id = id;
     }
 
     @Override
     public String getSql() {
-        return SQL_DELETE_BY_ID_QUERY;
+        return SQL_DELETE_BY_ID;
     }
 
     @Override

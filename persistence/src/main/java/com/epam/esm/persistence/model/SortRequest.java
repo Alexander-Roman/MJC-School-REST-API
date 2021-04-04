@@ -2,7 +2,7 @@ package com.epam.esm.persistence.model;
 
 import java.util.Objects;
 
-public class SortRequest {
+public final class SortRequest {
 
     private final Sort sort;
     private final Sort thenSort;

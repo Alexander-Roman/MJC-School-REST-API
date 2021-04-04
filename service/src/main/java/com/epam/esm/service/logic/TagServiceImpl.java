@@ -1,7 +1,7 @@
 package com.epam.esm.service.logic;
 
-import com.epam.esm.persistence.dao.CertificateTagRepository;
-import com.epam.esm.persistence.dao.TagRepository;
+import com.epam.esm.persistence.repository.CertificateTagRepository;
+import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.specification.Specification;
 import com.epam.esm.persistence.specification.tag.AllSpecification;
@@ -79,7 +79,7 @@ public class TagServiceImpl implements TagService {
                 throw new ServiceException("Invalid tag in collection: " + tag);
             }
         }
-        return tagRepository.saveIfNotExist(tags);
+        return tagRepository.createIfNotExists(tags);
     }
 
     @Override

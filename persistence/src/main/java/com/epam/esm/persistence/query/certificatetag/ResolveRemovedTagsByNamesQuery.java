@@ -6,19 +6,18 @@ import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.query.UpdateQuery;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class AddNewTagsQuery implements UpdateQuery<CertificateTag> {
+public class ResolveRemovedTagsByNamesQuery implements UpdateQuery<CertificateTag> {
 
-    private static final String TEMPLATE_SQL_ADD_NEW_TAGS =
-            "        INSERT INTO certificate_tag (certificate_id, tag_id) \n" +
-                    "VALUES %s ON CONFLICT (certificate_id, tag_id) DO NOTHING \n";
-    private static final String TEMPLATE_VALUE_SET = "(:certificateId, (SELECT tag.id FROM tag WHERE tag.name = %s))";
-    private static final String VALUE_SET_DELIMITER = ", ";
+    private static final String TEMPLATE_SQL_REMOVE_UNNECESSARY_TAGS = "\n" +
+            "DELETE FROM certificate_tag \n" +
+            "WHERE certificate_id = :certificateId \n" +
+            "  AND tag_id NOT IN (SELECT tag.id FROM tag WHERE tag.name IN (%s)) \n";
+    private static final String VALUES_DELIMITER = ", ";
 
     private final Certificate certificate;
 
-    public AddNewTagsQuery(Certificate certificate) {
+    public ResolveRemovedTagsByNamesQuery(Certificate certificate) {
         this.certificate = certificate;
     }
 
@@ -31,11 +30,8 @@ public class AddNewTagsQuery implements UpdateQuery<CertificateTag> {
             String parameter = ":tagName" + i;
             parameters.add(parameter);
         }
-        String valueSet = parameters
-                .stream()
-                .map(tagName -> String.format(TEMPLATE_VALUE_SET, tagName))
-                .collect(Collectors.joining(VALUE_SET_DELIMITER));
-        return String.format(TEMPLATE_SQL_ADD_NEW_TAGS, valueSet);
+        String values = String.join(VALUES_DELIMITER, parameters);
+        return String.format(TEMPLATE_SQL_REMOVE_UNNECESSARY_TAGS, values);
     }
 
     @Override

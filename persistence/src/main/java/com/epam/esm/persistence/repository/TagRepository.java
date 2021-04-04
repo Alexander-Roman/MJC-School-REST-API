@@ -1,4 +1,4 @@
-package com.epam.esm.persistence.dao;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.specification.Specification;
@@ -12,7 +12,7 @@ public interface TagRepository {
 
     Tag create(Tag tag);
 
-    List<Long> saveIfNotExist(Set<Tag> tags);
+    List<Long> createIfNotExists(Set<Tag> tags);
 
     void delete(Long id);
 

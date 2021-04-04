@@ -1,4 +1,4 @@
-package com.epam.esm.persistence.dao;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.exception.PersistenceException;
@@ -30,14 +30,14 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
     }
 
     @Override
-    public List<Certificate> findSorted(SortRequest sortRequest, Specification<Certificate> specification) {
-        SelectQuery<Certificate> query = new SortQuery(sortRequest, specification);
+    public List<Certificate> find(SortRequest sortRequest, Specification<Certificate> specification) {
+        SelectQuery<Certificate> query = new SelectSortedBySpecificationQuery(sortRequest, specification);
         return this.executeSelect(query);
     }
 
     @Override
     public Certificate create(Certificate certificate) {
-        UpdateQuery<Certificate> query = new CreateCertificateQuery(certificate);
+        UpdateQuery<Certificate> query = new CertificateCreateQuery(certificate);
         List<Long> keys = this.executeUpdate(query);
         Long id = keys
                 .stream()
@@ -51,14 +51,14 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
 
     @Override
     public Certificate update(Certificate certificate) {
-        UpdateQuery<Certificate> query = new UpdateCertificateQuery(certificate);
+        UpdateQuery<Certificate> query = new CertificateUpdateQuery(certificate);
         this.executeUpdate(query);
         return certificate;
     }
 
     @Override
     public void delete(Long id) {
-        UpdateQuery<Certificate> query = new DeleteByIdQuery(id);
+        UpdateQuery<Certificate> query = new CertificateDeleteByIdQuery(id);
         this.executeUpdate(query);
     }
 

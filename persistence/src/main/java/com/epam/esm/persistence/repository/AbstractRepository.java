@@ -1,4 +1,4 @@
-package com.epam.esm.persistence.dao;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.entity.Identifiable;
 import com.epam.esm.persistence.query.SelectQuery;
@@ -12,10 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class AbstractRepository<T extends Identifiable> {
 
@@ -51,12 +48,12 @@ public class AbstractRepository<T extends Identifiable> {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(sql, parameterSource, keyHolder);
 
-        List<Map<String, Object>> allKeys = keyHolder.getKeyList();
-        LOGGER.debug("Keys generated: " + allKeys);
+        List<Map<String, Object>> keyList = keyHolder.getKeyList();
+        LOGGER.debug("Keys generated: " + keyList);
 
         List<Long> ids = new ArrayList<>();
-        for (Map<String, Object> objectKeys : allKeys) {
-            Optional<Object> value = objectKeys
+        for (Map<String, Object> objectKeyMap : keyList) {
+            Optional<Object> value = objectKeyMap
                     .values()
                     .stream()
                     .findFirst();
@@ -65,7 +62,7 @@ public class AbstractRepository<T extends Identifiable> {
                 ids.add(id);
             }
         }
-        return ids;
+        return Collections.unmodifiableList(ids);
     }
 
 }

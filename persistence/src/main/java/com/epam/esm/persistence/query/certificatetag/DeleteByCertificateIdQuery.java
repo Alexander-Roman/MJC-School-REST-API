@@ -30,4 +30,5 @@ public class DeleteByCertificateIdQuery implements UpdateQuery<CertificateTag> {
         namedParameters.put("certificateId", certificateId);
         return Collections.unmodifiableMap(namedParameters);
     }
+
 }
