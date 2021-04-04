@@ -25,7 +25,7 @@ public class CertificateRepositoryImpl extends AbstractRepository<Certificate> i
 
     @Override
     public List<Certificate> find(Specification<Certificate> specification) {
-        SelectQuery<Certificate> query = new SimpleSpecificationQuery(specification);
+        SelectQuery<Certificate> query = new SelectBySpecificationQuery(specification);
         return this.executeSelect(query);
     }
 

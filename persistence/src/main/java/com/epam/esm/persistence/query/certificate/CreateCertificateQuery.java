@@ -11,9 +11,9 @@ import java.util.Map;
 
 public class CreateCertificateQuery implements UpdateQuery<Certificate> {
 
-    private static final String SQL_INSERT_NEW =
-            "        INSERT INTO certificate (name, description, price, duration, create_date, last_update_date) \n" +
-                    "VALUES (:name, :description, :price, :duration, :createDate, :lastUpdateDate) \n";
+    private static final String SQL_INSERT_NEW = "\n" +
+            "INSERT INTO certificate (name, description, price, duration, create_date, last_update_date) \n" +
+            "VALUES (:name, :description, :price, :duration, :createDate, :lastUpdateDate) \n";
     private final Certificate certificate;
 
     public CreateCertificateQuery(Certificate certificate) {

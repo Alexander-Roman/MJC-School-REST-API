@@ -62,8 +62,13 @@ public final class Tag implements Identifiable {
             name = tag.name;
         }
 
-        private static Builder from(Tag tag) {
+        public static Builder from(Tag tag) {
             return new Builder(tag);
+        }
+
+        public Builder setId(Long id) {
+            this.id = id;
+            return this;
         }
 
         public Builder setName(String name) {

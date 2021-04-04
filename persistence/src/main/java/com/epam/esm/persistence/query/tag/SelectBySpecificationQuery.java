@@ -1,16 +1,16 @@
-package com.epam.esm.persistence.query.certificate;
+package com.epam.esm.persistence.query.tag;
 
-import com.epam.esm.persistence.entity.Certificate;
+import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.query.SelectQuery;
 import com.epam.esm.persistence.specification.Specification;
 
 import java.util.Map;
 
-public class SimpleSpecificationQuery implements SelectQuery<Certificate> {
+public class SelectBySpecificationQuery implements SelectQuery<Tag> {
 
-    Specification<Certificate> specification;
+    Specification<Tag> specification;
 
-    public SimpleSpecificationQuery(Specification<Certificate> specification) {
+    public SelectBySpecificationQuery(Specification<Tag> specification) {
         this.specification = specification;
     }
 

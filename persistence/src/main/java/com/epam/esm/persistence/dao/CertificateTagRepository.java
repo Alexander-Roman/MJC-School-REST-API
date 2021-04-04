@@ -10,4 +10,6 @@ public interface CertificateTagRepository {
 
     void deleteByCertificateId(Long id);
 
+    void deleteByTagId(Long id);
+
 }

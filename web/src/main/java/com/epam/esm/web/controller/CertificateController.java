@@ -105,8 +105,8 @@ public class CertificateController {
         Certificate target = found.get();
         Certificate source = certificateDtoToEntityConverter.convert(certificateDto);
         Certificate updated = certificateService.selectiveUpdate(source, target);
-        CertificateDto createdDto = CertificateDto.fromEntity(updated);
-        return new ResponseEntity<>(createdDto, HttpStatus.OK);
+        CertificateDto updatedDto = CertificateDto.fromEntity(updated);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

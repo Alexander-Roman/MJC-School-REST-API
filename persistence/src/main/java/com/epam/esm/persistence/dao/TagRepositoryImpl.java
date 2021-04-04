@@ -1,9 +1,11 @@
 package com.epam.esm.persistence.dao;
 
 import com.epam.esm.persistence.entity.Tag;
+import com.epam.esm.persistence.exception.PersistenceException;
+import com.epam.esm.persistence.query.SelectQuery;
 import com.epam.esm.persistence.query.UpdateQuery;
-import com.epam.esm.persistence.query.tag.DeleteUnusedQuery;
-import com.epam.esm.persistence.query.tag.SaveIfNotExistQuery;
+import com.epam.esm.persistence.query.tag.*;
+import com.epam.esm.persistence.specification.Specification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,6 +24,32 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
     }
 
     @Override
+    public List<Tag> find(Specification<Tag> specification) {
+        SelectQuery<Tag> query = new SelectBySpecificationQuery(specification);
+        return this.executeSelect(query);
+    }
+
+    @Override
+    public Tag create(Tag tag) {
+        UpdateQuery<Tag> query = new CreateTagQuery(tag);
+        List<Long> keys = this.executeUpdate(query);
+        Long id = keys
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new PersistenceException("Unexpected query result!"));
+        return Tag.Builder
+                .from(tag)
+                .setId(id)
+                .build();
+    }
+
+    @Override
+    public void delete(Long id) {
+        UpdateQuery<Tag> query = new DeleteByIdQuery(id);
+        this.executeUpdate(query);
+    }
+
+    @Override
     public List<Long> saveIfNotExist(Set<Tag> tags) {
         UpdateQuery<Tag> query = new SaveIfNotExistQuery(tags);
         return this.executeUpdate(query);
@@ -32,4 +60,5 @@ public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRep
         UpdateQuery<Tag> query = new DeleteUnusedQuery();
         this.executeUpdate(query);
     }
+
 }
