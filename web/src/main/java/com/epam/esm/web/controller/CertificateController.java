@@ -3,7 +3,7 @@ package com.epam.esm.web.controller;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.service.logic.CertificateService;
-import com.epam.esm.service.model.FilterRequest;
+import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.model.FilterRequestDto;
 import com.epam.esm.web.model.SortRequestDto;

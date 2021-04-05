@@ -1,6 +1,6 @@
 package com.epam.esm.web.converter;
 
-import com.epam.esm.service.model.FilterRequest;
+import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.web.model.FilterRequestDto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

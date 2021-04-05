@@ -1,4 +1,4 @@
-package com.epam.esm.service.model;
+package com.epam.esm.persistence.model;
 
 import java.util.Objects;
 

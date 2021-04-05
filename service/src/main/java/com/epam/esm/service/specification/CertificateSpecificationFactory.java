@@ -6,7 +6,7 @@ import com.epam.esm.persistence.specification.certificate.AllSpecification;
 import com.epam.esm.persistence.specification.certificate.DualSpecification;
 import com.epam.esm.persistence.specification.certificate.SearchSpecification;
 import com.epam.esm.persistence.specification.certificate.TagNameSpecification;
-import com.epam.esm.service.model.FilterRequest;
+import com.epam.esm.persistence.model.FilterRequest;
 
 import java.util.ArrayList;
 import java.util.List;

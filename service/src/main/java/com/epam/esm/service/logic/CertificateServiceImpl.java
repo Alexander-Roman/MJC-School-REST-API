@@ -1,5 +1,6 @@
 package com.epam.esm.service.logic;
 
+import com.epam.esm.persistence.dao.CertificateDao;
 import com.epam.esm.persistence.repository.CertificateRepository;
 import com.epam.esm.persistence.repository.CertificateTagRepository;
 import com.epam.esm.persistence.entity.Certificate;
@@ -8,7 +9,7 @@ import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.persistence.specification.Specification;
 import com.epam.esm.persistence.specification.certificate.IdSpecification;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.model.FilterRequest;
+import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.service.specification.CertificateSpecificationFactory;
 import com.epam.esm.service.validator.SortRequestValidator;
 import com.epam.esm.service.validator.Validator;
@@ -33,29 +34,33 @@ public class CertificateServiceImpl implements CertificateService {
     private final Validator<Certificate> certificateValidator;
     private final SortRequestValidator<Certificate> certificateSortRequestValidator;
     private final TagService tagService;
+    private final CertificateDao certificateDao;
 
     @Autowired
     public CertificateServiceImpl(CertificateRepository certificateRepository,
                                   CertificateTagRepository certificateTagRepository,
                                   Validator<Certificate> certificateValidator,
                                   SortRequestValidator<Certificate> certificateSortRequestValidator,
-                                  TagService tagService) {
+                                  TagService tagService,
+                                  CertificateDao certificateDao) {
         this.certificateRepository = certificateRepository;
         this.certificateTagRepository = certificateTagRepository;
         this.certificateValidator = certificateValidator;
         this.certificateSortRequestValidator = certificateSortRequestValidator;
         this.tagService = tagService;
+        this.certificateDao = certificateDao;
     }
 
     @Override
     public Optional<Certificate> findById(Long id) {
         Preconditions.checkArgument(id != null && id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
 
-        Specification<Certificate> idSpecification = new IdSpecification(id);
-        List<Certificate> results = certificateRepository.find(idSpecification);
-        return results
-                .stream()
-                .findFirst();
+//        Specification<Certificate> idSpecification = new IdSpecification(id);
+//        List<Certificate> results = certificateRepository.find(idSpecification);
+//        return results
+//                .stream()
+//                .findFirst();
+        return certificateDao.findById(id);
     }
 
     @Override
@@ -65,8 +70,9 @@ public class CertificateServiceImpl implements CertificateService {
             throw new ServiceException("Invalid SortRequest parameter: " + sortRequest);
         }
 
-        Specification<Certificate> specification = CertificateSpecificationFactory.getByFilterRequest(filterRequest);
-        return certificateRepository.find(sortRequest, specification);
+//        Specification<Certificate> specification = CertificateSpecificationFactory.getByFilterRequest(filterRequest);
+//        return certificateRepository.find(sortRequest, specification);
+        return certificateDao.findAll(sortRequest, filterRequest);
     }
 
     @Override
@@ -92,7 +98,8 @@ public class CertificateServiceImpl implements CertificateService {
             tagService.createIfNotExist(tags);
         }
 
-        Certificate saved = certificateRepository.create(dated);
+//        Certificate saved = certificateRepository.create(dated);
+        Certificate saved = certificateDao.create(dated);
 
         if (!tags.isEmpty()) {
             certificateTagRepository.resolveAddedTagsByNames(saved);
@@ -120,7 +127,8 @@ public class CertificateServiceImpl implements CertificateService {
                 .from(certificate)
                 .setLastUpdateDate(now)
                 .build();
-        Certificate updated = certificateRepository.update(dated);
+//        Certificate updated = certificateRepository.update(dated);
+        Certificate updated = certificateDao.update(dated);
         if (!tags.isEmpty()) {
             certificateTagRepository.resolveAddedTagsByNames(updated);
         }
@@ -178,7 +186,8 @@ public class CertificateServiceImpl implements CertificateService {
     public void deleteById(Long id) {
         Preconditions.checkArgument(id != null && id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
         certificateTagRepository.deleteByCertificateId(id);
-        certificateRepository.delete(id);
+//        certificateRepository.delete(id);
+        certificateDao.delete(id);
         tagService.deleteUnused();
     }
 
