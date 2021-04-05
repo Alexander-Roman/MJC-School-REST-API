@@ -1,7 +1,7 @@
 package com.epam.esm.persistence.dao;
 
-import com.epam.esm.persistence.clause.SqlCertificateOrderClauseFactory;
-import com.epam.esm.persistence.clause.SqlCertificateWhereClauseFactory;
+import com.epam.esm.persistence.clause.SqlCertificateOrderClauseBuilder;
+import com.epam.esm.persistence.clause.SqlCertificateWhereClauseBuilder;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.exception.PersistenceException;
 import com.epam.esm.persistence.model.FilterRequest;
@@ -97,8 +97,8 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public List<Certificate> findAll(SortRequest sortRequest, FilterRequest filterRequest) {
-        String whereClause = SqlCertificateWhereClauseFactory.buildSqlWhereClause(filterRequest);
-        String orderByeClause = SqlCertificateOrderClauseFactory.buildSqlOrderClause(sortRequest);
+        String whereClause = SqlCertificateWhereClauseBuilder.buildSqlWhereClause(filterRequest);
+        String orderByeClause = SqlCertificateOrderClauseBuilder.buildSqlOrderClause(sortRequest);
         String sql = SQL_FIND_ALL
                 .concat(whereClause)
                 .concat(orderByeClause);

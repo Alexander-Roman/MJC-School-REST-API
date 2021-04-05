@@ -7,7 +7,7 @@ import com.epam.esm.persistence.model.SortRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlCertificateOrderClauseFactory {
+public class SqlCertificateOrderClauseBuilder {
 
     private static final String SQL_NO_ORDER_CLAUSE = "";
     private static final String TEMPLATE_SQL_ORDER_CLAUSE = "\n" +

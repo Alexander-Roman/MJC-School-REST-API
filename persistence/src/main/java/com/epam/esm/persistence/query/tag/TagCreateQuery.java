@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class TagCreateQuery implements UpdateQuery<Tag> {
 
-    private static final String SQL_INSERT = "INSERT INTO tag (name) VALUES (:name)";
+    private static final String SQL_INSERT = "INSERT INTO tag (name) VALUES (:name) \n";
 
     private final Tag tag;
 

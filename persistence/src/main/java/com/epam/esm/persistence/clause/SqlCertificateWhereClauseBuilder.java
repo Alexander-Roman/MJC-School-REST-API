@@ -5,7 +5,7 @@ import com.epam.esm.persistence.model.FilterRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlCertificateWhereClauseFactory {
+public class SqlCertificateWhereClauseBuilder {
 
     private static final String SQL_NO_WHERE_CLAUSE = "";
     private static final String TEMPLATE_SQL_WHERE_CLAUSE = "\n" +

@@ -1,4 +1,4 @@
-package com.epam.esm.service.logic;
+package com.epam.esm.persistence.dao;
 
 import com.epam.esm.persistence.entity.Tag;
 
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public interface TagService {
+public interface TagDao {
 
     Optional<Tag> findById(Long id);
 
@@ -14,9 +14,9 @@ public interface TagService {
 
     Tag create(Tag tag);
 
-    void createIfNotExist(Set<Tag> tags);
+    void createIfNotExists(Set<Tag> tags);
 
-    void deleteById(Long id);
+    void delete(Long id);
 
     void deleteUnused();
 
