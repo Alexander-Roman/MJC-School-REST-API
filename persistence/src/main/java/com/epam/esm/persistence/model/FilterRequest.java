@@ -2,7 +2,7 @@ package com.epam.esm.persistence.model;
 
 import java.util.Objects;
 
-public class FilterRequest {
+public final class FilterRequest {
 
     private final String search;
     private final String tagName;
