@@ -32,20 +32,6 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.STANDARD);
-        modelMapper.addConverter(new CertificateDtoToEntityConverter());
-        modelMapper.addConverter(new CertificateEntityToDtoConverter());
-        modelMapper.addConverter(new TagDtoToEntityConverter());
-        modelMapper.addConverter(new TagEntityToDtoConverter());
-        modelMapper.addConverter(new FilterRequestDtoToModelConverter());
-        modelMapper.addConverter(new SortRequestDtoToModelConverter());
-        return modelMapper;
-    }
-
-    @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -69,6 +55,25 @@ public class WebConfig implements WebMvcConfigurer {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         MappingJackson2HttpMessageConverter messageConverter = mappingJackson2HttpMessageConverter();
         converters.add(messageConverter);
+    }
+
+    @Bean
+    public ModelMapper modelMapper(CertificateDtoToEntityConverter certificateDtoToEntityConverter,
+                                   CertificateEntityToDtoConverter certificateEntityToDtoConverter,
+                                   FilterRequestDtoToModelConverter filterRequestDtoToModelConverter,
+                                   SortRequestDtoToModelConverter sortRequestDtoToModelConverter,
+                                   TagDtoToEntityConverter tagDtoToEntityConverter,
+                                   TagEntityToDtoConverter tagEntityToDtoConverter) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STANDARD);
+        modelMapper.addConverter(certificateDtoToEntityConverter);
+        modelMapper.addConverter(certificateEntityToDtoConverter);
+        modelMapper.addConverter(filterRequestDtoToModelConverter);
+        modelMapper.addConverter(sortRequestDtoToModelConverter);
+        modelMapper.addConverter(tagDtoToEntityConverter);
+        modelMapper.addConverter(tagEntityToDtoConverter);
+        return modelMapper;
     }
 
 }

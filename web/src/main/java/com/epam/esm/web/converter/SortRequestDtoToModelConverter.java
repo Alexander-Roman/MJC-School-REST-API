@@ -5,7 +5,9 @@ import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.web.model.SortRequestDto;
 import org.modelmapper.AbstractConverter;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SortRequestDtoToModelConverter extends AbstractConverter<SortRequestDto, SortRequest> implements Converter<SortRequestDto, SortRequest> {
 
     private static final Sort.Direction DEFAULT_SORT_DIRECTION = Sort.Direction.ASC;

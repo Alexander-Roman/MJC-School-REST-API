@@ -1,14 +1,14 @@
 package com.epam.esm.web.validator;
 
-import com.epam.esm.web.model.TagDto;
+import com.epam.esm.web.model.CertificateDto;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.Validator;
 
-public interface TagDtoValidator extends Validator {
+public interface CertificateDtoUpdateValidator extends Validator {
 
     @Override
     default boolean supports(@NonNull Class<?> clazz) {
-        return TagDto.class.equals(clazz);
+        return CertificateDto.class.equals(clazz);
     }
 
 }

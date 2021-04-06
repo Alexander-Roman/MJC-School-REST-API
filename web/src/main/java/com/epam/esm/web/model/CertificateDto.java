@@ -1,7 +1,5 @@
 package com.epam.esm.web.model;
 
-import com.epam.esm.persistence.entity.Certificate;
-import com.epam.esm.persistence.entity.Tag;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class CertificateDto implements Serializable {
 
@@ -24,7 +21,7 @@ public final class CertificateDto implements Serializable {
     private final Integer duration;
     private final LocalDateTime createDate;
     private final LocalDateTime lastUpdateDate;
-    private final Set<String> tags;
+    private final Set<TagDto> tags;
 
     @JsonCreator
     public CertificateDto(@JsonProperty("id") Long id,
@@ -34,7 +31,7 @@ public final class CertificateDto implements Serializable {
                           @JsonProperty("duration") Integer duration,
                           @JsonProperty("createDate") LocalDateTime createDate,
                           @JsonProperty("lastUpdateDate") LocalDateTime lastUpdateDate,
-                          @JsonProperty("tags") Set<String> tags) {
+                          @JsonProperty("tags") Set<TagDto> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -44,26 +41,6 @@ public final class CertificateDto implements Serializable {
         this.lastUpdateDate = lastUpdateDate;
         this.tags = tags;
     }
-
-//    public static CertificateDto fromEntity(Certificate certificate) {
-//        Set<Tag> entityTags = certificate.getTags();
-//        Set<String> tags = entityTags == null
-//                ? null
-//                : entityTags
-//                .stream()
-//                .map(Tag::getName)
-//                .collect(Collectors.toSet());
-//        return new CertificateDto(
-//                certificate.getId(),
-//                certificate.getName(),
-//                certificate.getDescription(),
-//                certificate.getPrice(),
-//                certificate.getDuration(),
-//                certificate.getCreateDate(),
-//                certificate.getLastUpdateDate(),
-//                tags
-//        );
-//    }
 
     public Long getId() {
         return id;
@@ -93,7 +70,7 @@ public final class CertificateDto implements Serializable {
         return lastUpdateDate;
     }
 
-    public Set<String> getTags() {
+    public Set<TagDto> getTags() {
         return tags == null
                 ? null
                 : Collections.unmodifiableSet(tags);
@@ -155,7 +132,7 @@ public final class CertificateDto implements Serializable {
         private Integer duration;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
-        private Set<String> tags;
+        private Set<TagDto> tags;
 
         public Builder() {
         }
@@ -205,7 +182,7 @@ public final class CertificateDto implements Serializable {
             return this;
         }
 
-        public Builder setTags(Set<String> tags) {
+        public Builder setTags(Set<TagDto> tags) {
             this.tags = tags;
             return this;
         }

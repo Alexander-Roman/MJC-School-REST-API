@@ -5,7 +5,6 @@ import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CertificateService {
 

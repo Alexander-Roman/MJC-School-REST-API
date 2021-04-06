@@ -7,8 +7,9 @@ import com.epam.esm.service.logic.CertificateService;
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.model.FilterRequestDto;
 import com.epam.esm.web.model.SortRequestDto;
-import com.epam.esm.web.validator.CertificateDtoValidator;
-import com.epam.esm.web.validator.SortRequestDtoValidator;
+import com.epam.esm.web.validator.CertificateDtoCreateValidator;
+import com.epam.esm.web.validator.CertificateDtoUpdateValidator;
+import com.epam.esm.web.validator.CertificateSortRequestDtoValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,18 +26,21 @@ import java.util.stream.Collectors;
 public class CertificateController {
 
     private final CertificateService certificateService;
-    private final CertificateDtoValidator certificateDtoValidator;
-    private final SortRequestDtoValidator sortRequestDtoValidator;
+    private final CertificateDtoUpdateValidator certificateDtoUpdateValidator;
+    private final CertificateDtoCreateValidator certificateDtoCreateValidator;
+    private final CertificateSortRequestDtoValidator certificateSortRequestDtoValidator;
     private final ModelMapper modelMapper;
 
     @Autowired
     public CertificateController(CertificateService certificateService,
-                                 CertificateDtoValidator certificateDtoValidator,
-                                 SortRequestDtoValidator sortRequestDtoValidator,
+                                 CertificateDtoUpdateValidator certificateDtoUpdateValidator,
+                                 CertificateDtoCreateValidator certificateDtoCreateValidator,
+                                 CertificateSortRequestDtoValidator certificateSortRequestDtoValidator,
                                  ModelMapper modelMapper) {
         this.certificateService = certificateService;
-        this.certificateDtoValidator = certificateDtoValidator;
-        this.sortRequestDtoValidator = sortRequestDtoValidator;
+        this.certificateDtoUpdateValidator = certificateDtoUpdateValidator;
+        this.certificateDtoCreateValidator = certificateDtoCreateValidator;
+        this.certificateSortRequestDtoValidator = certificateSortRequestDtoValidator;
         this.modelMapper = modelMapper;
     }
 
@@ -51,7 +55,7 @@ public class CertificateController {
     public ResponseEntity<?> getCertificateList(SortRequestDto sortRequestDto,
                                                 BindingResult bindingResult,
                                                 FilterRequestDto filterRequestDto) throws BindException {
-        sortRequestDtoValidator.validate(sortRequestDto, bindingResult);
+        certificateSortRequestDtoValidator.validate(sortRequestDto, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -60,7 +64,7 @@ public class CertificateController {
         List<Certificate> result = certificateService.findAll(sortRequest, filterRequest);
         List<CertificateDto> resultDto = result
                 .stream()
-                .map(entity -> modelMapper.map(entity, CertificateDto.class))
+                .map(certificate -> modelMapper.map(certificate, CertificateDto.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(resultDto, HttpStatus.OK);
     }
@@ -68,7 +72,7 @@ public class CertificateController {
     @PostMapping
     public ResponseEntity<CertificateDto> createCertificate(@RequestBody CertificateDto certificateDto,
                                                             BindingResult bindingResult) throws BindException {
-        certificateDtoValidator.validate(certificateDto, bindingResult);
+        certificateDtoCreateValidator.validate(certificateDto, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -81,7 +85,7 @@ public class CertificateController {
     @PutMapping
     public ResponseEntity<CertificateDto> updateCertificate(@RequestBody CertificateDto certificateDto,
                                                             BindingResult bindingResult) throws BindException {
-        certificateDtoValidator.validate(certificateDto, bindingResult);
+        certificateDtoUpdateValidator.validate(certificateDto, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }

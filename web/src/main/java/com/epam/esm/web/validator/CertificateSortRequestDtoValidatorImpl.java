@@ -5,13 +5,12 @@ import com.epam.esm.web.model.SortRequestDto;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class SortRequestDtoValidator implements Validator {
+public class CertificateSortRequestDtoValidatorImpl implements CertificateSortRequestDtoValidator {
 
     /*
      * These results will match:
@@ -23,11 +22,6 @@ public class SortRequestDtoValidator implements Validator {
      */
     private static final String REGEX_SORT = "([A-Za-z]+)(?i)(,asc|,desc)*";
     private static final Pattern PATTERN_SORT = Pattern.compile(REGEX_SORT);
-
-    @Override
-    public boolean supports(@NonNull Class<?> clazz) {
-        return SortRequestDto.class.equals(clazz);
-    }
 
     @Override
     public void validate(@NonNull Object object, @NonNull Errors errors) {

@@ -1,6 +1,5 @@
 package com.epam.esm.web.model;
 
-import com.epam.esm.persistence.entity.Tag;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
