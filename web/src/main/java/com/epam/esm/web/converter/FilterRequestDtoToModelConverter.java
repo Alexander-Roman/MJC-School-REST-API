@@ -2,11 +2,10 @@ package com.epam.esm.web.converter;
 
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.web.model.FilterRequestDto;
+import org.modelmapper.AbstractConverter;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
-@Component
-public class FilterRequestDtoToModelConverter implements Converter<FilterRequestDto, FilterRequest> {
+public class FilterRequestDtoToModelConverter extends AbstractConverter<FilterRequestDto, FilterRequest> implements Converter<FilterRequestDto, FilterRequest> {
 
     @Override
     public FilterRequest convert(FilterRequestDto filterRequestDto) {

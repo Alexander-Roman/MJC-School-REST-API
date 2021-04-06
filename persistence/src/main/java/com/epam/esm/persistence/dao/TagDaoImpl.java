@@ -1,7 +1,6 @@
 package com.epam.esm.persistence.dao;
 
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.persistence.exception.PersistenceException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,23 +10,27 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
 public class TagDaoImpl implements TagDao {
 
+    public static final String SQL_FIND_BY_NAME = "\n" +
+            "SELECT tag.id   AS tag_id, \n" +
+            "       tag.name AS tag_name \n" +
+            "FROM tag \n" +
+            "WHERE tag.name = :tagName \n";
     private static final String SQL_FIND_BY_ID = "\n" +
             "SELECT tag.id   AS tag_id, \n" +
             "       tag.name AS tag_name \n" +
             "FROM tag \n" +
             "WHERE tag.id = :tagId \n";
-
     private static final String SQL_FIND_ALL = "\n" +
             "SELECT tag.id   AS tag_id, \n" +
             "       tag.name AS tag_name \n" +
             "FROM tag \n";
 
-    private static final String SQL_INSERT = "INSERT INTO tag (name) VALUES (:name) \n";
+    private static final String SQL_INSERT = "\n" +
+            "INSERT INTO tag (name) VALUES (:name) \n";
 
     private static final String SQL_DELETE_BY_ID = "\n" +
             "DELETE FROM tag \n" +
@@ -55,6 +58,14 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
+    public Optional<Tag> findByName(String tagName) {
+        Map<String, Object> namedParameters = new HashMap<>();
+        namedParameters.put("tagName", tagName);
+        List<Tag> results = namedParameterJdbcTemplate.query(SQL_FIND_BY_NAME, namedParameters, tagRowMapper);
+        return results.stream().findFirst();
+    }
+
+    @Override
     public List<Tag> findAll() {
         return namedParameterJdbcTemplate.query(SQL_FIND_ALL, tagRowMapper);
     }
@@ -63,44 +74,12 @@ public class TagDaoImpl implements TagDao {
     public Tag create(Tag tag) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(tag);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(SQL_INSERT, sqlParameterSource, keyHolder);
-
-        List<Map<String, Object>> keyList = keyHolder.getKeyList();
-        Long id = (Long) keyList
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new PersistenceException("Unexpected query result!"))
-                .values()
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new PersistenceException("Unexpected query result!"));
+        namedParameterJdbcTemplate.update(SQL_INSERT, sqlParameterSource, keyHolder, new String[]{"id"});
+        Long id = keyHolder.getKeyAs(Long.class);
         return Tag.Builder
                 .from(tag)
                 .setId(id)
                 .build();
-    }
-
-    @Override
-    public void createIfNotExists(Set<Tag> tags) {
-        List<String> parameterNames = new ArrayList<>();
-        Map<String, Object> namedParameters = new HashMap<>();
-        int count = 0;
-        for (Tag tag : tags) {
-            ++count;
-
-            String parameterName = ":tagName" + count;
-            parameterNames.add(parameterName);
-
-            String tagName = tag.getName();
-            String key = "tagName" + count;
-            namedParameters.put(key, tagName);
-        }
-        String valueSet = parameterNames
-                .stream()
-                .map(param -> String.format("(%s)", param))
-                .collect(Collectors.joining(", "));
-        String sql = String.format("INSERT INTO tag (name) VALUES %s ON CONFLICT (name) DO NOTHING", valueSet);
-        namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
     @Override

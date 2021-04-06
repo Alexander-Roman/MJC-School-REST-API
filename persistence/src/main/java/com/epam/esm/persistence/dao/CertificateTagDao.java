@@ -1,15 +1,22 @@
 package com.epam.esm.persistence.dao;
 
-import com.epam.esm.persistence.entity.Certificate;
+import com.epam.esm.persistence.entity.CertificateTag;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface CertificateTagDao {
 
-    void resolveAddedTagsByNames(Certificate certificate);
+    List<CertificateTag> findByCertificateId(Long certificateId);
 
-    void resolveRemovedTagsByNames(Certificate certificate);
+    CertificateTag create(CertificateTag certificateTag);
 
-    void deleteByCertificateId(Long id);
+    void create(Collection<CertificateTag> certificateTags);
 
-    void deleteByTagId(Long id);
+    void delete(Collection<Long> certificateTagIds);
+
+    void deleteByCertificateId(Long certificateId);
+
+    void deleteByTagId(Long tagId);
 
 }

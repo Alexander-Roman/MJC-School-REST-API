@@ -1,13 +1,8 @@
 package com.epam.esm.service.logic;
 
-import com.epam.esm.persistence.dao.CertificateTagDao;
 import com.epam.esm.persistence.dao.TagDao;
-import com.epam.esm.persistence.repository.CertificateTagRepository;
-import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.persistence.specification.Specification;
-import com.epam.esm.persistence.specification.tag.AllSpecification;
-import com.epam.esm.persistence.specification.tag.IdSpecification;
+import com.epam.esm.persistence.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.Validator;
 import com.google.common.base.Preconditions;
@@ -15,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,41 +20,29 @@ public class TagServiceImpl implements TagService {
 
     public static final long MIN_ID_VALUE = 1L;
 
-    private final TagRepository tagRepository;
-    private final CertificateTagRepository certificateTagRepository;
-    private final Validator<Tag> tagValidator;
     private final TagDao tagDao;
-    private final CertificateTagDao certificateTagDao;
+    private final CertificateTagService certificateTagService;
+    private final Validator<Tag> tagValidator;
 
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository,
-                          CertificateTagRepository certificateTagRepository,
-                          Validator<Tag> tagValidator,
-                          TagDao tagDao,
-                          CertificateTagDao certificateTagDao) {
-        this.tagRepository = tagRepository;
-        this.certificateTagRepository = certificateTagRepository;
-        this.tagValidator = tagValidator;
+    public TagServiceImpl(TagDao tagDao, CertificateTagService certificateTagService, Validator<Tag> tagValidator) {
         this.tagDao = tagDao;
-        this.certificateTagDao = certificateTagDao;
+        this.certificateTagService = certificateTagService;
+        this.tagValidator = tagValidator;
     }
 
     @Override
-    public Optional<Tag> findById(Long id) {
-        Preconditions.checkArgument(id != null && id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
+    public Tag findById(Long id) {
+        Preconditions.checkNotNull(id, "Invalid ID parameter: " + id);
+        Preconditions.checkArgument(id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
 
-//        Specification<Tag> specification = new IdSpecification(id);
-//        List<Tag> results = tagRepository.find(specification);
-//        return results
-//                .stream()
-//                .findFirst();
-        return tagDao.findById(id);
+        return tagDao
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Tag does not exists! ID: " + id));
     }
 
     @Override
     public List<Tag> findAll() {
-//        Specification<Tag> specification = new AllSpecification();
-//        return tagRepository.find(specification);
         return tagDao.findAll();
     }
 
@@ -70,35 +54,53 @@ public class TagServiceImpl implements TagService {
         if (tag.getId() != null) {
             throw new ServiceException("Specifying id is now allowed for new tag! Tag invalid: " + tag);
         }
-//        return tagRepository.create(tag);
         return tagDao.create(tag);
     }
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
-        Preconditions.checkArgument(id != null && id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
-//        certificateTagRepository.deleteByTagId(id);
-        certificateTagDao.deleteByTagId(id);
-//        tagRepository.delete(id);
+    public Tag deleteById(Long id) {
+        Preconditions.checkNotNull(id, "Invalid ID parameter: " + id);
+        Preconditions.checkArgument(id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
+
+        Tag target = tagDao
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Tag does not exists! ID: " + id));
+
+        certificateTagService.deleteByTagId(id);
         tagDao.delete(id);
+
+        return target;
     }
 
     @Override
-    public void createIfNotExist(Set<Tag> tags) {
-        Preconditions.checkArgument(tags != null && !tags.isEmpty(), "Invalid tags parameter: " + tags);
+    @Transactional
+    public Set<Tag> createIfNotExist(Set<Tag> tags) {
+        Preconditions.checkNotNull(tags, "Invalid tags parameter: " + tags);
+
         for (Tag tag : tags) {
             if (!tagValidator.isValid(tag)) {
-                throw new ServiceException("Invalid tag in collection: " + tag);
+                throw new ServiceException("Tag invalid: " + tag);
             }
         }
-//        return tagRepository.createIfNotExists(tags);
-        tagDao.createIfNotExists(tags);
+
+        Set<Tag> results = new HashSet<>();
+        for (Tag tag : tags) {
+            String name = tag.getName();
+            Optional<Tag> result = tagDao.findByName(name);
+            if (result.isPresent()) {
+                Tag found = result.get();
+                results.add(found);
+            } else {
+                Tag created = tagDao.create(tag);
+                results.add(created);
+            }
+        }
+        return results;
     }
 
     @Override
     public void deleteUnused() {
-//        tagRepository.deleteUnused();
         tagDao.deleteUnused();
     }
 

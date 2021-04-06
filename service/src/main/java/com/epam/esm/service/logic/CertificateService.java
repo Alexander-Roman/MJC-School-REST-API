@@ -1,24 +1,22 @@
 package com.epam.esm.service.logic;
 
 import com.epam.esm.persistence.entity.Certificate;
-import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.persistence.model.FilterRequest;
+import com.epam.esm.persistence.model.SortRequest;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CertificateService {
 
-    Optional<Certificate> findById(Long id);
+    Certificate findById(Long id);
 
     List<Certificate> findAll(SortRequest sortRequest, FilterRequest filterRequest);
 
     Certificate create(Certificate certificate);
 
-    Certificate update(Certificate certificate);
+    Certificate selectiveUpdate(Certificate certificate);
 
-    Certificate selectiveUpdate(Certificate source, Certificate target);
-
-    void deleteById(Long id);
+    Certificate deleteById(Long id);
 
 }

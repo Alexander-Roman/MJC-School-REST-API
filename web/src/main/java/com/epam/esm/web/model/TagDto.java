@@ -21,13 +21,6 @@ public final class TagDto implements Serializable {
         this.name = name;
     }
 
-    public static TagDto fromEntity(Tag tag) {
-        return new TagDto(
-                tag.getId(),
-                tag.getName()
-        );
-    }
-
     public Long getId() {
         return id;
     }

@@ -60,4 +60,49 @@ public final class CertificateTag implements Identifiable {
                 '}';
     }
 
+
+    public static final class Builder {
+
+        private Long id;
+        private Long certificateId;
+        private Long tagId;
+
+        public Builder() {
+        }
+
+        private Builder(CertificateTag certificateTag) {
+            id = certificateTag.id;
+            certificateId = certificateTag.certificateId;
+            tagId = certificateTag.tagId;
+        }
+
+        public static Builder from(CertificateTag certificateTag) {
+            return new Builder(certificateTag);
+        }
+
+        public Builder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setCertificateId(Long certificateId) {
+            this.certificateId = certificateId;
+            return this;
+        }
+
+        public Builder setTagId(Long tagId) {
+            this.tagId = tagId;
+            return this;
+        }
+
+        public CertificateTag build() {
+            return new CertificateTag(
+                    id,
+                    certificateId,
+                    tagId
+            );
+        }
+
+    }
+
 }

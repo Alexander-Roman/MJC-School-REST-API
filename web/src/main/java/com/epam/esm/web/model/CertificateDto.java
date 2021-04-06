@@ -45,25 +45,25 @@ public final class CertificateDto implements Serializable {
         this.tags = tags;
     }
 
-    public static CertificateDto fromEntity(Certificate certificate) {
-        Set<Tag> entityTags = certificate.getTags();
-        Set<String> tags = entityTags == null
-                ? null
-                : entityTags
-                .stream()
-                .map(Tag::getName)
-                .collect(Collectors.toSet());
-        return new CertificateDto(
-                certificate.getId(),
-                certificate.getName(),
-                certificate.getDescription(),
-                certificate.getPrice(),
-                certificate.getDuration(),
-                certificate.getCreateDate(),
-                certificate.getLastUpdateDate(),
-                tags
-        );
-    }
+//    public static CertificateDto fromEntity(Certificate certificate) {
+//        Set<Tag> entityTags = certificate.getTags();
+//        Set<String> tags = entityTags == null
+//                ? null
+//                : entityTags
+//                .stream()
+//                .map(Tag::getName)
+//                .collect(Collectors.toSet());
+//        return new CertificateDto(
+//                certificate.getId(),
+//                certificate.getName(),
+//                certificate.getDescription(),
+//                certificate.getPrice(),
+//                certificate.getDuration(),
+//                certificate.getCreateDate(),
+//                certificate.getLastUpdateDate(),
+//                tags
+//        );
+//    }
 
     public Long getId() {
         return id;

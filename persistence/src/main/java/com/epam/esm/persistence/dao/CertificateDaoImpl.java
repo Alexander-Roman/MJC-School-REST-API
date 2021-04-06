@@ -3,7 +3,6 @@ package com.epam.esm.persistence.dao;
 import com.epam.esm.persistence.clause.SqlCertificateOrderClauseBuilder;
 import com.epam.esm.persistence.clause.SqlCertificateWhereClauseBuilder;
 import com.epam.esm.persistence.entity.Certificate;
-import com.epam.esm.persistence.exception.PersistenceException;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,17 +109,8 @@ public class CertificateDaoImpl implements CertificateDao {
     public Certificate create(Certificate certificate) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(certificate);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(SQL_INSERT, sqlParameterSource, keyHolder);
-
-        List<Map<String, Object>> keyList = keyHolder.getKeyList();
-        Long id = (Long) keyList
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new PersistenceException("Unexpected query result!"))
-                .values()
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new PersistenceException("Unexpected query result!"));
+        namedParameterJdbcTemplate.update(SQL_INSERT, sqlParameterSource, keyHolder, new String[]{"id"});
+        Long id = keyHolder.getKeyAs(Long.class);
         return Certificate.Builder
                 .from(certificate)
                 .setId(id)

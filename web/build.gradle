@@ -16,7 +16,11 @@ dependencies {
     // General data-binding functionality for Jackson: works on core streaming API
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.2'
 
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
+    // Add-on module to support JSR-310 (Java 8 Date & Time API) data types.
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.2'
+
+    // ModelMapper
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
+
 
 }

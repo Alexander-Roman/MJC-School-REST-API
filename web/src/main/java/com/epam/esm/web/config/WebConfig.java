@@ -1,13 +1,15 @@
 package com.epam.esm.web.config;
 
+import com.epam.esm.web.converter.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -27,6 +29,20 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STANDARD);
+        modelMapper.addConverter(new CertificateDtoToEntityConverter());
+        modelMapper.addConverter(new CertificateEntityToDtoConverter());
+        modelMapper.addConverter(new TagDtoToEntityConverter());
+        modelMapper.addConverter(new TagEntityToDtoConverter());
+        modelMapper.addConverter(new FilterRequestDtoToModelConverter());
+        modelMapper.addConverter(new SortRequestDtoToModelConverter());
+        return modelMapper;
     }
 
     @Bean
