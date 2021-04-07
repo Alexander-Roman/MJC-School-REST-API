@@ -13,7 +13,7 @@ CREATE TABLE certificate
     last_update_date TIMESTAMP     NOT NULL
 );
 
-create table tag
+CREATE TABLE tag
 (
     id   BIGSERIAL   NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -22,7 +22,7 @@ create table tag
 
 CREATE UNIQUE INDEX tag_name_case_insensitive_unique_index ON tag (LOWER(name));
 
-create table certificate_tag
+CREATE TABLE certificate_tag
 (
     id             BIGSERIAL,
     certificate_id BIGINT NOT NULL REFERENCES certificate (id),

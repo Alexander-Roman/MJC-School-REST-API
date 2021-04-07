@@ -13,4 +13,10 @@ dependencies {
     // HikariCP JDBC Connection Pool
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
 
+    //  Spring TestContext Framework
+    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.5'
+
+    // H2 Database Engine
+    testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+
 }
