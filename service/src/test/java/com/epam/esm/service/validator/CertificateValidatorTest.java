@@ -3,6 +3,7 @@ package com.epam.esm.service.validator;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -12,24 +13,49 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
 public class CertificateValidatorTest {
 
     private static final int MAX_NAME_LENGTH = 150;
     private static final int MAX_DESCRIPTION_LENGTH = 255;
 
+    private static final List<Tag> TAGS_LIST = Collections.singletonList(
+            new Tag(1L, "name")
+    );
+
+    private static final Certificate CERTIFICATE_WITH_ID = new Certificate(
+            1L,
+            "name",
+            "description",
+            new BigDecimal("42.00"),
+            13,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            new HashSet<>(TAGS_LIST)
+    );
+    private static final Certificate CERTIFICATE_WITHOUT_ID = new Certificate(
+            null,
+            "name",
+            "description",
+            new BigDecimal("42.00"),
+            13,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            new HashSet<>(TAGS_LIST)
+    );
+
     private final Validator<Tag> tagValidator = Mockito.mock(TagValidator.class);
     private final CertificateValidator certificateValidator = new CertificateValidator(tagValidator);
 
     private static Stream<Certificate> provideValidCertificates() {
         return Stream.of(
-                new Certificate(1L, "name", "description", new BigDecimal("10.00"), 1, LocalDateTime.now(), LocalDateTime.now(), Collections.emptySet()),
-                new Certificate(null, "name", "description", new BigDecimal("10.00"), 1, LocalDateTime.now(), LocalDateTime.now(), Collections.emptySet())
+                CERTIFICATE_WITH_ID,
+                CERTIFICATE_WITHOUT_ID
         );
     }
 
@@ -69,6 +95,12 @@ public class CertificateValidatorTest {
         return stringBuilder.toString();
     }
 
+    @BeforeEach
+    public void setUp() {
+        //Positive scenario
+        lenient().when(tagValidator.isValid(any())).thenReturn(true);
+    }
+
     @ParameterizedTest
     @MethodSource("provideValidCertificates")
     public void testIsValidShouldReturnTrueWhenCertificateValid(Certificate valid) {
@@ -92,21 +124,9 @@ public class CertificateValidatorTest {
     @Test
     public void testIsValidShouldReturnFalseWhenOneOfTagsInvalid() {
         //given
-        Tag tag = new Tag(1L, null);
-        Set<Tag> tags = new HashSet<>(Collections.singletonList(tag));
-        Certificate validExceptTags = new Certificate(
-                1L,
-                "name",
-                "description",
-                new BigDecimal("42.00"),
-                13,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                tags
-        );
-        when(tagValidator.isValid(any())).thenReturn(false);
+        lenient().when(tagValidator.isValid(any())).thenReturn(false);
         //when
-        boolean actual = certificateValidator.isValid(validExceptTags);
+        boolean actual = certificateValidator.isValid(CERTIFICATE_WITH_ID);
         //then
         Assertions.assertFalse(actual);
     }
