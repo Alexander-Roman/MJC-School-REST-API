@@ -19,8 +19,8 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 public class TestPersistenceConfig {
 
-    public static final String SQL_H2_DDL = "classpath:sql.h2/ddl.sql";
-    public static final String SQL_H2_DML = "classpath:sql.h2/dml.sql";
+    private static final String SQL_H2_DDL = "classpath:sql.h2/ddl.sql";
+    private static final String SQL_H2_DML = "classpath:sql.h2/dml.sql";
 
     @Bean
     public DataSource dataSource() {

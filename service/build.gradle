@@ -8,4 +8,10 @@ dependencies {
     // Guava libraries
     implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
 
+    // Mockito mock objects library core API and implementation
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.9.0'
+
+    // Mockito JUnit 5 support
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.9.0'
+
 }

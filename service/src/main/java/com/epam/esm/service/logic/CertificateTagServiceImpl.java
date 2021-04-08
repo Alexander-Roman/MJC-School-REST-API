@@ -77,7 +77,9 @@ public class CertificateTagServiceImpl implements CertificateTagService {
                 .stream()
                 .filter(certificateTag -> !oldTagIds.contains(certificateTag.getTagId()))
                 .collect(Collectors.toList());
-        certificateTagDao.create(toCreate);
+        if (!toCreate.isEmpty()) {
+            certificateTagDao.create(toCreate);
+        }
 
         List<Long> newTagIds = newCertificateTags
                 .stream()
@@ -88,7 +90,9 @@ public class CertificateTagServiceImpl implements CertificateTagService {
                 .filter(certificateTag -> !newTagIds.contains(certificateTag.getTagId()))
                 .map(CertificateTag::getId)
                 .collect(Collectors.toList());
-        certificateTagDao.delete(toDelete);
+        if (!toDelete.isEmpty()) {
+            certificateTagDao.delete(toDelete);
+        }
 
     }
 

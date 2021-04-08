@@ -25,7 +25,7 @@ import java.util.*;
 @Transactional
 public class CertificateDaoImplTest {
 
-    public static final LocalDateTime LOCAL_DATE_TIME_TEST = LocalDateTime.parse("2021-01-01T12:00:00");
+    private static final LocalDateTime LOCAL_DATE_TIME_TEST = LocalDateTime.parse("2021-01-01T12:00:00");
     private static final List<Tag> TAGS_FIRST = Arrays.asList(
             new Tag(1L, "tag1"),
             new Tag(2L, "tag2")

@@ -7,7 +7,7 @@ import com.epam.esm.persistence.exception.EntityNotFoundException;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.validator.SortRequestValidator;
+import com.epam.esm.service.validator.CertificateSortRequestValidator;
 import com.epam.esm.service.validator.Validator;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +29,14 @@ public class CertificateServiceImpl implements CertificateService {
     private final TagService tagService;
     private final CertificateTagService certificateTagService;
     private final Validator<Certificate> certificateValidator;
-    private final SortRequestValidator<Certificate> certificateSortRequestValidator;
+    private final CertificateSortRequestValidator certificateSortRequestValidator;
 
     @Autowired
     public CertificateServiceImpl(CertificateDao certificateDao,
                                   TagService tagService,
                                   CertificateTagService certificateTagService,
                                   Validator<Certificate> certificateValidator,
-                                  SortRequestValidator<Certificate> certificateSortRequestValidator) {
+                                  CertificateSortRequestValidator certificateSortRequestValidator) {
         this.certificateDao = certificateDao;
         this.tagService = tagService;
         this.certificateTagService = certificateTagService;
