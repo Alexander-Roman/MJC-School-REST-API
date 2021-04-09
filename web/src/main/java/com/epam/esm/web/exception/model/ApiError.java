@@ -8,9 +8,9 @@ public class ApiError implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final String message;
-    private final String code;
+    private final Integer code;
 
-    public ApiError(String message, String code) {
+    public ApiError(String message, Integer code) {
         this.message = message;
         this.code = code;
     }
@@ -19,19 +19,19 @@ public class ApiError implements Serializable {
         return message;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        ApiError apiError = (ApiError) o;
+        ApiError apiError = (ApiError) object;
         return Objects.equals(message, apiError.message) &&
                 Objects.equals(code, apiError.code);
     }
@@ -47,7 +47,7 @@ public class ApiError implements Serializable {
     public String toString() {
         return getClass().getSimpleName() + "{" +
                 "message='" + message + '\'' +
-                ", code='" + code + '\'' +
+                ", code=" + code +
                 '}';
     }
 

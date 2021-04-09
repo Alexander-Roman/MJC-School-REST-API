@@ -3,7 +3,7 @@ package com.epam.esm.service.logic;
 import com.epam.esm.persistence.dao.CertificateDao;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.persistence.exception.EntityNotFoundException;
+import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.service.exception.ServiceException;

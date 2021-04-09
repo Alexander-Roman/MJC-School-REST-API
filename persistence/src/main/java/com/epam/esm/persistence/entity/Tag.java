@@ -2,7 +2,7 @@ package com.epam.esm.persistence.entity;
 
 import java.util.Objects;
 
-public final class Tag implements Identifiable {
+public final class Tag {
 
     private final Long id;
     private final String name;
@@ -12,7 +12,6 @@ public final class Tag implements Identifiable {
         this.name = name;
     }
 
-    @Override
     public Long getId() {
         return id;
     }

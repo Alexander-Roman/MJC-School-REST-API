@@ -2,7 +2,6 @@ package com.epam.esm.web.validator;
 
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.model.TagDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -18,13 +17,7 @@ public class CertificateDtoCreateValidatorImpl implements CertificateDtoCreateVa
     private static final int MAX_DESCRIPTION_LENGTH = 255;
     private static final BigDecimal MAX_PRICE = new BigDecimal("99999.99");
     private static final int MIN_DURATION = 1;
-
-    private final TagDtoValidator tagDtoValidator;
-
-    @Autowired
-    public CertificateDtoCreateValidatorImpl(TagDtoValidator tagDtoValidator) {
-        this.tagDtoValidator = tagDtoValidator;
-    }
+    private static final int MAX_TAG_NAME_LENGTH = 50;
 
     @Override
     public void validate(@NonNull Object object, @NonNull Errors errors) {
@@ -92,8 +85,31 @@ public class CertificateDtoCreateValidatorImpl implements CertificateDtoCreateVa
         if (tags == null) {
             errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.create", "Certificate tags required for create operation!");
         } else {
-            for (TagDto tag : tags) {
-                tagDtoValidator.validate(tag, errors);
+            this.validate(tags, errors);
+        }
+    }
+
+    private void validate(Set<TagDto> tags, Errors errors) {
+        for (TagDto tagDto : tags) {
+            if (tagDto == null) {
+                errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.null", "Certificate tags should not contain NULL values!");
+            } else {
+                Long id = tagDto.getId();
+                if (id != null) {
+                    errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.id.specified", "Certificate tags should not contain tags with id!");
+                }
+
+                String name = tagDto.getName();
+                if (name == null) {
+                    errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.name.null", "Certificate tags should not contain tags without name!");
+                } else {
+                    if (name.length() > MAX_TAG_NAME_LENGTH) {
+                        errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.name.invalid", "Certificate tags should not contain tags with name greater than 50 characters!");
+                    }
+                    if (name.trim().isEmpty()) {
+                        errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.name.blank", "Certificate tags should not contain tags with blank name!");
+                    }
+                }
             }
         }
     }

@@ -2,7 +2,7 @@ package com.epam.esm.service.logic;
 
 import com.epam.esm.persistence.dao.TagDao;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.persistence.exception.EntityNotFoundException;
+import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.Validator;
 import com.google.common.base.Preconditions;

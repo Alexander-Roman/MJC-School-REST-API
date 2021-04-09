@@ -2,7 +2,7 @@ package com.epam.esm.persistence.entity;
 
 import java.util.Objects;
 
-public final class CertificateTag implements Identifiable {
+public final class CertificateTag {
 
     private final Long id;
     private final Long certificateId;
@@ -16,7 +16,6 @@ public final class CertificateTag implements Identifiable {
         this.tagId = tagId;
     }
 
-    @Override
     public Long getId() {
         return id;
     }

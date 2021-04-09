@@ -8,32 +8,34 @@ public final class BindApiError extends ApiError {
 
     private static final long serialVersionUID = 1L;
 
-    private final List<String> errors;
+    private final List<FieldApiError> errors;
 
-    public BindApiError(String message, String code, List<String> errors) {
+    public BindApiError(String message,
+                        Integer code,
+                        List<FieldApiError> errors) {
         super(message, code);
         this.errors = errors;
     }
 
-    public List<String> getErrors() {
+    public List<FieldApiError> getErrors() {
         return errors == null
                 ? null
                 : Collections.unmodifiableList(errors);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        if (!super.equals(o)) {
+        if (!super.equals(object)) {
             return false;
         }
-        BindApiError bindError = (BindApiError) o;
-        return Objects.equals(errors, bindError.errors);
+        BindApiError that = (BindApiError) object;
+        return Objects.equals(errors, that.errors);
     }
 
     @Override
@@ -46,8 +48,8 @@ public final class BindApiError extends ApiError {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "{" +
-                "message='" + getMessage() + '\'' +
-                ", code='" + getCode() + '\'' +
+                "message='" + this.getMessage() + '\'' +
+                ", code=" + this.getCode() +
                 ", errors=" + errors +
                 '}';
     }

@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
-public final class Certificate implements Identifiable {
+public final class Certificate {
 
     private final Long id;
     private final String name;
@@ -35,7 +35,6 @@ public final class Certificate implements Identifiable {
         this.tags = tags;
     }
 
-    @Override
     public Long getId() {
         return id;
     }

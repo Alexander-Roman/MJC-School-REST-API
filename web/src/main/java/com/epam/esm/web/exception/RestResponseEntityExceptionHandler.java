@@ -2,8 +2,10 @@ package com.epam.esm.web.exception;
 
 import com.epam.esm.web.exception.model.ApiError;
 import com.epam.esm.web.exception.model.BindApiError;
+import com.epam.esm.web.exception.model.FieldApiError;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -26,46 +29,48 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     private static final Logger LOGGER = LogManager.getLogger(RestResponseEntityExceptionHandler.class);
 
+    private static final Integer TYPE_MISMATCH_CODE = 40001;
+    private static final Integer BIND_EXCEPTION_CODE = 40002;
+    private static final Integer UNHANDLED_EXCEPTION_CODE = 50000;
 
-    @ExceptionHandler(ResponseStatusException.class)
-    protected ResponseEntity<Object> handleConflict(ResponseStatusException exception, WebRequest request) {
-        String message = exception.getReason();
-        LOGGER.error(message, exception);
+    @Override
+    @NonNull
+    protected ResponseEntity<Object> handleTypeMismatch(@NonNull TypeMismatchException exception,
+                                                        @NonNull HttpHeaders headers,
+                                                        @NonNull HttpStatus status,
+                                                        @NonNull WebRequest request) {
+        LOGGER.debug(exception.getMessage(), exception);
 
-        HttpStatus httpStatus = exception.getStatus();
-        int value = httpStatus.value();
-        String code = Integer.toString(value);
-
-        ApiError apiError = new ApiError(message, code);
-
-        return new ResponseEntity<>(apiError, new HttpHeaders(), httpStatus);
+        ApiError apiError = new ApiError(
+                exception.getMessage(),
+                TYPE_MISMATCH_CODE
+        );
+        return new ResponseEntity<>(apiError, headers, status);
     }
 
-    @NonNull
     @Override
+    @NonNull
     protected ResponseEntity<Object> handleBindException(@NonNull BindException exception,
                                                          @NonNull HttpHeaders headers,
                                                          @NonNull HttpStatus status,
                                                          @NonNull WebRequest request) {
+        LOGGER.debug(exception.getMessage(), exception);
+
         BindingResult bindingResult = exception.getBindingResult();
-        List<String> errors = new ArrayList<>();
+        List<FieldApiError> errors = new ArrayList<>();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         for (FieldError fieldError : fieldErrors) {
-            String field = fieldError.getField();
-            String message = fieldError.getDefaultMessage();
-            errors.add(field + ": " + message);
+            FieldApiError error = new FieldApiError(
+                    fieldError.getField(),
+                    fieldError.getRejectedValue(),
+                    fieldError.getDefaultMessage(),
+                    fieldError.getCode()
+            );
+            errors.add(error);
         }
-        List<ObjectError> objectErrors = bindingResult.getGlobalErrors();
-        for (ObjectError objectError : objectErrors) {
-            String name = objectError.getObjectName();
-            String message = objectError.getDefaultMessage();
-            errors.add(name + ": " + message);
-        }
-        String message = exception.getObjectName() + " is not valid!";
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        int value = httpStatus.value();
-        String code = Integer.toString(value);
-        BindApiError bindApiError = new BindApiError(message, code, errors);
+        String objectName = exception.getObjectName();
+        String message = "Object is not valid: " + objectName;
+        BindApiError bindApiError = new BindApiError(message, BIND_EXCEPTION_CODE, errors);
         return new ResponseEntity<>(bindApiError, headers, HttpStatus.BAD_REQUEST);
     }
 
@@ -76,22 +81,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                                                              @NonNull HttpHeaders headers,
                                                              @NonNull HttpStatus status,
                                                              @NonNull WebRequest request) {
-        String message = exception.getMessage();
-        LOGGER.error(message, exception);
-        return new ResponseEntity<>(message, headers, status);
+        LOGGER.error(exception.getMessage(), exception);
+
+        String message = "Something going wrong. We are already working on a solution!";
+        ApiError apiError = new ApiError(message, UNHANDLED_EXCEPTION_CODE);
+        return new ResponseEntity<>(apiError, headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<Object> handleConflict(Exception exception, WebRequest request) {
-        String message = exception.getMessage();
-        LOGGER.error(message, exception);
-
-        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        int value = httpStatus.value();
-        String code = Integer.toString(value);
-
-        ApiError apiError = new ApiError(message, code);
-
-        return new ResponseEntity<>(apiError, new HttpHeaders(), httpStatus);
-    }
 }
