@@ -57,6 +57,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public List<Certificate> findAll(SortRequest sortRequest, FilterRequest filterRequest) {
         Preconditions.checkNotNull(filterRequest, "Invalid FilterRequest parameter: " + filterRequest);
+        Preconditions.checkNotNull(sortRequest, "Invalid SortRequest parameter: " + sortRequest);
 
         if (!certificateSortRequestValidator.isValid(sortRequest)) {
             throw new ServiceException("Invalid SortRequest parameter: " + sortRequest);

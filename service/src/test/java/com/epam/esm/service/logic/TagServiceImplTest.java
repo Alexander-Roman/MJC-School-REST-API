@@ -100,6 +100,16 @@ public class TagServiceImplTest {
     }
 
     @Test
+    public void testCreateShouldThrowExceptionWhenTagIsNull() {
+        //given
+        //when
+        //then
+        Assertions.assertThrows(NullPointerException.class, () ->
+                tagService.create(null)
+        );
+    }
+
+    @Test
     public void testCreateShouldThrowExceptionWhenTagInvalid() {
         //given
         lenient().when(tagValidator.isValid(any())).thenReturn(false);

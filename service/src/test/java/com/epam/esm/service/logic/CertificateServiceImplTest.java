@@ -149,6 +149,16 @@ public class CertificateServiceImplTest {
     }
 
     @Test
+    public void testFindAllShouldThrowExceptionWhenSortRequestIsNull() {
+        //given
+        //when
+        //then
+        Assertions.assertThrows(NullPointerException.class, () ->
+                certificateService.findAll(null, FILTER_REQUEST)
+        );
+    }
+
+    @Test
     public void testFindAllShouldThrowExceptionWhenFilterRequestIsNull() {
         //given
         //when

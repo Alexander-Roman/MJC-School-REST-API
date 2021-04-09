@@ -48,6 +48,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag create(Tag tag) {
+        Preconditions.checkNotNull(tag, "Tag invalid: " + tag);
+
         if (!tagValidator.isValid(tag)) {
             throw new ServiceException("Tag invalid: " + tag);
         }
@@ -55,22 +57,6 @@ public class TagServiceImpl implements TagService {
             throw new ServiceException("Specifying id is now allowed for new tag! Tag invalid: " + tag);
         }
         return tagDao.create(tag);
-    }
-
-    @Override
-    @Transactional
-    public Tag deleteById(Long id) {
-        Preconditions.checkNotNull(id, "Invalid ID parameter: " + id);
-        Preconditions.checkArgument(id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
-
-        Tag target = tagDao
-                .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Tag does not exists! ID: " + id));
-
-        certificateTagService.deleteByTagId(id);
-        tagDao.delete(id);
-
-        return target;
     }
 
     @Override
@@ -97,6 +83,22 @@ public class TagServiceImpl implements TagService {
             }
         }
         return results;
+    }
+
+    @Override
+    @Transactional
+    public Tag deleteById(Long id) {
+        Preconditions.checkNotNull(id, "Invalid ID parameter: " + id);
+        Preconditions.checkArgument(id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
+
+        Tag target = tagDao
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Tag does not exists! ID: " + id));
+
+        certificateTagService.deleteByTagId(id);
+        tagDao.delete(id);
+
+        return target;
     }
 
     @Override
