@@ -3,9 +3,9 @@ package com.epam.esm.service;
 import com.epam.esm.persistence.dao.CertificateTagDao;
 import com.epam.esm.persistence.entity.CertificateTag;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.Validator;
 import com.google.common.base.Preconditions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,16 +18,13 @@ public class CertificateTagServiceImpl implements CertificateTagService {
 
     private static final String ERROR_MESSAGE_ID_INVALID = "Invalid ID parameter: ";
     private static final String ERROR_MESSAGE_TAGS_INVALID = "Invalid tags parameter: ";
-    private static final String ERROR_MESSAGE_CERTIFICATE_TAG_INVALID = "CertificateTag invalid: ";
     private static final long MIN_ID_VALUE = 1L;
 
     private final CertificateTagDao certificateTagDao;
-    private final Validator<CertificateTag> certificateTagValidator;
 
-    public CertificateTagServiceImpl(CertificateTagDao certificateTagDao,
-                                     Validator<CertificateTag> certificateTagValidator) {
+    @Autowired
+    public CertificateTagServiceImpl(CertificateTagDao certificateTagDao) {
         this.certificateTagDao = certificateTagDao;
-        this.certificateTagValidator = certificateTagValidator;
     }
 
     @Override
@@ -42,11 +39,6 @@ public class CertificateTagServiceImpl implements CertificateTagService {
         }
 
         List<CertificateTag> certificateTags = this.createCertificateTags(certificateId, tags);
-        for (CertificateTag certificateTag : certificateTags) {
-            if (!certificateTagValidator.isValid(certificateTag)) {
-                throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_TAG_INVALID + certificateTag);
-            }
-        }
         certificateTagDao.create(certificateTags);
     }
 
@@ -58,11 +50,6 @@ public class CertificateTagServiceImpl implements CertificateTagService {
         Preconditions.checkArgument(certificateId >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + certificateId);
 
         List<CertificateTag> newCertificateTags = this.createCertificateTags(certificateId, tags);
-        for (CertificateTag certificateTag : newCertificateTags) {
-            if (!certificateTagValidator.isValid(certificateTag)) {
-                throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_TAG_INVALID + certificateTag);
-            }
-        }
 
         List<CertificateTag> oldCertificateTags = certificateTagDao.findByCertificateId(certificateId);
         List<Long> oldTagIds = oldCertificateTags

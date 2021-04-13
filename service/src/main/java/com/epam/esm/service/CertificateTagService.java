@@ -1,7 +1,6 @@
 package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.service.exception.ServiceException;
 
 import java.util.Set;
 
@@ -19,7 +18,6 @@ public interface CertificateTagService {
      * @param tags          tag set of target certificate to create CertificateTags
      * @throws NullPointerException     when one of parameters is null
      * @throws IllegalArgumentException when certificateId is not valid
-     * @throws ServiceException         when one of resulting CertificateTags invalid
      */
     void addTags(Long certificateId, Set<Tag> tags);
 
@@ -32,7 +30,6 @@ public interface CertificateTagService {
      * @param tags          expected tag set of target certificate
      * @throws NullPointerException     when one of parameters is null
      * @throws IllegalArgumentException when certificateId is not valid
-     * @throws ServiceException         when one of created CertificateTags invalid
      */
     void updateTags(Long certificateId, Set<Tag> tags);
 

@@ -3,8 +3,6 @@ package com.epam.esm.service;
 import com.epam.esm.persistence.dao.CertificateTagDao;
 import com.epam.esm.persistence.entity.CertificateTag;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.validator.Validator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,12 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyCollection;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.lenient;
@@ -32,7 +28,6 @@ public class CertificateTagServiceImplTest {
     private static final Long ID_INVALID = -1L;
 
     private static final Tag TAG_WITH_ID = new Tag(1L, "tagName");
-    private static final Tag TAG_WITHOUT_ID = new Tag(null, "tagName");
     private static final Set<Tag> TAG_SET_WITH_ID = new HashSet<>(Collections.singletonList(TAG_WITH_ID));
 
     private static final CertificateTag CERTIFICATE_TAG_WITHOUT_ID = new CertificateTag(null, 1L, 1L);
@@ -40,15 +35,12 @@ public class CertificateTagServiceImplTest {
 
     @Mock
     private CertificateTagDao certificateTagDao;
-    @Mock
-    private Validator<CertificateTag> certificateTagValidator;
     @InjectMocks
     private CertificateTagServiceImpl certificateTagService;
 
     @BeforeEach
     public void setUp() {
         //Positive scenario
-        lenient().when(certificateTagValidator.isValid(any())).thenReturn(true);
         lenient().when(certificateTagDao.findByCertificateId(anyLong())).thenReturn(Collections.singletonList(CERTIFICATE_TAG_WITH_ID));
     }
 
@@ -92,19 +84,6 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testAddTagSetShouldThrowExceptionWhenOneOfCreatedCertificateTagsInvalid() {
-        //given
-        Set<Tag> tags = new HashSet<>(Arrays.asList(TAG_WITH_ID, TAG_WITHOUT_ID));
-        CertificateTag invalid = new CertificateTag(null, ID_VALID, null);
-        lenient().when(certificateTagValidator.isValid(invalid)).thenReturn(false);
-        //when
-        //then
-        Assertions.assertThrows(ServiceException.class, () ->
-                certificateTagService.addTags(ID_VALID, tags)
-        );
-    }
-
-    @Test
     public void testAddTagSetShouldCreateCertificateTags() {
         //given
         //when
@@ -140,19 +119,6 @@ public class CertificateTagServiceImplTest {
         //then
         Assertions.assertThrows(NullPointerException.class, () ->
                 certificateTagService.updateTags(null, Collections.emptySet())
-        );
-    }
-
-    @Test
-    public void testUpdateTagSetShouldThrowExceptionWhenOneOfCreatedCertificateTagsInvalid() {
-        //given
-        Set<Tag> tags = new HashSet<>(Arrays.asList(TAG_WITH_ID, TAG_WITHOUT_ID));
-        CertificateTag invalid = new CertificateTag(null, ID_VALID, null);
-        lenient().when(certificateTagValidator.isValid(invalid)).thenReturn(false);
-        //when
-        //then
-        Assertions.assertThrows(ServiceException.class, () ->
-                certificateTagService.updateTags(ID_VALID, tags)
         );
     }
 
