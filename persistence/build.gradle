@@ -2,13 +2,45 @@ plugins {
     id 'com.epam.esm.java-library-conventions'
 }
 
+sourceSets {
+    integration {
+        java {
+            srcDir file('src/integration/java')
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+        resources.srcDir file('src/integration/resources')
+    }
+}
+
+configurations {
+    integrationImplementation.extendsFrom implementation
+    integrationCompile.extendsFrom testCompile
+    integrationRuntime.extendsFrom testRuntime
+}
+
 dependencies {
 
     implementation group: 'org.springframework', name: 'spring-jdbc', version: "${springVersion}"
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
 
-    testImplementation group: 'org.springframework', name: 'spring-test', version: "${springVersion}"
-    testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+    implementation group: 'org.springframework', name: 'spring-test', version: "${springVersion}"
+    implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 
+    integrationCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${jupiterVersion}"
+    integrationCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${jupiterVersion}"
+
+    integrationRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${jupiterVersion}"
+}
+
+
+task integration(type: Test) {
+    description = 'Runs the integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath = sourceSets.integration.runtimeClasspath
+
+    useJUnitPlatform()
 }

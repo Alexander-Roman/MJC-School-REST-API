@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestPersistenceConfig.class})
-@ActiveProfiles("test")
+@ActiveProfiles("integrationTest")
 @Transactional
 public class CertificateDaoImplTest {
 
