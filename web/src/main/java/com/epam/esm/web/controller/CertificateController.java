@@ -3,7 +3,7 @@ package com.epam.esm.web.controller;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
-import com.epam.esm.service.logic.CertificateService;
+import com.epam.esm.service.CertificateService;
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.model.FilterRequestDto;
 import com.epam.esm.web.model.SortRequestDto;
@@ -16,7 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,9 +59,9 @@ public class CertificateController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getCertificateList(SortRequestDto sortRequestDto,
-                                                BindingResult bindingResult,
-                                                FilterRequestDto filterRequestDto) throws BindException {
+    public ResponseEntity<List<CertificateDto>> getCertificateList(SortRequestDto sortRequestDto,
+                                                                   BindingResult bindingResult,
+                                                                   FilterRequestDto filterRequestDto) throws BindException {
         certificateSortRequestDtoValidator.validate(sortRequestDto, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);

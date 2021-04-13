@@ -11,14 +11,14 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
 public class CertificateTagDaoImpl implements CertificateTagDao {
-
-    public static final String SQL_DELETE_BY_ID = "\n" +
-            "DELETE FROM certificate_tag WHERE id = :id \n";
 
     private static final String SQL_FIND_BY_CERTIFICATE_ID = "\n" +
             "SELECT certificate_tag.id, \n" +
@@ -30,6 +30,10 @@ public class CertificateTagDaoImpl implements CertificateTagDao {
     private static final String SQL_INSERT = "\n" +
             "INSERT INTO certificate_tag (certificate_id, tag_id) \n" +
             "VALUES (:certificateId, :tagId) \n";
+
+    private static final String SQL_DELETE_BY_ID = "\n" +
+            "DELETE FROM certificate_tag \n" +
+            "WHERE id = :id \n";
 
     private static final String SQL_DELETE_BY_CERTIFICATE_ID_QUERY = "\n" +
             "DELETE FROM certificate_tag \n" +

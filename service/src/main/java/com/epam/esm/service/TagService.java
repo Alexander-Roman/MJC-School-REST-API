@@ -1,4 +1,4 @@
-package com.epam.esm.service.logic;
+package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.service.exception.EntityNotFoundException;
@@ -35,8 +35,7 @@ public interface TagService {
      *
      * @param tag to create
      * @return Tag created in effect
-     * @throws NullPointerException when tag parameter is null
-     * @throws ServiceException     when tag id specified, or tag invalid
+     * @throws ServiceException when tag invalid
      */
     Tag create(Tag tag);
 

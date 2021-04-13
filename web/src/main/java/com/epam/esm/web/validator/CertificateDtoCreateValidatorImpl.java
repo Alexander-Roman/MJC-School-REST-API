@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Component
@@ -22,11 +21,6 @@ public class CertificateDtoCreateValidatorImpl implements CertificateDtoCreateVa
     @Override
     public void validate(@NonNull Object object, @NonNull Errors errors) {
         CertificateDto certificateDto = (CertificateDto) object;
-
-        Long id = certificateDto.getId();
-        if (id != null) {
-            errors.rejectValue(CertificateDto.Field.ID, "certificate.dto.id.create", "Specifying certificate id is not allowed for create operations!");
-        }
 
         String name = certificateDto.getName();
         if (name == null) {
@@ -69,16 +63,6 @@ public class CertificateDtoCreateValidatorImpl implements CertificateDtoCreateVa
             errors.rejectValue(CertificateDto.Field.DURATION, "certificate.dto.duration.create", "Certificate duration required for create operation!");
         } else if (duration < MIN_DURATION) {
             errors.rejectValue(CertificateDto.Field.DURATION, "certificate.dto.duration.invalid", "Duration can not be less than 1 day!");
-        }
-
-        LocalDateTime createDate = certificateDto.getCreateDate();
-        if (createDate != null) {
-            errors.rejectValue(CertificateDto.Field.CREATE_DATE, "certificate.dto.create.date.specified", "Specifying creation date is not allowed!");
-        }
-
-        LocalDateTime lastUpdateDate = certificateDto.getLastUpdateDate();
-        if (lastUpdateDate != null) {
-            errors.rejectValue(CertificateDto.Field.LAST_UPDATE_DATE, "certificate.dto.last.update.date.specified", "Specifying last update date is not allowed!");
         }
 
         Set<TagDto> tags = certificateDto.getTags();

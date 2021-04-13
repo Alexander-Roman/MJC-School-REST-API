@@ -14,11 +14,6 @@ public class TagDtoValidatorImpl implements TagDtoValidator {
     public void validate(@NonNull Object object, @NonNull Errors errors) {
         TagDto tagDto = (TagDto) object;
 
-        Long id = tagDto.getId();
-        if (id != null) {
-            errors.rejectValue(TagDto.Field.ID, "tag.dto.id.specified", "Specifying tag id is not allowed for all operations!");
-        }
-
         String name = tagDto.getName();
         if (name == null) {
             errors.rejectValue(TagDto.Field.NAME, "tag.dto.name.null", "Tag name required!");

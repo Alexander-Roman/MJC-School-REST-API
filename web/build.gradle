@@ -2,25 +2,20 @@ plugins {
     id 'com.epam.esm.java-webapp-conventions'
 }
 
+ext {
+    jacksonVersion = '2.12.2'
+}
+
 dependencies {
     implementation project(':service')
     implementation project(':persistence')
     implementation project(':logging')
 
-    //  Spring Web MVC
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.4'
-
-    // Java Servlet API
-    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-
-    // General data-binding functionality for Jackson: works on core streaming API
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.2'
-
-    // Add-on module to support JSR-310 (Java 8 Date & Time API) data types.
-    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.2'
-
-    // ModelMapper
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: "${springVersion}"
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonVersion}"
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: "${jacksonVersion}"
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
 
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
 }

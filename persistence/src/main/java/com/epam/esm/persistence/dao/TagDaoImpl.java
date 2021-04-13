@@ -9,25 +9,27 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class TagDaoImpl implements TagDao {
 
-    public static final String SQL_FIND_BY_NAME = "\n" +
-            "SELECT tag.id   AS tag_id, \n" +
-            "       tag.name AS tag_name \n" +
-            "FROM tag \n" +
-            "WHERE tag.name = :tagName \n";
-    private static final String SQL_FIND_BY_ID = "\n" +
-            "SELECT tag.id   AS tag_id, \n" +
-            "       tag.name AS tag_name \n" +
-            "FROM tag \n" +
-            "WHERE tag.id = :tagId \n";
     private static final String SQL_FIND_ALL = "\n" +
             "SELECT tag.id   AS tag_id, \n" +
             "       tag.name AS tag_name \n" +
             "FROM tag \n";
+
+    private static final String SQL_FIND_BY_NAME = "\n" +
+            SQL_FIND_ALL +
+            "WHERE tag.name = :tagName \n";
+
+    private static final String SQL_FIND_BY_ID = "\n" +
+            SQL_FIND_ALL +
+            "WHERE tag.id = :tagId \n";
 
     private static final String SQL_INSERT = "\n" +
             "INSERT INTO tag (name) VALUES (:name) \n";

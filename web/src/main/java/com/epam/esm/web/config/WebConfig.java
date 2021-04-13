@@ -1,6 +1,11 @@
 package com.epam.esm.web.config;
 
-import com.epam.esm.web.converter.*;
+import com.epam.esm.web.converter.CertificateDtoToEntityConverter;
+import com.epam.esm.web.converter.CertificateEntityToDtoConverter;
+import com.epam.esm.web.converter.FilterRequestDtoToModelConverter;
+import com.epam.esm.web.converter.SortRequestDtoToModelConverter;
+import com.epam.esm.web.converter.TagDtoToEntityConverter;
+import com.epam.esm.web.converter.TagEntityToDtoConverter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

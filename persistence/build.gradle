@@ -4,19 +4,11 @@ plugins {
 
 dependencies {
 
-    // Spring JDBC
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.4'
-
-    // Postgres JDBC Driver
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: "${springVersion}"
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
-
-    // HikariCP JDBC Connection Pool
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
 
-    //  Spring TestContext Framework
-    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.5'
-
-    // H2 Database Engine
+    testImplementation group: 'org.springframework', name: 'spring-test', version: "${springVersion}"
     testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 
 }

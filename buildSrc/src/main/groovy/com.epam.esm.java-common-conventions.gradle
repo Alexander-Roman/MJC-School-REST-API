@@ -2,33 +2,26 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
-
 repositories {
     mavenCentral()
 }
 
+ext {
+    springVersion = '5.3.4'
+    jupiterVersion = '5.7.1'
+}
+
 dependencies {
 
-    // The Apache Log4j SLF4J API binding to Log4j 2 Core
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.14.1'
+    implementation group: 'org.springframework', name: 'spring-context', version: "${springVersion}"
+    implementation group: 'org.springframework', name: 'spring-beans', version: "${springVersion}"
+    implementation group: 'org.springframework', name: 'spring-tx', version: "${springVersion}"
 
-    // Spring Context
-    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.4'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${jupiterVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${jupiterVersion}"
 
-    // Spring Beans
-    implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.4'
-
-    // Spring Transaction
-    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.4'
-
-    // Use JUnit Jupiter API for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.1'
-
-    // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${jupiterVersion}"
 
 }
 

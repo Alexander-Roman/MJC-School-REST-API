@@ -1,4 +1,4 @@
-package com.epam.esm.service.logic;
+package com.epam.esm.service;
 
 import com.epam.esm.persistence.dao.TagDao;
 import com.epam.esm.persistence.entity.Tag;
@@ -13,10 +13,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class TagServiceImplTest {
@@ -100,16 +109,6 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldThrowExceptionWhenTagIsNull() {
-        //given
-        //when
-        //then
-        Assertions.assertThrows(NullPointerException.class, () ->
-                tagService.create(null)
-        );
-    }
-
-    @Test
     public void testCreateShouldThrowExceptionWhenTagInvalid() {
         //given
         lenient().when(tagValidator.isValid(any())).thenReturn(false);
@@ -121,22 +120,12 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldThrowExceptionWhenTagIdSpecified() {
-        //given
-        //when
-        //then
-        Assertions.assertThrows(ServiceException.class, () ->
-                tagService.create(TAG_WITH_ID)
-        );
-    }
-
-    @Test
     public void testCreateShouldCreateTag() {
         //given
         //when
         tagService.create(TAG_WITHOUT_ID);
         //then
-        verify(tagDao, times(1)).create(TAG_WITHOUT_ID);
+        verify(tagDao).create(TAG_WITHOUT_ID);
     }
 
     @Test
@@ -185,7 +174,7 @@ public class TagServiceImplTest {
         //when
         tagService.deleteById(ID_VALID);
         //then
-        verify(certificateTagService, times(1)).deleteByTagId(ID_VALID);
+        verify(certificateTagService).deleteByTagId(ID_VALID);
     }
 
     @Test
@@ -194,7 +183,7 @@ public class TagServiceImplTest {
         //when
         tagService.deleteById(ID_VALID);
         //then
-        verify(tagDao, times(1)).delete(ID_VALID);
+        verify(tagDao).delete(ID_VALID);
     }
 
     @Test
@@ -266,7 +255,7 @@ public class TagServiceImplTest {
         //when
         tagService.createIfNotExist(TAG_SET_WITHOUT_ID);
         //then
-        verify(tagDao, times(1)).create(TAG_WITHOUT_ID);
+        verify(tagDao).create(TAG_WITHOUT_ID);
     }
 
     @Test
@@ -285,7 +274,7 @@ public class TagServiceImplTest {
         //when
         tagService.deleteUnused();
         //then
-        verify(tagDao, times(1)).deleteUnused();
+        verify(tagDao).deleteUnused();
     }
 
 }

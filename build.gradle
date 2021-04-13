@@ -4,7 +4,7 @@ version '1.0.0'
 subprojects {
 
     plugins.withType(JavaPlugin) {
-        project.sourceCompatibility='1.8'
+        project.sourceCompatibility = JavaVersion.VERSION_1_8
     }
 
     tasks.withType(JavaCompile) {

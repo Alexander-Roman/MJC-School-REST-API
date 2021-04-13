@@ -1,4 +1,4 @@
-package com.epam.esm.service.logic;
+package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.service.exception.ServiceException;
@@ -21,7 +21,7 @@ public interface CertificateTagService {
      * @throws IllegalArgumentException when certificateId is not valid
      * @throws ServiceException         when one of resulting CertificateTags invalid
      */
-    void addTagSet(Long certificateId, Set<Tag> tags);
+    void addTags(Long certificateId, Set<Tag> tags);
 
     /**
      * Manages CertificateTags to match a given tag set for target certificate
@@ -34,7 +34,7 @@ public interface CertificateTagService {
      * @throws IllegalArgumentException when certificateId is not valid
      * @throws ServiceException         when one of created CertificateTags invalid
      */
-    void updateTagSet(Long certificateId, Set<Tag> tags);
+    void updateTags(Long certificateId, Set<Tag> tags);
 
     /**
      * Deletes all CertificateTags matching specified certificate id

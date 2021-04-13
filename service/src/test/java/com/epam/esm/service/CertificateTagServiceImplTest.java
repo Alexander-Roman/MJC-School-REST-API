@@ -1,4 +1,4 @@
-package com.epam.esm.service.logic;
+package com.epam.esm.service;
 
 import com.epam.esm.persistence.dao.CertificateTagDao;
 import com.epam.esm.persistence.entity.CertificateTag;
@@ -19,7 +19,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyCollection;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class CertificateTagServiceImplTest {
@@ -54,7 +58,7 @@ public class CertificateTagServiceImplTest {
         //when
         //then
         Assertions.assertThrows(NullPointerException.class, () ->
-                certificateTagService.addTagSet(ID_VALID, null)
+                certificateTagService.addTags(ID_VALID, null)
         );
     }
 
@@ -64,7 +68,7 @@ public class CertificateTagServiceImplTest {
         //when
         //then
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                certificateTagService.addTagSet(ID_INVALID, Collections.emptySet())
+                certificateTagService.addTags(ID_INVALID, Collections.emptySet())
         );
     }
 
@@ -74,7 +78,7 @@ public class CertificateTagServiceImplTest {
         //when
         //then
         Assertions.assertThrows(NullPointerException.class, () ->
-                certificateTagService.addTagSet(null, Collections.emptySet())
+                certificateTagService.addTags(null, Collections.emptySet())
         );
     }
 
@@ -82,7 +86,7 @@ public class CertificateTagServiceImplTest {
     public void testAddTagSetShouldDoNothingWhenTagSetIsEmpty() {
         //given
         //when
-        certificateTagService.addTagSet(ID_VALID, Collections.emptySet());
+        certificateTagService.addTags(ID_VALID, Collections.emptySet());
         //then
         verify(certificateTagDao, never()).create(anyCollection());
     }
@@ -96,7 +100,7 @@ public class CertificateTagServiceImplTest {
         //when
         //then
         Assertions.assertThrows(ServiceException.class, () ->
-                certificateTagService.addTagSet(ID_VALID, tags)
+                certificateTagService.addTags(ID_VALID, tags)
         );
     }
 
@@ -104,9 +108,9 @@ public class CertificateTagServiceImplTest {
     public void testAddTagSetShouldCreateCertificateTags() {
         //given
         //when
-        certificateTagService.addTagSet(ID_VALID, TAG_SET_WITH_ID);
+        certificateTagService.addTags(ID_VALID, TAG_SET_WITH_ID);
         //then
-        verify(certificateTagDao, times(1)).create(Collections.singletonList(CERTIFICATE_TAG_WITHOUT_ID));
+        verify(certificateTagDao).create(Collections.singletonList(CERTIFICATE_TAG_WITHOUT_ID));
     }
 
     @Test
@@ -115,7 +119,7 @@ public class CertificateTagServiceImplTest {
         //when
         //then
         Assertions.assertThrows(NullPointerException.class, () ->
-                certificateTagService.updateTagSet(ID_VALID, null)
+                certificateTagService.updateTags(ID_VALID, null)
         );
     }
 
@@ -125,7 +129,7 @@ public class CertificateTagServiceImplTest {
         //when
         //then
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                certificateTagService.updateTagSet(ID_INVALID, Collections.emptySet())
+                certificateTagService.updateTags(ID_INVALID, Collections.emptySet())
         );
     }
 
@@ -135,7 +139,7 @@ public class CertificateTagServiceImplTest {
         //when
         //then
         Assertions.assertThrows(NullPointerException.class, () ->
-                certificateTagService.updateTagSet(null, Collections.emptySet())
+                certificateTagService.updateTags(null, Collections.emptySet())
         );
     }
 
@@ -148,7 +152,7 @@ public class CertificateTagServiceImplTest {
         //when
         //then
         Assertions.assertThrows(ServiceException.class, () ->
-                certificateTagService.updateTagSet(ID_VALID, tags)
+                certificateTagService.updateTags(ID_VALID, tags)
         );
     }
 
@@ -157,25 +161,25 @@ public class CertificateTagServiceImplTest {
         //given
         lenient().when(certificateTagDao.findByCertificateId(anyLong())).thenReturn(Collections.emptyList());
         //when
-        certificateTagService.updateTagSet(ID_VALID, TAG_SET_WITH_ID);
+        certificateTagService.updateTags(ID_VALID, TAG_SET_WITH_ID);
         //then
-        verify(certificateTagDao, times(1)).create(Collections.singletonList(CERTIFICATE_TAG_WITHOUT_ID));
+        verify(certificateTagDao).create(Collections.singletonList(CERTIFICATE_TAG_WITHOUT_ID));
     }
 
     @Test
     public void testUpdateTagSetShouldDeleteCertificateTagWhenTagRemoved() {
         //given
         //when
-        certificateTagService.updateTagSet(ID_VALID, Collections.emptySet());
+        certificateTagService.updateTags(ID_VALID, Collections.emptySet());
         //then
-        verify(certificateTagDao, times(1)).delete(Collections.singletonList(ID_VALID));
+        verify(certificateTagDao).delete(Collections.singletonList(ID_VALID));
     }
 
     @Test
     public void testUpdateTagSetShouldDoNothingWhenNothingToChange() {
         //given
         //when
-        certificateTagService.updateTagSet(ID_VALID, TAG_SET_WITH_ID);
+        certificateTagService.updateTags(ID_VALID, TAG_SET_WITH_ID);
         //then
         verify(certificateTagDao, never()).create(anyCollection());
         verify(certificateTagDao, never()).delete(anyCollection());
@@ -207,7 +211,7 @@ public class CertificateTagServiceImplTest {
         //when
         certificateTagService.deleteByCertificateId(ID_VALID);
         //then
-        verify(certificateTagDao, times(1)).deleteByCertificateId(ID_VALID);
+        verify(certificateTagDao).deleteByCertificateId(ID_VALID);
     }
 
     @Test
@@ -236,7 +240,7 @@ public class CertificateTagServiceImplTest {
         //when
         certificateTagService.deleteByTagId(ID_VALID);
         //then
-        verify(certificateTagDao, times(1)).deleteByTagId(ID_VALID);
+        verify(certificateTagDao).deleteByTagId(ID_VALID);
     }
 
 }

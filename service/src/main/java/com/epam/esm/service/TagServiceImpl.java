@@ -1,4 +1,4 @@
-package com.epam.esm.service.logic;
+package com.epam.esm.service;
 
 import com.epam.esm.persistence.dao.TagDao;
 import com.epam.esm.persistence.entity.Tag;
@@ -18,7 +18,10 @@ import java.util.Set;
 @Service
 public class TagServiceImpl implements TagService {
 
-    public static final long MIN_ID_VALUE = 1L;
+    private static final String ERROR_MESSAGE_ID_INVALID = "Invalid ID parameter: ";
+    private static final String ERROR_MESSAGE_TAG_NOT_FOUND = "Tag does not exists! ID: ";
+    private static final String ERROR_MESSAGE_TAG_INVALID = "Tag invalid: ";
+    private static final long MIN_ID_VALUE = 1L;
 
     private final TagDao tagDao;
     private final CertificateTagService certificateTagService;
@@ -33,12 +36,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag findById(Long id) {
-        Preconditions.checkNotNull(id, "Invalid ID parameter: " + id);
-        Preconditions.checkArgument(id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
+        Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
+        Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
 
         return tagDao
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Tag does not exists! ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_TAG_NOT_FOUND + id));
     }
 
     @Override
@@ -48,13 +51,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag create(Tag tag) {
-        Preconditions.checkNotNull(tag, "Tag invalid: " + tag);
-
         if (!tagValidator.isValid(tag)) {
-            throw new ServiceException("Tag invalid: " + tag);
-        }
-        if (tag.getId() != null) {
-            throw new ServiceException("Specifying id is now allowed for new tag! Tag invalid: " + tag);
+            throw new ServiceException(ERROR_MESSAGE_TAG_INVALID + tag);
         }
         return tagDao.create(tag);
     }
@@ -66,7 +64,7 @@ public class TagServiceImpl implements TagService {
 
         for (Tag tag : tags) {
             if (!tagValidator.isValid(tag)) {
-                throw new ServiceException("Tag invalid: " + tag);
+                throw new ServiceException(ERROR_MESSAGE_TAG_INVALID + tag);
             }
         }
 
@@ -88,12 +86,12 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public Tag deleteById(Long id) {
-        Preconditions.checkNotNull(id, "Invalid ID parameter: " + id);
-        Preconditions.checkArgument(id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
+        Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
+        Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
 
         Tag target = tagDao
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Tag does not exists! ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_TAG_NOT_FOUND + id));
 
         certificateTagService.deleteByTagId(id);
         tagDao.delete(id);

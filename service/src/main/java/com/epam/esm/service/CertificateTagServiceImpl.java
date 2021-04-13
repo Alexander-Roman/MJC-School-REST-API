@@ -1,4 +1,4 @@
-package com.epam.esm.service.logic;
+package com.epam.esm.service;
 
 import com.epam.esm.persistence.dao.CertificateTagDao;
 import com.epam.esm.persistence.entity.CertificateTag;
@@ -16,7 +16,10 @@ import java.util.stream.Collectors;
 @Service
 public class CertificateTagServiceImpl implements CertificateTagService {
 
-    public static final long MIN_ID_VALUE = 1L;
+    private static final String ERROR_MESSAGE_ID_INVALID = "Invalid ID parameter: ";
+    private static final String ERROR_MESSAGE_TAGS_INVALID = "Invalid tags parameter: ";
+    private static final String ERROR_MESSAGE_CERTIFICATE_TAG_INVALID = "CertificateTag invalid: ";
+    private static final long MIN_ID_VALUE = 1L;
 
     private final CertificateTagDao certificateTagDao;
     private final Validator<CertificateTag> certificateTagValidator;
@@ -29,23 +32,19 @@ public class CertificateTagServiceImpl implements CertificateTagService {
 
     @Override
     @Transactional
-    public void addTagSet(Long certificateId, Set<Tag> tags) {
-        Preconditions.checkNotNull(tags, "Invalid tags parameter: " + tags);
-        Preconditions.checkNotNull(certificateId, "Invalid ID parameter: " + certificateId);
-        Preconditions.checkArgument(certificateId >= MIN_ID_VALUE, "Invalid ID parameter: " + certificateId);
+    public void addTags(Long certificateId, Set<Tag> tags) {
+        Preconditions.checkNotNull(tags, ERROR_MESSAGE_TAGS_INVALID + tags);
+        Preconditions.checkNotNull(certificateId, ERROR_MESSAGE_ID_INVALID + certificateId);
+        Preconditions.checkArgument(certificateId >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + certificateId);
 
         if (tags.isEmpty()) {
             return;
         }
 
-        List<CertificateTag> certificateTags = tags
-                .stream()
-                .map(tag -> new CertificateTag(null, certificateId, tag.getId()))
-                .collect(Collectors.toList());
-
+        List<CertificateTag> certificateTags = this.createCertificateTags(certificateId, tags);
         for (CertificateTag certificateTag : certificateTags) {
             if (!certificateTagValidator.isValid(certificateTag)) {
-                throw new ServiceException("CertificateTag invalid: " + certificateTag);
+                throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_TAG_INVALID + certificateTag);
             }
         }
         certificateTagDao.create(certificateTags);
@@ -53,18 +52,15 @@ public class CertificateTagServiceImpl implements CertificateTagService {
 
     @Override
     @Transactional
-    public void updateTagSet(Long certificateId, Set<Tag> tags) {
-        Preconditions.checkNotNull(tags, "Invalid tags parameter: " + tags);
-        Preconditions.checkNotNull(certificateId, "Invalid ID parameter: " + certificateId);
-        Preconditions.checkArgument(certificateId >= MIN_ID_VALUE, "Invalid ID parameter: " + certificateId);
+    public void updateTags(Long certificateId, Set<Tag> tags) {
+        Preconditions.checkNotNull(tags, ERROR_MESSAGE_TAGS_INVALID + tags);
+        Preconditions.checkNotNull(certificateId, ERROR_MESSAGE_ID_INVALID + certificateId);
+        Preconditions.checkArgument(certificateId >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + certificateId);
 
-        List<CertificateTag> newCertificateTags = tags
-                .stream()
-                .map(tag -> new CertificateTag(null, certificateId, tag.getId()))
-                .collect(Collectors.toList());
+        List<CertificateTag> newCertificateTags = this.createCertificateTags(certificateId, tags);
         for (CertificateTag certificateTag : newCertificateTags) {
             if (!certificateTagValidator.isValid(certificateTag)) {
-                throw new ServiceException("CertificateTag invalid: " + certificateTag);
+                throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_TAG_INVALID + certificateTag);
             }
         }
 
@@ -98,18 +94,25 @@ public class CertificateTagServiceImpl implements CertificateTagService {
 
     @Override
     public void deleteByCertificateId(Long id) {
-        Preconditions.checkNotNull(id, "Invalid ID parameter: " + id);
-        Preconditions.checkArgument(id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
+        Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
+        Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
 
         certificateTagDao.deleteByCertificateId(id);
     }
 
     @Override
     public void deleteByTagId(Long id) {
-        Preconditions.checkNotNull(id, "Invalid ID parameter: " + id);
-        Preconditions.checkArgument(id >= MIN_ID_VALUE, "Invalid ID parameter: " + id);
+        Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
+        Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
 
         certificateTagDao.deleteByTagId(id);
+    }
+
+    private List<CertificateTag> createCertificateTags(Long certificateId, Set<Tag> tags) {
+        return tags
+                .stream()
+                .map(tag -> new CertificateTag(null, certificateId, tag.getId()))
+                .collect(Collectors.toList());
     }
 
 }

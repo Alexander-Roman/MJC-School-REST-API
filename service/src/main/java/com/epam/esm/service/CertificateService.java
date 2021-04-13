@@ -1,4 +1,4 @@
-package com.epam.esm.service.logic;
+package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.model.FilterRequest;
@@ -42,7 +42,7 @@ public interface CertificateService {
      * @param certificate to create
      * @return Certificate created in effect
      * @throws NullPointerException when certificate parameter is null
-     * @throws ServiceException     when certificate id specified, or certificate invalid
+     * @throws ServiceException     when certificate invalid
      */
     Certificate create(Certificate certificate);
 

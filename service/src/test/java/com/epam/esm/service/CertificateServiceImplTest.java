@@ -1,12 +1,12 @@
-package com.epam.esm.service.logic;
+package com.epam.esm.service;
 
 import com.epam.esm.persistence.dao.CertificateDao;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.Sort;
 import com.epam.esm.persistence.model.SortRequest;
+import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.CertificateSortRequestValidator;
 import com.epam.esm.service.validator.CertificateValidator;
@@ -17,11 +17,22 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.anySet;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 public class CertificateServiceImplTest {
 
@@ -200,16 +211,6 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldThrowExceptionWhenCertificateIdSpecified() {
-        //given
-        //when
-        //then
-        Assertions.assertThrows(ServiceException.class, () ->
-                certificateService.create(CERTIFICATE_WITH_ID)
-        );
-    }
-
-    @Test
     public void testCreateShouldSetActualCreateDate() {
         //given
         lenient().when(certificateDao.create(any())).then(returnsFirstArg());
@@ -248,7 +249,7 @@ public class CertificateServiceImplTest {
         //when
         certificateService.create(CERTIFICATE_WITHOUT_ID);
         //then
-        verify(certificateDao, times(1)).create(any());
+        verify(certificateDao).create(any());
     }
 
     @Test
@@ -267,8 +268,8 @@ public class CertificateServiceImplTest {
         //when
         certificateService.create(CERTIFICATE_NETHER_ID_NO_TAGS);
         //then
-        verify(certificateTagService, never()).addTagSet(anyLong(), anySet());
-        verify(certificateTagService, never()).updateTagSet(anyLong(), anySet());
+        verify(certificateTagService, never()).addTags(anyLong(), anySet());
+        verify(certificateTagService, never()).updateTags(anyLong(), anySet());
     }
 
     @Test
@@ -277,7 +278,7 @@ public class CertificateServiceImplTest {
         //when
         certificateService.create(CERTIFICATE_WITHOUT_ID);
         //then
-        verify(tagService, times(1)).createIfNotExist(new HashSet<>(TAGS_WITHOUT_ID));
+        verify(tagService).createIfNotExist(new HashSet<>(TAGS_WITHOUT_ID));
     }
 
     @Test
@@ -286,7 +287,7 @@ public class CertificateServiceImplTest {
         //when
         certificateService.create(CERTIFICATE_WITHOUT_ID);
         //then
-        verify(certificateTagService, times(1)).addTagSet(anyLong(), eq(new HashSet<>(TAGS_WITH_ID)));
+        verify(certificateTagService).addTags(anyLong(), eq(new HashSet<>(TAGS_WITH_ID)));
     }
 
     @Test
@@ -357,7 +358,7 @@ public class CertificateServiceImplTest {
                 .from(CERTIFICATE_WITH_ID)
                 .setName("Updated name")
                 .build();
-        verify(certificateValidator, times(1)).isValid(expected);
+        verify(certificateValidator).isValid(expected);
     }
 
     @Test
@@ -374,7 +375,7 @@ public class CertificateServiceImplTest {
                 .from(CERTIFICATE_WITH_ID)
                 .setDescription("Updated description")
                 .build();
-        verify(certificateValidator, times(1)).isValid(expected);
+        verify(certificateValidator).isValid(expected);
     }
 
     @Test
@@ -391,7 +392,7 @@ public class CertificateServiceImplTest {
                 .from(CERTIFICATE_WITH_ID)
                 .setPrice(new BigDecimal("10.00"))
                 .build();
-        verify(certificateValidator, times(1)).isValid(expected);
+        verify(certificateValidator).isValid(expected);
     }
 
     @Test
@@ -408,7 +409,7 @@ public class CertificateServiceImplTest {
                 .from(CERTIFICATE_WITH_ID)
                 .setDuration(1)
                 .build();
-        verify(certificateValidator, times(1)).isValid(expected);
+        verify(certificateValidator).isValid(expected);
     }
 
     @Test
@@ -425,7 +426,7 @@ public class CertificateServiceImplTest {
                 .from(CERTIFICATE_WITH_ID)
                 .setTags(new HashSet<>(TAGS_WITHOUT_ID))
                 .build();
-        verify(certificateValidator, times(1)).isValid(expected);
+        verify(certificateValidator).isValid(expected);
     }
 
     @Test
@@ -506,7 +507,7 @@ public class CertificateServiceImplTest {
         //when
         Certificate updated = certificateService.selectiveUpdate(CERTIFICATE_WITH_ID);
         //then
-        verify(tagService, times(1)).createIfNotExist(new HashSet<>(TAGS_WITH_ID));
+        verify(tagService).createIfNotExist(new HashSet<>(TAGS_WITH_ID));
     }
 
     @Test
@@ -515,7 +516,7 @@ public class CertificateServiceImplTest {
         //when
         Certificate updated = certificateService.selectiveUpdate(CERTIFICATE_WITH_ID);
         //then
-        verify(certificateTagService, times(1)).updateTagSet(ID_VALID, new HashSet<>(TAGS_WITH_ID));
+        verify(certificateTagService).updateTags(ID_VALID, new HashSet<>(TAGS_WITH_ID));
     }
 
     @Test
@@ -555,7 +556,7 @@ public class CertificateServiceImplTest {
         //when
         certificateService.deleteById(ID_VALID);
         //then
-        verify(certificateTagService, times(1)).deleteByCertificateId(ID_VALID);
+        verify(certificateTagService).deleteByCertificateId(ID_VALID);
     }
 
     @Test
@@ -564,7 +565,7 @@ public class CertificateServiceImplTest {
         //when
         certificateService.deleteById(ID_VALID);
         //then
-        verify(certificateDao, times(1)).delete(ID_VALID);
+        verify(certificateDao).delete(ID_VALID);
     }
 
 }
