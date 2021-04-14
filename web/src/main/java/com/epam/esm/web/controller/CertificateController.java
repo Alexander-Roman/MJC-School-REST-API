@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,12 +28,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/certificate")
+@Validated
 public class CertificateController {
+
+    private static final String MSG_ID_INVALID = "Invalid id parameter!";
 
     private final CertificateService certificateService;
     private final CertificateDtoUpdateValidator certificateDtoUpdateValidator;
@@ -60,7 +65,9 @@ public class CertificateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CertificateDto> getCertificateById(@PathVariable("id") Long id) {
+    public ResponseEntity<CertificateDto> getCertificateById(
+            @PathVariable("id")
+            @Min(value = 1L, message = MSG_ID_INVALID) Long id) {
         Certificate certificate = certificateService.findById(id);
         CertificateDto certificateDto = certificateMapper.map(certificate);
         return new ResponseEntity<>(certificateDto, HttpStatus.OK);
@@ -111,7 +118,9 @@ public class CertificateController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CertificateDto> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<CertificateDto> deleteById(
+            @PathVariable("id")
+            @Min(value = 1L, message = MSG_ID_INVALID) Long id) {
         Certificate deleted = certificateService.deleteById(id);
         CertificateDto deletedDto = certificateMapper.map(deleted);
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);

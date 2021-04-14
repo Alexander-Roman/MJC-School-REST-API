@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.persistence.dao.TagDao;
 import com.epam.esm.persistence.entity.Tag;
+import com.epam.esm.service.exception.EntityAlreadyExistsException;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.Validator;
@@ -54,7 +55,9 @@ public class TagServiceImpl implements TagService {
         if (!tagValidator.isValid(tag)) {
             throw new ServiceException(ERROR_MESSAGE_TAG_INVALID + tag);
         }
-        return tagDao.create(tag);
+        String name = tag.getName();
+        Optional<Tag> found = tagDao.findByName(name);
+        return found.orElseGet(() -> tagDao.create(tag));
     }
 
     @Override

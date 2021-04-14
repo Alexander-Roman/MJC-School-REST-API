@@ -2,7 +2,6 @@ package com.epam.esm.web.converter;
 
 import com.epam.esm.persistence.model.Sort;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,7 +15,7 @@ public class StringToSortConverter implements Converter<String, Sort> {
     private static final int INDEX_SORT_DIRECTION = 1;
 
     @Override
-    public Sort convert(@Nullable String value) {
+    public Sort convert(String value) {
         if (value == null) {
             return null;
         }

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,12 +19,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/tag")
+@Validated
 public class TagController {
+
+    private static final String MSG_ID_INVALID = "Invalid id parameter!";
 
     private final TagService tagService;
     private final TagDtoValidator tagDtoValidator;
@@ -39,7 +44,9 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TagDto> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<TagDto> findById(
+            @PathVariable("id")
+            @Min(value = 1L, message = MSG_ID_INVALID) Long id) {
         Tag tag = tagService.findById(id);
         TagDto tagDto = tagMapper.map(tag);
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
@@ -68,7 +75,9 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TagDto> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<TagDto> deleteById(
+            @PathVariable("id")
+            @Min(value = 1L, message = MSG_ID_INVALID) Long id) {
         Tag deleted = tagService.deleteById(id);
         TagDto deletedDto = tagMapper.map(deleted);
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);

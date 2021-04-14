@@ -57,40 +57,6 @@ public final class TagDto implements Serializable {
     }
 
 
-    public static final class Builder {
-
-        private Long id;
-        private String name;
-
-        public Builder() {
-        }
-
-        private Builder(TagDto tagDto) {
-            id = tagDto.id;
-            name = tagDto.name;
-        }
-
-        public static Builder from(TagDto tagDto) {
-            return new Builder(tagDto);
-        }
-
-        public Builder setId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public TagDto build() {
-            return new TagDto(id, name);
-        }
-
-    }
-
-
     public static final class Field {
 
         public static final String ID = "id";

@@ -11,14 +11,16 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-@ControllerAdvice
-public class ServiceExceptionHandler {
+import javax.validation.ConstraintViolationException;
 
-    private static final Logger LOGGER = LogManager.getLogger(ServiceExceptionHandler.class);
+@ControllerAdvice
+public class ControllerExceptionHandler {
+
+    private static final Logger LOGGER = LogManager.getLogger(ControllerExceptionHandler.class);
 
     private static final Integer UNHANDLED_EXCEPTION_CODE = 50000;
-    private static final Integer ILLEGAL_ARGUMENT_EXCEPTION_CODE = 50001;
     private static final Integer ENTITY_NOT_FOUND_EXCEPTION_CODE = 40401;
+    private static final Integer CONSTRAINT_VIOLATION_EXCEPTION_CODE = 40003;
 
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleConflict(EntityNotFoundException exception, WebRequest request) {
@@ -31,15 +33,15 @@ public class ServiceExceptionHandler {
         return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    protected ResponseEntity<Object> handleConflict(IllegalArgumentException exception, WebRequest request) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<Object> handleConflict(ConstraintViolationException exception, WebRequest request) {
         LOGGER.warn(exception.getMessage(), exception);
 
         ApiError apiError = new ApiError(
                 exception.getMessage(),
-                ILLEGAL_ARGUMENT_EXCEPTION_CODE
+                CONSTRAINT_VIOLATION_EXCEPTION_CODE
         );
-        return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
