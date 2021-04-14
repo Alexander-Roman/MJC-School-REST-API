@@ -3,7 +3,7 @@ package com.epam.esm.persistence.dao;
 import com.epam.esm.persistence.entity.Tag;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -42,12 +42,12 @@ public class TagDaoImpl implements TagDao {
             "DELETE FROM tag \n" +
             "WHERE id NOT IN (SELECT DISTINCT tag_id FROM certificate_tag); \n";
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcOperations jdbcOperations;
     private final RowMapper<Tag> tagRowMapper;
 
-    public TagDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+    public TagDaoImpl(NamedParameterJdbcOperations jdbcOperations,
                       RowMapper<Tag> tagRowMapper) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcOperations = jdbcOperations;
         this.tagRowMapper = tagRowMapper;
     }
 
@@ -55,7 +55,7 @@ public class TagDaoImpl implements TagDao {
     public Optional<Tag> findById(Long tagId) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("tagId", tagId);
-        List<Tag> results = namedParameterJdbcTemplate.query(SQL_FIND_BY_ID, namedParameters, tagRowMapper);
+        List<Tag> results = jdbcOperations.query(SQL_FIND_BY_ID, namedParameters, tagRowMapper);
         return results.stream().findFirst();
     }
 
@@ -63,20 +63,20 @@ public class TagDaoImpl implements TagDao {
     public Optional<Tag> findByName(String tagName) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("tagName", tagName);
-        List<Tag> results = namedParameterJdbcTemplate.query(SQL_FIND_BY_NAME, namedParameters, tagRowMapper);
+        List<Tag> results = jdbcOperations.query(SQL_FIND_BY_NAME, namedParameters, tagRowMapper);
         return results.stream().findFirst();
     }
 
     @Override
     public List<Tag> findAll() {
-        return namedParameterJdbcTemplate.query(SQL_FIND_ALL, tagRowMapper);
+        return jdbcOperations.query(SQL_FIND_ALL, tagRowMapper);
     }
 
     @Override
     public Tag create(Tag tag) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(tag);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(SQL_INSERT, sqlParameterSource, keyHolder, new String[]{"id"});
+        jdbcOperations.update(SQL_INSERT, sqlParameterSource, keyHolder, new String[]{"id"});
         Long id = keyHolder.getKeyAs(Long.class);
         return Tag.Builder
                 .from(tag)
@@ -88,13 +88,13 @@ public class TagDaoImpl implements TagDao {
     public void delete(Long id) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("id", id);
-        namedParameterJdbcTemplate.update(SQL_DELETE_BY_ID, namedParameters);
+        jdbcOperations.update(SQL_DELETE_BY_ID, namedParameters);
     }
 
     @Override
     public void deleteUnused() {
         Map<String, Object> namedParameters = Collections.emptyMap();
-        namedParameterJdbcTemplate.update(SQL_DELETE_UNUSED, namedParameters);
+        jdbcOperations.update(SQL_DELETE_UNUSED, namedParameters);
     }
 
 }

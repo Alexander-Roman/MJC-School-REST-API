@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -43,13 +43,13 @@ public class CertificateTagDaoImpl implements CertificateTagDao {
             "DELETE FROM certificate_tag \n" +
             "WHERE tag_id = :tagId \n";
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcOperations jdbcOperations;
     private final RowMapper<CertificateTag> certificateTagRowMapper;
 
     @Autowired
-    public CertificateTagDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+    public CertificateTagDaoImpl(NamedParameterJdbcOperations jdbcOperations,
                                  RowMapper<CertificateTag> certificateTagRowMapper) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcOperations = jdbcOperations;
         this.certificateTagRowMapper = certificateTagRowMapper;
     }
 
@@ -57,14 +57,14 @@ public class CertificateTagDaoImpl implements CertificateTagDao {
     public List<CertificateTag> findByCertificateId(Long certificateId) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("certificateId", certificateId);
-        return namedParameterJdbcTemplate.query(SQL_FIND_BY_CERTIFICATE_ID, namedParameters, certificateTagRowMapper);
+        return jdbcOperations.query(SQL_FIND_BY_CERTIFICATE_ID, namedParameters, certificateTagRowMapper);
     }
 
     @Override
     public CertificateTag create(CertificateTag certificateTag) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(certificateTag);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(SQL_INSERT, sqlParameterSource, keyHolder, new String[]{"id"});
+        jdbcOperations.update(SQL_INSERT, sqlParameterSource, keyHolder, new String[]{"id"});
         Long id = keyHolder.getKeyAs(Long.class);
         return CertificateTag.Builder
                 .from(certificateTag)
@@ -81,7 +81,7 @@ public class CertificateTagDaoImpl implements CertificateTagDao {
                 .map(BeanPropertySqlParameterSource::new)
                 .collect(Collectors.toList());
         sqlParameterSourceList.toArray(sqlParameterSourceArray);
-        namedParameterJdbcTemplate.batchUpdate(SQL_INSERT, sqlParameterSourceArray);
+        jdbcOperations.batchUpdate(SQL_INSERT, sqlParameterSourceArray);
     }
 
     @Override
@@ -93,21 +93,21 @@ public class CertificateTagDaoImpl implements CertificateTagDao {
                 .map(id -> new MapSqlParameterSource().addValue("id", id))
                 .collect(Collectors.toList());
         sqlParameterSourceList.toArray(sqlParameterSourceArray);
-        namedParameterJdbcTemplate.batchUpdate(SQL_DELETE_BY_ID, sqlParameterSourceArray);
+        jdbcOperations.batchUpdate(SQL_DELETE_BY_ID, sqlParameterSourceArray);
     }
 
     @Override
     public void deleteByCertificateId(Long certificateId) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("certificateId", certificateId);
-        namedParameterJdbcTemplate.update(SQL_DELETE_BY_CERTIFICATE_ID_QUERY, namedParameters);
+        jdbcOperations.update(SQL_DELETE_BY_CERTIFICATE_ID_QUERY, namedParameters);
     }
 
     @Override
     public void deleteByTagId(Long tagId) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("tagId", tagId);
-        namedParameterJdbcTemplate.update(SQL_DELETE_BY_TAG_ID_QUERY, namedParameters);
+        jdbcOperations.update(SQL_DELETE_BY_TAG_ID_QUERY, namedParameters);
     }
 
 }

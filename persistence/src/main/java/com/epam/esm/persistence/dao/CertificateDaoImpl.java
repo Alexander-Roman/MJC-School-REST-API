@@ -8,7 +8,7 @@ import com.epam.esm.persistence.model.SortRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -58,15 +58,15 @@ public class CertificateDaoImpl implements CertificateDao {
             "DELETE FROM certificate \n" +
             "WHERE id = :id \n";
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcOperations jdbcOperations;
     private final ResultSetExtractor<List<Certificate>> certificateListExtractor;
     private final ResultSetExtractor<Optional<Certificate>> certificateExtractor;
 
     @Autowired
-    public CertificateDaoImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+    public CertificateDaoImpl(NamedParameterJdbcOperations jdbcOperations,
                               ResultSetExtractor<List<Certificate>> certificateListExtractor,
                               ResultSetExtractor<Optional<Certificate>> certificateExtractor) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcOperations = jdbcOperations;
         this.certificateListExtractor = certificateListExtractor;
         this.certificateExtractor = certificateExtractor;
     }
@@ -75,12 +75,12 @@ public class CertificateDaoImpl implements CertificateDao {
     public Optional<Certificate> findById(Long certificateId) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("certificateId", certificateId);
-        return namedParameterJdbcTemplate.query(SQL_FIND_BY_ID, namedParameters, certificateExtractor);
+        return jdbcOperations.query(SQL_FIND_BY_ID, namedParameters, certificateExtractor);
     }
 
     @Override
     public List<Certificate> findAll() {
-        return namedParameterJdbcTemplate.query(SQL_FIND_ALL, certificateListExtractor);
+        return jdbcOperations.query(SQL_FIND_ALL, certificateListExtractor);
     }
 
     @Override
@@ -91,14 +91,14 @@ public class CertificateDaoImpl implements CertificateDao {
                 .concat(whereClause)
                 .concat(orderByeClause);
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(filterRequest);
-        return namedParameterJdbcTemplate.query(sql, sqlParameterSource, certificateListExtractor);
+        return jdbcOperations.query(sql, sqlParameterSource, certificateListExtractor);
     }
 
     @Override
     public Certificate create(Certificate certificate) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(certificate);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(SQL_INSERT, sqlParameterSource, keyHolder, new String[]{"id"});
+        jdbcOperations.update(SQL_INSERT, sqlParameterSource, keyHolder, new String[]{"id"});
         Long id = keyHolder.getKeyAs(Long.class);
         return Certificate.Builder
                 .from(certificate)
@@ -109,7 +109,7 @@ public class CertificateDaoImpl implements CertificateDao {
     @Override
     public Certificate update(Certificate certificate) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(certificate);
-        namedParameterJdbcTemplate.update(SQL_UPDATE, sqlParameterSource);
+        jdbcOperations.update(SQL_UPDATE, sqlParameterSource);
         return certificate;
     }
 
@@ -117,7 +117,7 @@ public class CertificateDaoImpl implements CertificateDao {
     public void delete(Long id) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("id", id);
-        namedParameterJdbcTemplate.update(SQL_DELETE_BY_ID, namedParameters);
+        jdbcOperations.update(SQL_DELETE_BY_ID, namedParameters);
     }
 
 }

@@ -77,11 +77,6 @@ public class CertificateDtoUpdateValidatorImpl implements CertificateDtoUpdateVa
             if (tagDto == null) {
                 errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.null", "Certificate tags should not contain NULL values!");
             } else {
-                Long id = tagDto.getId();
-                if (id != null) {
-                    errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.id.specified", "Certificate tags should not contain tags with id!");
-                }
-
                 String name = tagDto.getName();
                 if (name == null) {
                     errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.name.null", "Certificate tags should not contain tags without name!");

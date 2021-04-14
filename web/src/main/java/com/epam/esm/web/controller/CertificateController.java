@@ -21,9 +21,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,11 +33,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/certificate")
+@RequestMapping("/api/v1/certificates")
 @Validated
 public class CertificateController {
 
-    private static final String MSG_ID_INVALID = "Invalid id parameter!";
+    private static final String MSG_CODE_ID_INVALID = "controller.id.invalid";
+    private static final long MIN_ID = 1L;
 
     private final CertificateService certificateService;
     private final CertificateDtoUpdateValidator certificateDtoUpdateValidator;
@@ -67,7 +68,7 @@ public class CertificateController {
     @GetMapping("/{id}")
     public ResponseEntity<CertificateDto> getCertificateById(
             @PathVariable("id")
-            @Min(value = 1L, message = MSG_ID_INVALID) Long id) {
+            @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id) {
         Certificate certificate = certificateService.findById(id);
         CertificateDto certificateDto = certificateMapper.map(certificate);
         return new ResponseEntity<>(certificateDto, HttpStatus.OK);
@@ -104,7 +105,7 @@ public class CertificateController {
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<CertificateDto> updateCertificate(@RequestBody CertificateDto certificateDto,
                                                             BindingResult bindingResult) throws BindException {
         certificateDtoUpdateValidator.validate(certificateDto, bindingResult);
@@ -120,7 +121,7 @@ public class CertificateController {
     @DeleteMapping("/{id}")
     public ResponseEntity<CertificateDto> deleteById(
             @PathVariable("id")
-            @Min(value = 1L, message = MSG_ID_INVALID) Long id) {
+            @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id) {
         Certificate deleted = certificateService.deleteById(id);
         CertificateDto deletedDto = certificateMapper.map(deleted);
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);

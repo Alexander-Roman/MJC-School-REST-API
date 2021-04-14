@@ -122,6 +122,7 @@ public class TagServiceImplTest {
     @Test
     public void testCreateShouldCreateTag() {
         //given
+        lenient().when(tagDao.findByName(anyString())).thenReturn(Optional.empty());
         //when
         tagService.create(TAG_WITHOUT_ID);
         //then
