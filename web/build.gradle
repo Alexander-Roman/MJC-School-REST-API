@@ -4,6 +4,7 @@ plugins {
 
 ext {
     jacksonVersion = '2.12.2'
+    mapstructVersion = '1.4.2.Final'
 }
 
 dependencies {
@@ -14,7 +15,9 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-webmvc', version: "${springVersion}"
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonVersion}"
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: "${jacksonVersion}"
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.0'
+
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
+    annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: "${mapstructVersion}"
 
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 

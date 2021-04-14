@@ -12,6 +12,10 @@ public final class Tag {
         this.name = name;
     }
 
+    public static Tag.Builder builder() {
+        return new Tag.Builder();
+    }
+
     public Long getId() {
         return id;
     }

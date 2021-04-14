@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "98b35131-5bdf-4f08-bc7b-f752cf4c27a0",
+		"_postman_id": "6a9eec01-4030-4410-8d43-543f65177485",
 		"name": "gift-certificates-system",
 		"description": "MJC-School REST API working collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -308,6 +308,37 @@
 										{
 											"key": "thenSort",
 											"value": "price,DESC"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List sorted (invalid)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/certificate?sort=desc&thenSort=price,DE1SC",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"certificate"
+									],
+									"query": [
+										{
+											"key": "sort",
+											"value": "desc"
+										},
+										{
+											"key": "thenSort",
+											"value": "price,DE1SC"
 										}
 									]
 								}

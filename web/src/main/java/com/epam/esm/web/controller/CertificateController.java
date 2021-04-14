@@ -4,13 +4,15 @@ import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.web.mapper.CertificateMapper;
+import com.epam.esm.web.mapper.FilterRequestMapper;
+import com.epam.esm.web.mapper.SortRequestMapper;
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.model.FilterRequestDto;
 import com.epam.esm.web.model.SortRequestDto;
 import com.epam.esm.web.validator.CertificateDtoCreateValidator;
 import com.epam.esm.web.validator.CertificateDtoUpdateValidator;
 import com.epam.esm.web.validator.CertificateSortRequestDtoValidator;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,25 +38,31 @@ public class CertificateController {
     private final CertificateDtoUpdateValidator certificateDtoUpdateValidator;
     private final CertificateDtoCreateValidator certificateDtoCreateValidator;
     private final CertificateSortRequestDtoValidator certificateSortRequestDtoValidator;
-    private final ModelMapper modelMapper;
+    private final FilterRequestMapper filterRequestMapper;
+    private final CertificateMapper certificateMapper;
+    private final SortRequestMapper sortRequestMapper;
 
     @Autowired
     public CertificateController(CertificateService certificateService,
                                  CertificateDtoUpdateValidator certificateDtoUpdateValidator,
                                  CertificateDtoCreateValidator certificateDtoCreateValidator,
                                  CertificateSortRequestDtoValidator certificateSortRequestDtoValidator,
-                                 ModelMapper modelMapper) {
+                                 FilterRequestMapper filterRequestMapper,
+                                 CertificateMapper certificateMapper,
+                                 SortRequestMapper sortRequestMapper) {
         this.certificateService = certificateService;
         this.certificateDtoUpdateValidator = certificateDtoUpdateValidator;
         this.certificateDtoCreateValidator = certificateDtoCreateValidator;
         this.certificateSortRequestDtoValidator = certificateSortRequestDtoValidator;
-        this.modelMapper = modelMapper;
+        this.filterRequestMapper = filterRequestMapper;
+        this.certificateMapper = certificateMapper;
+        this.sortRequestMapper = sortRequestMapper;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CertificateDto> getCertificateById(@PathVariable("id") Long id) {
         Certificate certificate = certificateService.findById(id);
-        CertificateDto certificateDto = modelMapper.map(certificate, CertificateDto.class);
+        CertificateDto certificateDto = certificateMapper.map(certificate);
         return new ResponseEntity<>(certificateDto, HttpStatus.OK);
     }
 
@@ -66,12 +74,12 @@ public class CertificateController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        SortRequest sortRequest = modelMapper.map(sortRequestDto, SortRequest.class);
-        FilterRequest filterRequest = modelMapper.map(filterRequestDto, FilterRequest.class);
+        SortRequest sortRequest = sortRequestMapper.map(sortRequestDto);
+        FilterRequest filterRequest = filterRequestMapper.map(filterRequestDto);
         List<Certificate> result = certificateService.findAll(sortRequest, filterRequest);
         List<CertificateDto> resultDto = result
                 .stream()
-                .map(certificate -> modelMapper.map(certificate, CertificateDto.class))
+                .map(certificateMapper::map)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(resultDto, HttpStatus.OK);
     }
@@ -83,9 +91,9 @@ public class CertificateController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        Certificate certificate = modelMapper.map(certificateDto, Certificate.class);
+        Certificate certificate = certificateMapper.map(certificateDto);
         Certificate created = certificateService.create(certificate);
-        CertificateDto createdDto = modelMapper.map(created, CertificateDto.class);
+        CertificateDto createdDto = certificateMapper.map(created);
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
@@ -96,16 +104,16 @@ public class CertificateController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        Certificate certificate = modelMapper.map(certificateDto, Certificate.class);
+        Certificate certificate = certificateMapper.map(certificateDto);
         Certificate updated = certificateService.selectiveUpdate(certificate);
-        CertificateDto updatedDto = modelMapper.map(updated, CertificateDto.class);
+        CertificateDto updatedDto = certificateMapper.map(updated);
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CertificateDto> deleteById(@PathVariable("id") Long id) {
         Certificate deleted = certificateService.deleteById(id);
-        CertificateDto deletedDto = modelMapper.map(deleted, CertificateDto.class);
+        CertificateDto deletedDto = certificateMapper.map(deleted);
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);
     }
 

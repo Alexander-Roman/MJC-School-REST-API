@@ -42,6 +42,10 @@ public final class CertificateDto implements Serializable {
         this.tags = tags;
     }
 
+    public static CertificateDto.Builder builder() {
+        return new CertificateDto.Builder();
+    }
+
     public Long getId() {
         return id;
     }
@@ -150,6 +154,11 @@ public final class CertificateDto implements Serializable {
 
         public static Builder from(CertificateDto certificateDto) {
             return new Builder(certificateDto);
+        }
+
+        public Builder setId(Long id) {
+            this.id = id;
+            return this;
         }
 
         public Builder setName(String name) {

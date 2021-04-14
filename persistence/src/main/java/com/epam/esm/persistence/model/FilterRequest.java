@@ -12,6 +12,10 @@ public final class FilterRequest {
         this.tagName = tagName;
     }
 
+    public static FilterRequest.Builder builder() {
+        return new FilterRequest.Builder();
+    }
+
     public String getSearch() {
         return search;
     }
@@ -46,6 +50,40 @@ public final class FilterRequest {
                 "search='" + search + '\'' +
                 ", tagName='" + tagName + '\'' +
                 '}';
+    }
+
+
+    public static final class Builder {
+
+        private String search;
+        private String tagName;
+
+        public Builder() {
+        }
+
+        private Builder(FilterRequest filterRequest) {
+            search = filterRequest.search;
+            tagName = filterRequest.tagName;
+        }
+
+        public static Builder from(FilterRequest filterRequest) {
+            return new Builder(filterRequest);
+        }
+
+        public Builder setSearch(String search) {
+            this.search = search;
+            return this;
+        }
+
+        public Builder setTagName(String tagName) {
+            this.tagName = tagName;
+            return this;
+        }
+
+        public FilterRequest build() {
+            return new FilterRequest(search, tagName);
+        }
+
     }
 
 }

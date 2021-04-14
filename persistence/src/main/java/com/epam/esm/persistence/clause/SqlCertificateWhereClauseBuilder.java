@@ -18,7 +18,7 @@ public class SqlCertificateWhereClauseBuilder {
             "   FROM certificate \n" +
             "            LEFT JOIN certificate_tag ON certificate.id = certificate_tag.certificate_id \n" +
             "            LEFT JOIN tag ON certificate_tag.tag_id = tag.id \n" +
-            "   WHERE tag.name = :tagName \n" +
+            "   WHERE tag.name = LOWER(:tagName) \n" +
             ") \n";
     private static final String STATEMENTS_DELIMITER = " AND ";
 

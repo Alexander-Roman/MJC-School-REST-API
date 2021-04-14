@@ -37,8 +37,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                                                         @NonNull WebRequest request) {
         LOGGER.debug(exception.getMessage(), exception);
 
+        Object object = exception.getValue();
+        String message = "Unable to process the request! Invalid variable value: " + object;
         ApiError apiError = new ApiError(
-                exception.getMessage(),
+                message,
                 TYPE_MISMATCH_CODE
         );
         return new ResponseEntity<>(apiError, headers, status);

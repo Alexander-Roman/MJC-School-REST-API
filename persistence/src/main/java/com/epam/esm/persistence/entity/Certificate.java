@@ -35,6 +35,10 @@ public final class Certificate {
         this.tags = tags;
     }
 
+    public static Certificate.Builder builder() {
+        return new Certificate.Builder();
+    }
+
     public Long getId() {
         return id;
     }

@@ -2,9 +2,9 @@ package com.epam.esm.web.controller;
 
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.service.TagService;
+import com.epam.esm.web.mapper.TagMapper;
 import com.epam.esm.web.model.TagDto;
 import com.epam.esm.web.validator.TagDtoValidator;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,21 +27,21 @@ public class TagController {
 
     private final TagService tagService;
     private final TagDtoValidator tagDtoValidator;
-    private final ModelMapper modelMapper;
+    private final TagMapper tagMapper;
 
     @Autowired
     public TagController(TagService tagService,
                          TagDtoValidator tagDtoValidator,
-                         ModelMapper modelMapper) {
+                         TagMapper tagMapper) {
         this.tagService = tagService;
         this.tagDtoValidator = tagDtoValidator;
-        this.modelMapper = modelMapper;
+        this.tagMapper = tagMapper;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TagDto> findById(@PathVariable("id") Long id) {
         Tag tag = tagService.findById(id);
-        TagDto tagDto = modelMapper.map(tag, TagDto.class);
+        TagDto tagDto = tagMapper.map(tag);
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
@@ -50,7 +50,7 @@ public class TagController {
         List<Tag> tagList = tagService.findAll();
         List<TagDto> tagDtoList = tagList
                 .stream()
-                .map(tag -> modelMapper.map(tag, TagDto.class))
+                .map(tagMapper::map)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(tagDtoList, HttpStatus.OK);
     }
@@ -61,16 +61,16 @@ public class TagController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        Tag tag = modelMapper.map(tagDto, Tag.class);
+        Tag tag = tagMapper.map(tagDto);
         Tag created = tagService.create(tag);
-        TagDto createdDto = modelMapper.map(created, TagDto.class);
+        TagDto createdDto = tagMapper.map(created);
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<TagDto> deleteById(@PathVariable("id") Long id) {
         Tag deleted = tagService.deleteById(id);
-        TagDto deletedDto = modelMapper.map(deleted, TagDto.class);
+        TagDto deletedDto = tagMapper.map(deleted);
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);
     }
 

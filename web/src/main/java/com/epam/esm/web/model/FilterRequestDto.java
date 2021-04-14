@@ -15,6 +15,10 @@ public class FilterRequestDto implements Serializable {
         this.tag = tag;
     }
 
+    public static FilterRequestDto.Builder builder() {
+        return new FilterRequestDto.Builder();
+    }
+
     public String getSearch() {
         return search;
     }
@@ -49,6 +53,40 @@ public class FilterRequestDto implements Serializable {
                 "search='" + search + '\'' +
                 ", tag='" + tag + '\'' +
                 '}';
+    }
+
+
+    public static final class Builder {
+
+        private String search;
+        private String tag;
+
+        public Builder() {
+        }
+
+        private Builder(FilterRequestDto filterRequestDto) {
+            search = filterRequestDto.search;
+            tag = filterRequestDto.tag;
+        }
+
+        public static Builder from(FilterRequestDto filterRequestDto) {
+            return new Builder(filterRequestDto);
+        }
+
+        public Builder setSearch(String search) {
+            this.search = search;
+            return this;
+        }
+
+        public Builder setTag(String tag) {
+            this.tag = tag;
+            return this;
+        }
+
+        public FilterRequestDto build() {
+            return new FilterRequestDto(search, tag);
+        }
+
     }
 
 }

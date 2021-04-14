@@ -1,14 +1,12 @@
 package com.epam.esm.web.converter;
 
 import com.epam.esm.persistence.model.Sort;
-import com.epam.esm.persistence.model.SortRequest;
-import com.epam.esm.web.model.SortRequestDto;
-import org.modelmapper.AbstractConverter;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SortRequestDtoToModelConverter extends AbstractConverter<SortRequestDto, SortRequest> implements Converter<SortRequestDto, SortRequest> {
+public class StringToSortConverter implements Converter<String, Sort> {
 
     private static final Sort.Direction DEFAULT_SORT_DIRECTION = Sort.Direction.ASC;
 
@@ -18,20 +16,11 @@ public class SortRequestDtoToModelConverter extends AbstractConverter<SortReques
     private static final int INDEX_SORT_DIRECTION = 1;
 
     @Override
-    public SortRequest convert(SortRequestDto sortRequestDto) {
-        String sortDto = sortRequestDto.getSort();
-        Sort sort = sortDto == null
-                ? null
-                : this.convert(sortDto);
-        String thenSortDto = sortRequestDto.getThenSort();
-        Sort thenSort = thenSortDto == null
-                ? null
-                : this.convert(thenSortDto);
-        return new SortRequest(sort, thenSort);
-    }
-
-    private Sort convert(String sortDto) {
-        String[] parameters = sortDto.split(SPLITERATOR);
+    public Sort convert(@Nullable String value) {
+        if (value == null) {
+            return null;
+        }
+        String[] parameters = value.split(SPLITERATOR);
         String field = parameters[INDEX_SORT_FIELD];
         if (parameters.length == LENGTH_SORT_FIELD_ONLY) {
             return new Sort(field, DEFAULT_SORT_DIRECTION);

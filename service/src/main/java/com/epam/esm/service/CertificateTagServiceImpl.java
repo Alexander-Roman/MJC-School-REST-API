@@ -3,7 +3,6 @@ package com.epam.esm.service;
 import com.epam.esm.persistence.dao.CertificateTagDao;
 import com.epam.esm.persistence.entity.CertificateTag;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.service.validator.Validator;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

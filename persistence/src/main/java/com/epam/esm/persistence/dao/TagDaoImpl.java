@@ -25,14 +25,14 @@ public class TagDaoImpl implements TagDao {
 
     private static final String SQL_FIND_BY_NAME = "\n" +
             SQL_FIND_ALL +
-            "WHERE tag.name = :tagName \n";
+            "WHERE tag.name = LOWER(:tagName) \n";
 
     private static final String SQL_FIND_BY_ID = "\n" +
             SQL_FIND_ALL +
             "WHERE tag.id = :tagId \n";
 
     private static final String SQL_INSERT = "\n" +
-            "INSERT INTO tag (name) VALUES (:name) \n";
+            "INSERT INTO tag (name) VALUES (LOWER(:name)) \n";
 
     private static final String SQL_DELETE_BY_ID = "\n" +
             "DELETE FROM tag \n" +
