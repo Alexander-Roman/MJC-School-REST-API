@@ -13,6 +13,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 @Profile("integrationTest")
@@ -26,10 +27,11 @@ public class TestPersistenceConfig {
     @Bean
     public DataSource dataSource() {
         EmbeddedDatabaseBuilder databaseBuilder = new EmbeddedDatabaseBuilder();
+        String scriptEncoding = StandardCharsets.UTF_8.name();
         return databaseBuilder
                 .generateUniqueName(true)
                 .setType(EmbeddedDatabaseType.H2)
-                .setScriptEncoding("UTF-8")
+                .setScriptEncoding(scriptEncoding)
                 .ignoreFailedDrops(true)
                 .addScript(SQL_H2_DDL)
                 .addScript(SQL_H2_DML)

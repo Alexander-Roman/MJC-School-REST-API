@@ -24,6 +24,7 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-jdbc', version: "${springVersion}"
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
+    implementation group: 'org.jasypt', name: 'jasypt', version: '1.9.3'
 
     integrationImplementation group: 'org.springframework', name: 'spring-test', version: "${springVersion}"
     integrationImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
