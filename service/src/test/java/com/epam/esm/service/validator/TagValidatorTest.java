@@ -44,7 +44,7 @@ public class TagValidatorTest {
 
     @ParameterizedTest
     @MethodSource("provideValidTags")
-    public void testIsValidShouldReturnTrueWhenTagValid(Tag valid) {
+    public void isValid_WhenTagValid_ShouldReturnTrue(Tag valid) {
         //given
         //when
         boolean actual = validator.isValid(valid);
@@ -54,11 +54,12 @@ public class TagValidatorTest {
 
     @ParameterizedTest
     @MethodSource("provideInvalidTags")
-    public void testIsValidShouldReturnFalseWhenTagInvalid(Tag invalid) {
+    public void isValid_WhenTagInvalid_ShouldReturnFalse(Tag invalid) {
         //given
         //when
         boolean actual = validator.isValid(invalid);
         //then
         Assertions.assertFalse(actual);
     }
+
 }

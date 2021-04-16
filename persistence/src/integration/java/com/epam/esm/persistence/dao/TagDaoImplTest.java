@@ -31,7 +31,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void testFindByIdShouldReturnOptionalOfTagWhenFound() {
+    public void findById_WhenFound_ShouldReturnOptionalOfTag() {
         //given
         //when
         Optional<Tag> actual = tagDao.findById(1L);
@@ -41,7 +41,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void testFindByIdShouldReturnOptionalEmptyWhenTagNotFound() {
+    public void findById_WhenTagNotFound_ShouldReturnOptionalEmpty() {
         //given
         //when
         Optional<Tag> actual = tagDao.findById(10000L);
@@ -51,7 +51,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void testFindByNameShouldReturnOptionalOfTagWhenFound() {
+    public void findByName_WhenFound_ShouldReturnOptionalOfTag() {
         //given
         //when
         Optional<Tag> actual = tagDao.findByName("tag1");
@@ -61,7 +61,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void testFindByNameShouldReturnOptionalEmptyWhenTagNotFound() {
+    public void findByName_WhenTagNotFound_ShouldReturnOptionalEmpty() {
         //given
         //when
         Optional<Tag> actual = tagDao.findByName("such name does not exists");
@@ -71,7 +71,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOfAllTags() {
+    public void findAll_ShouldReturnListOfAllTags() {
         //given
         //when
         List<Tag> results = tagDao.findAll();
@@ -81,7 +81,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void testCreateShouldReturnCreatedWithId() {
+    public void create_ShouldReturnCreatedWithId() {
         //given
         //when
         Tag created = tagDao.create(TAG_TO_CREATE);
@@ -91,7 +91,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void testCreateShouldSaveTagInDatabase() {
+    public void create_ShouldSaveTagInDatabase() {
         //given
         Tag created = tagDao.create(TAG_TO_CREATE);
         Long id = created.getId();
@@ -107,7 +107,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void testDeleteShouldDeleteTagFromDatabase() {
+    public void delete_ShouldDeleteTagFromDatabase() {
         //given
         //when
         tagDao.delete(5L);
@@ -118,7 +118,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void testDeleteUnusedShouldDeleteAllTagNotAttachedToAnyCertificate() {
+    public void deleteUnused_ShouldDeleteAllTagNotAttachedToAnyCertificate() {
         //given
         //when
         tagDao.deleteUnused();

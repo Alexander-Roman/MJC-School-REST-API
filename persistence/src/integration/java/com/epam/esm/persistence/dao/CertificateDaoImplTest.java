@@ -116,7 +116,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindByIdShouldReturnOptionalOfCertificateWhenFound() {
+    public void findById_WhenFound_ShouldReturnOptionalOfCertificate() {
         //given
         //when
         Optional<Certificate> actual = certificateDao.findById(1L);
@@ -126,7 +126,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindByIdShouldReturnOptionalEmptyWhenCertificateNotFound() {
+    public void findById_WhenCertificateNotFound_ShouldReturnOptionalEmpty() {
         //given
         //when
         Optional<Certificate> actual = certificateDao.findById(10000L);
@@ -136,7 +136,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOfAllCertificates() {
+    public void findAll_ShouldReturnListOfAllCertificates() {
         //given
         //when
         List<Certificate> results = certificateDao.findAll();
@@ -146,7 +146,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOfAllCertificatesWhenNoRequestConditions() {
+    public void findAll_WhenNoRequestConditions_ShouldReturnListOfAllCertificates() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(null, null);
@@ -158,7 +158,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOfSelectionWhenSearchByNameOrDescriptionSpecified() {
+    public void findAll_WhenSearchByNameOrDescriptionSpecified_ShouldReturnListOfSelection() {
         //given
         FilterRequest filterRequest = new FilterRequest("number 1", null);
         SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
@@ -170,9 +170,9 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnEmptyListWhenSearchByNameOrDescriptionMatchesNothing() {
+    public void findAll_WhenSearchByNameOrDescriptionMatchesNothing_ShouldReturnEmptyList() {
         //given
-        FilterRequest filterRequest = new FilterRequest("Should found nothing", null);
+        FilterRequest filterRequest = new FilterRequest("_Should found nothing", null);
         SortRequest sortRequest = new SortRequest(null, null);
         //when
         List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
@@ -182,7 +182,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOfSelectionWhenSearchByTagNameSpecified() {
+    public void findAll_WhenSearchByTagNameSpecified_ShouldReturnListOfSelection() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, "tag2");
         SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
@@ -194,7 +194,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldEmptyListWhenSearchByTagNameMatchesNothing() {
+    public void findAll_WhenSearchByTagNameMatchesNothing_ShouldEmptyList() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, "such tag does not exists");
         SortRequest sortRequest = new SortRequest(null, null);
@@ -206,7 +206,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOfSelectionWhenConjunctionSearchSpecified() {
+    public void findAll_WhenConjunctionSearchSpecified_ShouldReturnListOfSelection() {
         //given
         FilterRequest filterRequest = new FilterRequest("number 2", "tag1");
         SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
@@ -218,7 +218,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByNameAsc() {
+    public void findAll_ShouldReturnListOrderedByNameAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
@@ -230,7 +230,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByNameDesc() {
+    public void findAll_ShouldReturnListOrderedByNameDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("name"), null);
@@ -242,7 +242,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByDescriptionAsc() {
+    public void findAll_ShouldReturnListOrderedByDescriptionAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("description"), null);
@@ -254,7 +254,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByDescriptionDesc() {
+    public void findAll_ShouldReturnListOrderedByDescriptionDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("description"), null);
@@ -266,7 +266,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByPriceAsc() {
+    public void findAll_ShouldReturnListOrderedByPriceAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("price"), null);
@@ -278,7 +278,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByPriceDesc() {
+    public void findAll_ShouldReturnListOrderedByPriceDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("price"), null);
@@ -290,7 +290,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByCreateDateAsc() {
+    public void findAll_ShouldReturnListOrderedByCreateDateAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("createDate"), null);
@@ -302,7 +302,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByCreateDateDesc() {
+    public void findAll_ShouldReturnListOrderedByCreateDateDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("createDate"), null);
@@ -314,7 +314,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByLastUpdateDateAsc() {
+    public void findAll_ShouldReturnListOrderedByLastUpdateDateAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("lastUpdateDate"), null);
@@ -326,7 +326,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOrderedByLastUpdateDateDesc() {
+    public void findAll_ShouldReturnListOrderedByLastUpdateDateDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("lastUpdateDate"), null);
@@ -338,7 +338,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByNameAsc() {
+    public void findAll_ShouldReturnListThenOrderedByNameAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("name"));
@@ -350,7 +350,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByNameDesc() {
+    public void findAll_ShouldReturnListThenOrderedByNameDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("name"));
@@ -362,7 +362,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByDescriptionAsc() {
+    public void findAll_ShouldReturnListThenOrderedByDescriptionAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("description"));
@@ -374,7 +374,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByDescriptionDesc() {
+    public void findAll_ShouldReturnListThenOrderedByDescriptionDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("description"));
@@ -386,7 +386,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByPriceAsc() {
+    public void findAll_ShouldReturnListThenOrderedByPriceAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("price"));
@@ -398,7 +398,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByPriceDesc() {
+    public void findAll_ShouldReturnListThenOrderedByPriceDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("price"));
@@ -410,7 +410,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByCreateDateAsc() {
+    public void findAll_ShouldReturnListThenOrderedByCreateDateAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("createDate"));
@@ -422,7 +422,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByCreateDateDesc() {
+    public void findAll_ShouldReturnListThenOrderedByCreateDateDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("createDate"));
@@ -434,7 +434,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByLastUpdateDateAsc() {
+    public void findAll_ShouldReturnListThenOrderedByLastUpdateDateAsc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("lastUpdateDate"));
@@ -446,7 +446,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListThenOrderedByLastUpdateDateDesc() {
+    public void findAll_ShouldReturnListThenOrderedByLastUpdateDateDesc() {
         //given
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("lastUpdateDate"));
@@ -458,7 +458,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testFindAllShouldReturnListOfSelectionWhenAllOptionsSpecified() {
+    public void findAll_WhenAllOptionsSpecified_ShouldReturnListOfSelection() {
         //given
         FilterRequest filterRequest = new FilterRequest("number", "tag2");
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("lastUpdateDate"));
@@ -470,7 +470,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testCreateShouldReturnCreatedWithId() {
+    public void create_ShouldReturnCreatedWithId() {
         //given
         //when
         Certificate created = certificateDao.create(CERTIFICATE_TO_CREATE);
@@ -480,7 +480,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testCreateShouldSaveCertificateInDatabase() {
+    public void create_ShouldSaveCertificateInDatabase() {
         //given
         Certificate created = certificateDao.create(CERTIFICATE_TO_CREATE);
         Long id = created.getId();
@@ -496,7 +496,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testUpdateShouldUpdateCertificateInDatabase() {
+    public void update_ShouldUpdateCertificateInDatabase() {
         //given
         certificateDao.update(FIFTH_TO_UPDATE);
         //when
@@ -507,7 +507,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testUpdateShouldReturnUpdated() {
+    public void update_ShouldReturnUpdated() {
         //given
         //when
         Certificate actual = certificateDao.update(FIFTH_TO_UPDATE);
@@ -516,7 +516,7 @@ public class CertificateDaoImplTest {
     }
 
     @Test
-    public void testDeleteShouldDeleteCertificateFromDatabase() {
+    public void delete_ShouldDeleteCertificateFromDatabase() {
         //given
         //when
         certificateDao.delete(5L);

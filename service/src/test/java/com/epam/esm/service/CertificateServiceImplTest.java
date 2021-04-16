@@ -120,7 +120,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testFindByIdShouldFindCertificateById() {
+    public void findById_ShouldFindCertificateById() {
         //given
         //when
         Certificate actual = certificateService.findById(ID_VALID);
@@ -129,7 +129,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testFindByIdShouldThrowExceptionWhenIdInvalid() {
+    public void findById_WhenIdInvalid_ShouldThrowException() {
         //given
         //when
         //then
@@ -139,7 +139,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testFindByIdShouldThrowExceptionWhenIdIsNull() {
+    public void findById_WhenIdIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -149,7 +149,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testFindByIdShouldThrowExceptionWhenFoundNothing() {
+    public void findById_WhenFoundNothing_ShouldThrowException() {
         //given
         lenient().when(certificateDao.findById(ID_VALID)).thenReturn(Optional.empty());
         //when
@@ -160,7 +160,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testFindAllShouldThrowExceptionWhenSortRequestIsNull() {
+    public void findAll_WhenSortRequestIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -170,7 +170,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testFindAllShouldThrowExceptionWhenFilterRequestIsNull() {
+    public void findAll_WhenFilterRequestIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -180,7 +180,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testFindAllShouldThrowExceptionWhenSortRequestInvalid() {
+    public void findAll_WhenSortRequestInvalid_ShouldThrowException() {
         //given
         lenient().when(certificateSortRequestValidator.isValid(any())).thenReturn(false);
         //when
@@ -191,7 +191,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testFindAllShouldFindListOfCertificates() {
+    public void findAll_ShouldFindListOfCertificates() {
         //given
         //when
         List<Certificate> actual = certificateService.findAll(SORT_REQUEST, FILTER_REQUEST);
@@ -201,7 +201,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldThrowExceptionWhenCertificateIsNull() {
+    public void create_WhenCertificateIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -211,7 +211,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldSetActualCreateDate() {
+    public void create_ShouldSetActualCreateDate() {
         //given
         lenient().when(certificateDao.create(any())).then(returnsFirstArg());
         //when
@@ -222,7 +222,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldSetActualLastUpdateDate() {
+    public void create_ShouldSetActualLastUpdateDate() {
         //given
         lenient().when(certificateDao.create(any())).then(returnsFirstArg());
         //when
@@ -233,7 +233,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldThrowExceptionWhenCertificateInvalid() {
+    public void create_WhenCertificateInvalid_ShouldThrowException() {
         //given
         lenient().when(certificateValidator.isValid(any())).thenReturn(false);
         //when
@@ -244,7 +244,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldCreateCertificate() {
+    public void create_ShouldCreateCertificate() {
         //given
         //when
         certificateService.create(CERTIFICATE_WITHOUT_ID);
@@ -253,7 +253,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldNotCreateTagsWhenNothingToCreate() {
+    public void create_WhenNothingToCreate_ShouldNotCreateTags() {
         //given
         //when
         certificateService.create(CERTIFICATE_NETHER_ID_NO_TAGS);
@@ -263,7 +263,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldNotAddTagsWhenNothingToAdd() {
+    public void create_WhenNothingToAdd_ShouldNotAddTags() {
         //given
         //when
         certificateService.create(CERTIFICATE_NETHER_ID_NO_TAGS);
@@ -273,7 +273,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldCreateTagsWhenNecessary() {
+    public void create_WhenTagsPresent_ShouldCreateTags() {
         //given
         //when
         certificateService.create(CERTIFICATE_WITHOUT_ID);
@@ -282,7 +282,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldAddTagsWhenNecessary() {
+    public void create_WhenTagsPresent_ShouldAddTags() {
         //given
         //when
         certificateService.create(CERTIFICATE_WITHOUT_ID);
@@ -291,7 +291,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldReturnCertificateCreated() {
+    public void create_ShouldReturnCertificateCreated() {
         //given
         //when
         Certificate actual = certificateService.create(CERTIFICATE_WITHOUT_ID);
@@ -300,7 +300,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldThrowExceptionWhenCertificateIsNull() {
+    public void selectiveUpdate_WhenCertificateIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -310,7 +310,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldThrowExceptionWhenCertificateIdIsNull() {
+    public void selectiveUpdate_WhenCertificateIdIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -320,7 +320,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldThrowExceptionWhenCertificateIdInvalid() {
+    public void selectiveUpdate_WhenCertificateIdInvalid_ShouldThrowException() {
         //given
         Certificate certificateWithIdInvalid = Certificate.Builder
                 .from(CERTIFICATE_WITH_ID)
@@ -334,7 +334,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldThrowExceptionWhenCertificateDoesNotExists() {
+    public void selectiveUpdate_WhenCertificateDoesNotExists_ShouldThrowException() {
         //given
         lenient().when(certificateDao.findById(anyLong())).thenReturn(Optional.empty());
         //when
@@ -345,7 +345,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldValidateCertificateWhenOnlyNameUpdated() {
+    public void selectiveUpdate_WhenOnlyNameUpdated_ShouldValidateCertificate() {
         //given
         Certificate updateName = new Certificate.Builder()
                 .setId(ID_VALID)
@@ -362,7 +362,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldValidateCertificateWhenOnlyDescriptionUpdated() {
+    public void selectiveUpdate_WhenOnlyDescriptionUpdated_ShouldValidateCertificate() {
         //given
         Certificate updateDescription = new Certificate.Builder()
                 .setId(ID_VALID)
@@ -379,7 +379,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldValidateCertificateWhenOnlyPriceUpdated() {
+    public void selectiveUpdate_WhenOnlyPriceUpdated_ShouldValidateCertificate() {
         //given
         Certificate updatePrice = new Certificate.Builder()
                 .setId(ID_VALID)
@@ -396,7 +396,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldValidateCertificateWhenOnlyDurationUpdated() {
+    public void selectiveUpdate_WhenOnlyDurationUpdated_ShouldValidateCertificate() {
         //given
         Certificate updateDuration = new Certificate.Builder()
                 .setId(ID_VALID)
@@ -413,7 +413,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldValidateCertificateWhenOnlyTagsUpdated() {
+    public void selectiveUpdate_WhenOnlyTagsUpdated_ShouldValidateCertificate() {
         //given
         Certificate updateTags = new Certificate.Builder()
                 .setId(ID_VALID)
@@ -430,7 +430,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldValidateCertificateWithoutCreateDateUpdate() {
+    public void selectiveUpdate_ShouldValidateCertificateWithoutCreateDateUpdate() {
         //given
         LocalDateTime createDate = LocalDateTime.now();
         Certificate updateCreateDate = new Certificate.Builder()
@@ -448,7 +448,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldValidateCertificateWithoutLastUpdateDateUpdate() {
+    public void selectiveUpdate_ShouldValidateCertificateWithoutLastUpdateDateUpdate() {
         //given
         LocalDateTime lastUpdateDate = LocalDateTime.now();
         Certificate updateCreateDate = new Certificate.Builder()
@@ -466,7 +466,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldThrowExceptionWhenUpdatedCertificateInvalid() {
+    public void selectiveUpdate_WhenUpdatedCertificateInvalid_ShouldThrowException() {
         //given
         lenient().when(certificateValidator.isValid(any())).thenReturn(false);
         //when
@@ -477,7 +477,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldSetActualLastUpdateDate() {
+    public void selectiveUpdate_ShouldSetActualLastUpdateDate() {
         //given
         //when
         Certificate updated = certificateService.selectiveUpdate(CERTIFICATE_WITH_ID);
@@ -487,7 +487,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldReceiveConsistentTags() {
+    public void selectiveUpdate_ShouldReceiveConsistentTags() {
         //given
         Certificate tagsWithoutId = Certificate.Builder
                 .from(CERTIFICATE_WITH_ID)
@@ -502,7 +502,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldCreateNewTags() {
+    public void selectiveUpdate_ShouldCreateNewTags() {
         //given
         //when
         Certificate updated = certificateService.selectiveUpdate(CERTIFICATE_WITH_ID);
@@ -511,7 +511,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testSelectiveUpdateShouldUpdateCertificateTags() {
+    public void selectiveUpdate_ShouldUpdateCertificateTags() {
         //given
         //when
         Certificate updated = certificateService.selectiveUpdate(CERTIFICATE_WITH_ID);
@@ -520,7 +520,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldThrowExceptionWhenIdInvalid() {
+    public void deleteById_WhenIdInvalid_ShouldThrowException() {
         //given
         //when
         //then
@@ -530,7 +530,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldThrowExceptionWhenIdIsNull() {
+    public void deleteById_WhenIdIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -540,7 +540,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldThrowExceptionWhenCertificateDoesNotExists() {
+    public void deleteById_WhenCertificateDoesNotExists_ShouldThrowException() {
         //given
         lenient().when(certificateDao.findById(anyLong())).thenReturn(Optional.empty());
         //when
@@ -551,7 +551,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldDeleteCertificateTags() {
+    public void deleteById_ShouldDeleteCertificateTags() {
         //given
         //when
         certificateService.deleteById(ID_VALID);
@@ -560,7 +560,7 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldDeleteCertificate() {
+    public void deleteById_ShouldDeleteCertificate() {
         //given
         //when
         certificateService.deleteById(ID_VALID);

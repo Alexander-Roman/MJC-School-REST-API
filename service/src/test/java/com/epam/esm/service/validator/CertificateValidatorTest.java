@@ -103,7 +103,7 @@ public class CertificateValidatorTest {
 
     @ParameterizedTest
     @MethodSource("provideValidCertificates")
-    public void testIsValidShouldReturnTrueWhenCertificateValid(Certificate valid) {
+    public void isValid_WhenCertificateValid_ShouldReturnTrue(Certificate valid) {
         //given
         //when
         boolean actual = certificateValidator.isValid(valid);
@@ -113,7 +113,7 @@ public class CertificateValidatorTest {
 
     @ParameterizedTest
     @MethodSource("provideInvalidCertificates")
-    public void testIsValidShouldReturnFalseWhenCertificateInvalid(Certificate invalid) {
+    public void isValid_WhenCertificateInvalid_ShouldReturnFalse(Certificate invalid) {
         //given
         //when
         boolean actual = certificateValidator.isValid(invalid);
@@ -122,7 +122,7 @@ public class CertificateValidatorTest {
     }
 
     @Test
-    public void testIsValidShouldReturnFalseWhenOneOfTagsInvalid() {
+    public void isValid_WhenOneOfTagsInvalid_ShouldReturnFalse() {
         //given
         lenient().when(tagValidator.isValid(any())).thenReturn(false);
         //when

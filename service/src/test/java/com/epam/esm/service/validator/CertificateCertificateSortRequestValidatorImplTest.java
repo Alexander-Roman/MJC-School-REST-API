@@ -54,7 +54,7 @@ public class CertificateCertificateSortRequestValidatorImplTest {
 
     @ParameterizedTest
     @MethodSource("provideValidSortRequests")
-    public void testIsValidShouldReturnTrueWhenSortRequestIsValidForCertificate(SortRequest valid) {
+    public void isValid_WhenSortRequestIsValidForCertificate_ShouldReturnTrue(SortRequest valid) {
         //given
         //when
         boolean actual = validator.isValid(valid);
@@ -64,7 +64,7 @@ public class CertificateCertificateSortRequestValidatorImplTest {
 
     @ParameterizedTest
     @MethodSource("provideInvalidSortRequests")
-    public void testIsValidShouldReturnFalseWhenSortRequestInvalidForCertificate(SortRequest invalid) {
+    public void isValid_WhenSortRequestInvalidForCertificate_ShouldReturnFalse(SortRequest invalid) {
         //given
         //when
         boolean actual = validator.isValid(invalid);

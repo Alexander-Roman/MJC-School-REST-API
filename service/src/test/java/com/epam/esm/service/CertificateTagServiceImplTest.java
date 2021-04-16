@@ -45,7 +45,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testAddTagSetShouldThrowExceptionWhenTagSetIsNull() {
+    public void addTags_WhenTagSetIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -55,7 +55,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testAddTagSetShouldThrowExceptionWhenIdInvalid() {
+    public void addTags_WhenIdInvalid_ShouldThrowException() {
         //given
         //when
         //then
@@ -65,7 +65,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testAddTagSetShouldThrowExceptionWhenIdIsNull() {
+    public void addTags_WhenIdIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -75,7 +75,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testAddTagSetShouldDoNothingWhenTagSetIsEmpty() {
+    public void addTags_WhenTagSetIsEmpty_ShouldDoNothing() {
         //given
         //when
         certificateTagService.addTags(ID_VALID, Collections.emptySet());
@@ -84,7 +84,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testAddTagSetShouldCreateCertificateTags() {
+    public void addTags_ShouldCreateCertificateTags() {
         //given
         //when
         certificateTagService.addTags(ID_VALID, TAG_SET_WITH_ID);
@@ -93,7 +93,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testUpdateTagSetShouldThrowExceptionWhenTagSetIsNull() {
+    public void updateTags_WhenTagSetIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -103,7 +103,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testUpdateTagSetShouldThrowExceptionWhenIdInvalid() {
+    public void updateTags_WhenIdInvalid_ShouldThrowException() {
         //given
         //when
         //then
@@ -113,7 +113,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testUpdateTagSetShouldThrowExceptionWhenIdIsNull() {
+    public void updateTags_WhenIdIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -123,7 +123,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testUpdateTagSetShouldCreteCertificateTagWhenNewTagAdded() {
+    public void updateTags_WhenNewTagAdded_ShouldCreteCertificateTag() {
         //given
         lenient().when(certificateTagDao.findByCertificateId(anyLong())).thenReturn(Collections.emptyList());
         //when
@@ -133,7 +133,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testUpdateTagSetShouldDeleteCertificateTagWhenTagRemoved() {
+    public void updateTags_WhenTagRemoved_ShouldDeleteCertificateTag() {
         //given
         //when
         certificateTagService.updateTags(ID_VALID, Collections.emptySet());
@@ -142,7 +142,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testUpdateTagSetShouldDoNothingWhenNothingToChange() {
+    public void updateTags_WhenNothingToChange_ShouldDoNothing() {
         //given
         //when
         certificateTagService.updateTags(ID_VALID, TAG_SET_WITH_ID);
@@ -152,7 +152,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByCertificateIdShouldThrowExceptionWhenIdInvalid() {
+    public void deleteByCertificateId_WhenIdInvalid_ShouldThrowException() {
         //given
         //when
         //then
@@ -162,7 +162,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByCertificateIdShouldThrowExceptionWhenIdIsNull() {
+    public void deleteByCertificateId_WhenIdIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -172,7 +172,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByCertificateIdShouldDeleteCertificateTags() {
+    public void deleteByCertificateId_ShouldDeleteCertificateTags() {
         //given
         //when
         certificateTagService.deleteByCertificateId(ID_VALID);
@@ -181,7 +181,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByTagIdShouldThrowExceptionWhenIdInvalid() {
+    public void deleteByTagId_WhenIdInvalid_ShouldThrowException() {
         //given
         //when
         //then
@@ -191,7 +191,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByTagIdShouldThrowExceptionWhenIdIsNull() {
+    public void deleteByTagId_WhenIdIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -201,7 +201,7 @@ public class CertificateTagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByTagIdShouldDeleteCertificateTags() {
+    public void deleteByTagId_ShouldDeleteCertificateTags() {
         //given
         //when
         certificateTagService.deleteByTagId(ID_VALID);

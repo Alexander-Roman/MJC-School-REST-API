@@ -59,7 +59,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testFindByIdShouldFindTagById() {
+    public void findById_ShouldFindTagById() {
         //given
         //when
         Tag actual = tagService.findById(ID_VALID);
@@ -68,7 +68,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testFindByIdShouldThrowExceptionWhenIdInvalid() {
+    public void findById_WhenIdInvalid_ShouldThrowException() {
         //given
         //when
         //then
@@ -78,7 +78,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testFindByIdShouldThrowExceptionWhenIdIsNull() {
+    public void findById_WhenIdIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -88,7 +88,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testFindByIdShouldThrowExceptionWhenFoundNothing() {
+    public void findById_WhenFoundNothing_ShouldThrowException() {
         //given
         lenient().when(tagDao.findById(ID_VALID)).thenReturn(Optional.empty());
         //when
@@ -99,7 +99,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testFindAllShouldFindListOfAllTags() {
+    public void findAll_ShouldFindListOfAllTags() {
         //given
         //when
         List<Tag> actual = tagService.findAll();
@@ -109,7 +109,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldThrowExceptionWhenTagInvalid() {
+    public void create_WhenTagInvalid_ShouldThrowException() {
         //given
         lenient().when(tagValidator.isValid(any())).thenReturn(false);
         //when
@@ -120,7 +120,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldCreateTag() {
+    public void create_ShouldCreateTag() {
         //given
         lenient().when(tagDao.findByName(anyString())).thenReturn(Optional.empty());
         //when
@@ -130,7 +130,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateShouldReturnCreated() {
+    public void create_ShouldReturnCreated() {
         //given
         //when
         Tag actual = tagService.create(TAG_WITHOUT_ID);
@@ -139,7 +139,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldThrowExceptionWhenIdInvalid() {
+    public void deleteById_WhenIdInvalid_ShouldThrowException() {
         //given
         //when
         //then
@@ -149,7 +149,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldThrowExceptionWhenIdIsNull() {
+    public void deleteById_WhenIdIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -159,7 +159,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldThrowExceptionWhenTagDoesNotExists() {
+    public void deleteById_WhenTagDoesNotExists_ShouldThrowException() {
         //given
         lenient().when(tagDao.findById(anyLong())).thenReturn(Optional.empty());
         //when
@@ -170,7 +170,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldDeleteCertificateTags() {
+    public void deleteById_ShouldDeleteCertificateTags() {
         //given
         //when
         tagService.deleteById(ID_VALID);
@@ -179,7 +179,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testDeleteByIdShouldDeleteTag() {
+    public void deleteById_ShouldDeleteTag() {
         //given
         //when
         tagService.deleteById(ID_VALID);
@@ -188,7 +188,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateIfNotExistShouldThrowExceptionWhenTagSetIsNull() {
+    public void createIfNotExist_WhenTagSetIsNull_ShouldThrowException() {
         //given
         //when
         //then
@@ -198,7 +198,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateIfNotExistShouldThrowExceptionWhenOneOfTagsInvalid() {
+    public void createIfNotExist_WhenOneOfTagsInvalid_ShouldThrowException() {
         //given
         Tag tagInvalid = new Tag(null, null);
         lenient().when(tagValidator.isValid(TAG_WITH_ID)).thenReturn(true);
@@ -212,7 +212,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateIfNotExistShouldDoNothingWhenTagSetIsEmpty() {
+    public void createIfNotExist_WhenTagSetIsEmpty_ShouldDoNothing() {
         //given
         //when
         tagService.createIfNotExist(Collections.emptySet());
@@ -222,7 +222,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateIfNotExistShouldReturnEmptySetWhenTagSetIsEmpty() {
+    public void createIfNotExist_WhenTagSetIsEmpty_ShouldReturnEmptySet() {
         //given
         //when
         Set<Tag> actual = tagService.createIfNotExist(Collections.emptySet());
@@ -232,7 +232,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateIfNotExistShouldReturnTagWhenExists() {
+    public void createIfNotExist_WhenExists_ShouldReturnTag() {
         //given
         //when
         Set<Tag> actual = tagService.createIfNotExist(TAG_SET_WITHOUT_ID);
@@ -241,7 +241,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateIfNotExistShouldNotCreateTagWhenExists() {
+    public void createIfNotExist_WhenExists_ShouldNotCreateTag() {
         //given
         //when
         tagService.createIfNotExist(TAG_SET_WITHOUT_ID);
@@ -250,7 +250,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateIfNotExistShouldCreateTagWhenNotFound() {
+    public void createIfNotExist_WhenNotFound_ShouldCreateTag() {
         //given
         lenient().when(tagDao.findByName(anyString())).thenReturn(Optional.empty());
         //when
@@ -260,7 +260,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testCreateIfNotExistShouldReturnCreatedWhenNotFound() {
+    public void createIfNotExist_WhenNotFound_ShouldReturnCreated() {
         //given
         lenient().when(tagDao.findByName(anyString())).thenReturn(Optional.empty());
         //when
@@ -270,7 +270,7 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testDeleteUnusedShouldDeleteNoCertificateAttachedTags() {
+    public void deleteUnused_ShouldDeleteNoCertificateAttachedTags() {
         //given
         //when
         tagService.deleteUnused();
