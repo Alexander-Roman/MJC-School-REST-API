@@ -1,0 +1,11 @@
+plugins {
+    id 'com.epam.esm.java-spring-boot-common-conventions'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

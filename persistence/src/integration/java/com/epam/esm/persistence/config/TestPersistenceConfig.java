@@ -3,6 +3,7 @@ package com.epam.esm.persistence.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,7 +18,13 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 @Profile("integrationTest")
-@ComponentScan(basePackages = "com.epam.esm.persistence")
+@ComponentScan(
+        basePackages = "com.epam.esm.persistence",
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ANNOTATION,
+                value = Configuration.class
+        )
+)
 @EnableTransactionManagement
 public class TestPersistenceConfig {
 

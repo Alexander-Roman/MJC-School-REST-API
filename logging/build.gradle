@@ -1,5 +1,5 @@
 plugins {
-    id 'com.epam.esm.java-library-conventions'
+    id 'com.epam.esm.java-spring-boot-library-conventions'
 }
 
 dependencies {

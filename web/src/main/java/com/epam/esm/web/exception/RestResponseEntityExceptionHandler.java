@@ -4,8 +4,9 @@ import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.web.exception.model.ApiError;
 import com.epam.esm.web.exception.model.BindApiError;
 import com.epam.esm.web.exception.model.FieldApiError;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -31,7 +32,7 @@ import java.util.Locale;
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(RestResponseEntityExceptionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 
     private static final Integer TYPE_MISMATCH_CODE = 40001;
     private static final Integer BIND_EXCEPTION_CODE = 40002;

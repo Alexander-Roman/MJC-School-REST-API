@@ -1,4 +1,0 @@
-plugins {
-    id 'com.epam.esm.java-common-conventions'
-    id 'war'
-}
