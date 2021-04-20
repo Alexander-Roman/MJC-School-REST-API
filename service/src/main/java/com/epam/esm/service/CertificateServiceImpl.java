@@ -1,6 +1,5 @@
 package com.epam.esm.service;
 
-import com.epam.esm.persistence.dao.CertificateDao;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.model.FilterRequest;
@@ -31,26 +30,20 @@ public class CertificateServiceImpl implements CertificateService {
     private static final String ERROR_MESSAGE_SORT_REQUEST_INVALID = "Invalid SortRequest parameter: ";
     private static final long MIN_ID_VALUE = 1L;
 
-    private final CertificateDao certificateDao;
+    private final CertificateRepository certificateRepository;
     private final TagService tagService;
-    private final CertificateTagService certificateTagService;
     private final Validator<Certificate> certificateValidator;
     private final CertificateSortRequestValidator certificateSortRequestValidator;
-    private final CertificateRepository certificateRepository;
 
     @Autowired
-    public CertificateServiceImpl(CertificateDao certificateDao,
+    public CertificateServiceImpl(CertificateRepository certificateRepository,
                                   TagService tagService,
-                                  CertificateTagService certificateTagService,
                                   Validator<Certificate> certificateValidator,
-                                  CertificateSortRequestValidator certificateSortRequestValidator,
-                                  CertificateRepository certificateRepository) {
-        this.certificateDao = certificateDao;
+                                  CertificateSortRequestValidator certificateSortRequestValidator) {
+        this.certificateRepository = certificateRepository;
         this.tagService = tagService;
-        this.certificateTagService = certificateTagService;
         this.certificateValidator = certificateValidator;
         this.certificateSortRequestValidator = certificateSortRequestValidator;
-        this.certificateRepository = certificateRepository;
     }
 
     @Override

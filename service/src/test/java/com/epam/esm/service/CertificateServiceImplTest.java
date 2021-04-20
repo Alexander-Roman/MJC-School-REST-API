@@ -1,11 +1,12 @@
 package com.epam.esm.service;
 
-import com.epam.esm.persistence.dao.CertificateDao;
+
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.Sort;
 import com.epam.esm.persistence.model.SortRequest;
+import com.epam.esm.persistence.repository.CertificateRepository;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.CertificateSortRequestValidator;
@@ -27,8 +28,6 @@ import java.util.Set;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.anySet;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -49,15 +48,15 @@ public class CertificateServiceImplTest {
 
 
     private static final List<Tag> TAGS_WITH_ID = Arrays.asList(
-            new Tag(1L, "tag1"),
-            new Tag(2L, "tag2"),
-            new Tag(3L, "tag3")
+            new Tag(1L, "tag1", null),
+            new Tag(2L, "tag2", null),
+            new Tag(3L, "tag3", null)
     );
 
     private static final List<Tag> TAGS_WITHOUT_ID = Arrays.asList(
-            new Tag(null, "tag1"),
-            new Tag(null, "tag2"),
-            new Tag(null, "tag3")
+            new Tag(null, "tag1", null),
+            new Tag(null, "tag2", null),
+            new Tag(null, "tag3", null)
     );
 
     private static final Certificate CERTIFICATE_WITH_ID = new Certificate(
@@ -93,30 +92,26 @@ public class CertificateServiceImplTest {
             new HashSet<>()
     );
 
-    private final CertificateDao certificateDao = mock(CertificateDao.class);
+    private final CertificateRepository certificateRepository = mock(CertificateRepository.class);
     private final TagService tagService = mock(TagService.class);
-    private final CertificateTagService certificateTagService = mock(CertificateTagService.class);
     private final Validator<Certificate> certificateValidator = mock(CertificateValidator.class);
     private final CertificateSortRequestValidator certificateSortRequestValidator = mock(CertificateSortRequestValidator.class);
 
     private final CertificateServiceImpl certificateService = new CertificateServiceImpl(
-            certificateDao,
+            certificateRepository,
             tagService,
-            certificateTagService,
             certificateValidator,
-            certificateSortRequestValidator,
-            certificateRepository);
+            certificateSortRequestValidator);
 
     @BeforeEach
     public void setUp() {
         //Positive scenario
-        lenient().when(certificateDao.findById(anyLong())).thenReturn(Optional.of(CERTIFICATE_WITH_ID));
+        lenient().when(certificateRepository.findById(anyLong())).thenReturn(Optional.of(CERTIFICATE_WITH_ID));
         lenient().when(certificateSortRequestValidator.isValid(any())).thenReturn(true);
-        lenient().when(certificateDao.findAll(any(), any())).thenReturn(Collections.singletonList(CERTIFICATE_WITH_ID));
+        lenient().when(certificateRepository.findAll(any(), any())).thenReturn(Collections.singletonList(CERTIFICATE_WITH_ID));
         lenient().when(certificateValidator.isValid(any())).thenReturn(true);
-        lenient().when(certificateDao.create(any())).thenReturn(CERTIFICATE_WITH_ID);
+        lenient().when(certificateRepository.save(any())).thenReturn(CERTIFICATE_WITH_ID);
         lenient().when(tagService.createIfNotExist(any())).thenReturn(new HashSet<>(TAGS_WITH_ID));
-        lenient().when(certificateDao.update(any())).then(returnsFirstArg());
     }
 
     @Test
@@ -151,7 +146,7 @@ public class CertificateServiceImplTest {
     @Test
     public void findById_WhenFoundNothing_ShouldThrowException() {
         //given
-        lenient().when(certificateDao.findById(ID_VALID)).thenReturn(Optional.empty());
+        lenient().when(certificateRepository.findById(ID_VALID)).thenReturn(Optional.empty());
         //when
         //then
         Assertions.assertThrows(EntityNotFoundException.class, () ->
@@ -213,7 +208,7 @@ public class CertificateServiceImplTest {
     @Test
     public void create_ShouldSetActualCreateDate() {
         //given
-        lenient().when(certificateDao.create(any())).then(returnsFirstArg());
+        lenient().when(certificateRepository.save(any())).then(returnsFirstArg());
         //when
         Certificate created = certificateService.create(CERTIFICATE_WITHOUT_ID);
         LocalDateTime actual = created.getCreateDate();
@@ -224,7 +219,7 @@ public class CertificateServiceImplTest {
     @Test
     public void create_ShouldSetActualLastUpdateDate() {
         //given
-        lenient().when(certificateDao.create(any())).then(returnsFirstArg());
+        lenient().when(certificateRepository.save(any())).then(returnsFirstArg());
         //when
         Certificate created = certificateService.create(CERTIFICATE_WITHOUT_ID);
         LocalDateTime actual = created.getLastUpdateDate();
@@ -249,7 +244,7 @@ public class CertificateServiceImplTest {
         //when
         certificateService.create(CERTIFICATE_WITHOUT_ID);
         //then
-        verify(certificateDao).create(any());
+        verify(certificateRepository).save(any());
     }
 
     @Test
@@ -263,31 +258,12 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void create_WhenNothingToAdd_ShouldNotAddTags() {
-        //given
-        //when
-        certificateService.create(CERTIFICATE_NETHER_ID_NO_TAGS);
-        //then
-        verify(certificateTagService, never()).addTags(anyLong(), anySet());
-        verify(certificateTagService, never()).updateTags(anyLong(), anySet());
-    }
-
-    @Test
     public void create_WhenTagsPresent_ShouldCreateTags() {
         //given
         //when
         certificateService.create(CERTIFICATE_WITHOUT_ID);
         //then
         verify(tagService).createIfNotExist(new HashSet<>(TAGS_WITHOUT_ID));
-    }
-
-    @Test
-    public void create_WhenTagsPresent_ShouldAddTags() {
-        //given
-        //when
-        certificateService.create(CERTIFICATE_WITHOUT_ID);
-        //then
-        verify(certificateTagService).addTags(anyLong(), eq(new HashSet<>(TAGS_WITH_ID)));
     }
 
     @Test
@@ -336,7 +312,7 @@ public class CertificateServiceImplTest {
     @Test
     public void selectiveUpdate_WhenCertificateDoesNotExists_ShouldThrowException() {
         //given
-        lenient().when(certificateDao.findById(anyLong())).thenReturn(Optional.empty());
+        lenient().when(certificateRepository.findById(anyLong())).thenReturn(Optional.empty());
         //when
         //then
         Assertions.assertThrows(EntityNotFoundException.class, () ->
@@ -479,6 +455,7 @@ public class CertificateServiceImplTest {
     @Test
     public void selectiveUpdate_ShouldSetActualLastUpdateDate() {
         //given
+        lenient().when(certificateRepository.save(any())).then(returnsFirstArg());
         //when
         Certificate updated = certificateService.selectiveUpdate(CERTIFICATE_WITH_ID);
         LocalDateTime actual = updated.getLastUpdateDate();
@@ -511,15 +488,6 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void selectiveUpdate_ShouldUpdateCertificateTags() {
-        //given
-        //when
-        Certificate updated = certificateService.selectiveUpdate(CERTIFICATE_WITH_ID);
-        //then
-        verify(certificateTagService).updateTags(ID_VALID, new HashSet<>(TAGS_WITH_ID));
-    }
-
-    @Test
     public void deleteById_WhenIdInvalid_ShouldThrowException() {
         //given
         //when
@@ -542,7 +510,7 @@ public class CertificateServiceImplTest {
     @Test
     public void deleteById_WhenCertificateDoesNotExists_ShouldThrowException() {
         //given
-        lenient().when(certificateDao.findById(anyLong())).thenReturn(Optional.empty());
+        lenient().when(certificateRepository.findById(anyLong())).thenReturn(Optional.empty());
         //when
         //then
         Assertions.assertThrows(EntityNotFoundException.class, () ->
@@ -551,21 +519,12 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void deleteById_ShouldDeleteCertificateTags() {
-        //given
-        //when
-        certificateService.deleteById(ID_VALID);
-        //then
-        verify(certificateTagService).deleteByCertificateId(ID_VALID);
-    }
-
-    @Test
     public void deleteById_ShouldDeleteCertificate() {
         //given
         //when
         certificateService.deleteById(ID_VALID);
         //then
-        verify(certificateDao).delete(ID_VALID);
+        verify(certificateRepository).delete(CERTIFICATE_WITH_ID);
     }
 
 }

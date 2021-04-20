@@ -13,8 +13,6 @@ import com.epam.esm.web.model.SortRequestDto;
 import com.epam.esm.web.validator.CertificateDtoCreateValidator;
 import com.epam.esm.web.validator.CertificateDtoUpdateValidator;
 import com.epam.esm.web.validator.CertificateSortRequestDtoValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +37,6 @@ import java.util.stream.Collectors;
 @Validated
 public class CertificateController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CertificateController.class);
     private static final String MSG_CODE_ID_INVALID = "controller.id.invalid";
     private static final long MIN_ID = 1L;
 
@@ -130,13 +127,4 @@ public class CertificateController {
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-        LOGGER.trace("trace");
-        LOGGER.debug("debug");
-        LOGGER.info("info");
-        LOGGER.warn("warn");
-        LOGGER.error("error");
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

@@ -17,6 +17,4 @@ public interface TagRepository {
 
     void delete(Tag tag);
 
-    void deleteUnused();
-
 }

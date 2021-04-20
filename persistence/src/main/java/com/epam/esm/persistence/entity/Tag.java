@@ -1,7 +1,5 @@
 package com.epam.esm.persistence.entity;
 
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

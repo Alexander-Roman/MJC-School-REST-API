@@ -1,6 +1,5 @@
 package com.epam.esm.service;
 
-import com.epam.esm.persistence.dao.TagDao;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.exception.EntityNotFoundException;
@@ -24,20 +23,14 @@ public class TagServiceImpl implements TagService {
     private static final String ERROR_MESSAGE_TAG_INVALID = "Tag invalid: ";
     private static final long MIN_ID_VALUE = 1L;
 
-    private final TagDao tagDao;
-    private final CertificateTagService certificateTagService;
-    private final Validator<Tag> tagValidator;
     private final TagRepository tagRepository;
+    private final Validator<Tag> tagValidator;
 
     @Autowired
-    public TagServiceImpl(TagDao tagDao,
-                          CertificateTagService certificateTagService,
-                          Validator<Tag> tagValidator,
-                          TagRepository tagRepository) {
-        this.tagDao = tagDao;
-        this.certificateTagService = certificateTagService;
-        this.tagValidator = tagValidator;
+    public TagServiceImpl(TagRepository tagRepository,
+                          Validator<Tag> tagValidator) {
         this.tagRepository = tagRepository;
+        this.tagValidator = tagValidator;
     }
 
     @Override
@@ -102,11 +95,6 @@ public class TagServiceImpl implements TagService {
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_TAG_NOT_FOUND + id));
         tagRepository.delete(target);
         return target;
-    }
-
-    @Override
-    public void deleteUnused() {
-        tagRepository.deleteUnused();
     }
 
 }

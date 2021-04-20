@@ -1,8 +1,9 @@
-package com.epam.esm.persistence.dao;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.config.TestPersistenceConfig;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
+import com.epam.esm.persistence.init.TestApplication;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.Sort;
 import com.epam.esm.persistence.model.SortRequest;
@@ -24,15 +25,15 @@ import java.util.Optional;
 @SpringBootTest(classes = {TestPersistenceConfig.class})
 @ActiveProfiles("integrationTest")
 @Transactional
-public class CertificateDaoImplTest {
+public class CertificateRepositoryImplTest {
 
     private static final LocalDateTime LOCAL_DATE_TIME_TEST = LocalDateTime.parse("2021-01-01T12:00:00");
     private static final List<Tag> TAGS_FIRST = Arrays.asList(
-            new Tag(1L, "tag1"),
-            new Tag(2L, "tag2")
+            new Tag(1L, "tag1", null),
+            new Tag(2L, "tag2", null)
     );
     private static final List<Tag> TAGS_SECOND = Collections.singletonList(
-            new Tag(2L, "tag2")
+            new Tag(2L, "tag2", null)
     );
     private static final Certificate FIRST = new Certificate(
             1L,
@@ -105,18 +106,18 @@ public class CertificateDaoImplTest {
             Collections.emptySet()
     );
 
-    private final CertificateDaoImpl certificateDao;
+    private final CertificateRepository certificateRepository;
 
     @Autowired
-    public CertificateDaoImplTest(CertificateDaoImpl certificateDao) {
-        this.certificateDao = certificateDao;
+    public CertificateRepositoryImplTest(CertificateRepository certificateRepository) {
+        this.certificateRepository = certificateRepository;
     }
 
     @Test
     public void findById_WhenFound_ShouldReturnOptionalOfCertificate() {
         //given
         //when
-        Optional<Certificate> actual = certificateDao.findById(1L);
+        Optional<Certificate> actual = certificateRepository.findById(1L);
         //then
         Optional<Certificate> expected = Optional.of(FIRST);
         Assertions.assertEquals(expected, actual);
@@ -126,20 +127,10 @@ public class CertificateDaoImplTest {
     public void findById_WhenCertificateNotFound_ShouldReturnOptionalEmpty() {
         //given
         //when
-        Optional<Certificate> actual = certificateDao.findById(10000L);
+        Optional<Certificate> actual = certificateRepository.findById(10000L);
         //then
         Optional<Certificate> expected = Optional.empty();
         Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    public void findAll_ShouldReturnListOfAllCertificates() {
-        //given
-        //when
-        List<Certificate> results = certificateDao.findAll();
-        //then
-        int size = results.size();
-        Assertions.assertEquals(5, size);
     }
 
     @Test
@@ -148,7 +139,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(null, null);
         //when
-        List<Certificate> results = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> results = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         int size = results.size();
         Assertions.assertEquals(5, size);
@@ -160,7 +151,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest("number 1", null);
         SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIRST, FIFTH);
         Assertions.assertEquals(expected, actual);
@@ -172,7 +163,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest("_Should found nothing", null);
         SortRequest sortRequest = new SortRequest(null, null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Collections.emptyList();
         Assertions.assertEquals(expected, actual);
@@ -184,7 +175,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, "tag2");
         SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIRST, SECOND);
         Assertions.assertEquals(expected, actual);
@@ -196,7 +187,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, "such tag does not exists");
         SortRequest sortRequest = new SortRequest(null, null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Collections.emptyList();
         Assertions.assertEquals(expected, actual);
@@ -208,7 +199,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest("number 2", "tag1");
         SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Collections.singletonList(FIRST);
         Assertions.assertEquals(expected, actual);
@@ -220,7 +211,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIRST, SECOND, THIRD, FOURTH, FIFTH);
         Assertions.assertEquals(expected, actual);
@@ -232,7 +223,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("name"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIFTH, FOURTH, THIRD, SECOND, FIRST);
         Assertions.assertEquals(expected, actual);
@@ -244,7 +235,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("description"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIFTH, FIRST, SECOND, THIRD, FOURTH);
         Assertions.assertEquals(expected, actual);
@@ -256,7 +247,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("description"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FOURTH, THIRD, SECOND, FIRST, FIFTH);
         Assertions.assertEquals(expected, actual);
@@ -268,7 +259,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("price"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FOURTH, FIFTH, FIRST, SECOND, THIRD);
         Assertions.assertEquals(expected, actual);
@@ -280,7 +271,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("price"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(THIRD, SECOND, FIRST, FIFTH, FOURTH);
         Assertions.assertEquals(expected, actual);
@@ -292,7 +283,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("createDate"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(SECOND, THIRD, FOURTH, FIFTH, FIRST);
         Assertions.assertEquals(expected, actual);
@@ -304,7 +295,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("createDate"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIRST, FIFTH, FOURTH, THIRD, SECOND);
         Assertions.assertEquals(expected, actual);
@@ -316,7 +307,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("lastUpdateDate"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIRST, SECOND, THIRD, FOURTH, FIFTH);
         Assertions.assertEquals(expected, actual);
@@ -328,7 +319,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("lastUpdateDate"), null);
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIFTH, FOURTH, THIRD, SECOND, FIRST);
         Assertions.assertEquals(expected, actual);
@@ -340,7 +331,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("name"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIFTH, THIRD, FOURTH, FIRST, SECOND);
         Assertions.assertEquals(expected, actual);
@@ -352,7 +343,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("name"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(SECOND, FIRST, FOURTH, THIRD, FIFTH);
         Assertions.assertEquals(expected, actual);
@@ -364,7 +355,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("description"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIFTH, THIRD, FOURTH, FIRST, SECOND);
         Assertions.assertEquals(expected, actual);
@@ -376,7 +367,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("description"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(SECOND, FIRST, FOURTH, THIRD, FIFTH);
         Assertions.assertEquals(expected, actual);
@@ -388,7 +379,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("price"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIFTH, FOURTH, THIRD, FIRST, SECOND);
         Assertions.assertEquals(expected, actual);
@@ -400,7 +391,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("price"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(SECOND, FIRST, THIRD, FOURTH, FIFTH);
         Assertions.assertEquals(expected, actual);
@@ -412,7 +403,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("createDate"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIFTH, THIRD, FOURTH, SECOND, FIRST);
         Assertions.assertEquals(expected, actual);
@@ -424,7 +415,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("createDate"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIRST, SECOND, FOURTH, THIRD, FIFTH);
         Assertions.assertEquals(expected, actual);
@@ -436,7 +427,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("lastUpdateDate"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(FIFTH, THIRD, FOURTH, FIRST, SECOND);
         Assertions.assertEquals(expected, actual);
@@ -448,7 +439,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest(null, null);
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("lastUpdateDate"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(SECOND, FIRST, FOURTH, THIRD, FIFTH);
         Assertions.assertEquals(expected, actual);
@@ -460,7 +451,7 @@ public class CertificateDaoImplTest {
         FilterRequest filterRequest = new FilterRequest("number", "tag2");
         SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("lastUpdateDate"));
         //when
-        List<Certificate> actual = certificateDao.findAll(sortRequest, filterRequest);
+        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
         //then
         List<Certificate> expected = Arrays.asList(SECOND, FIRST);
         Assertions.assertEquals(expected, actual);
@@ -470,7 +461,7 @@ public class CertificateDaoImplTest {
     public void create_ShouldReturnCreatedWithId() {
         //given
         //when
-        Certificate created = certificateDao.create(CERTIFICATE_TO_CREATE);
+        Certificate created = certificateRepository.save(CERTIFICATE_TO_CREATE);
         //then
         Long actual = created.getId();
         Assertions.assertNotNull(actual);
@@ -479,10 +470,10 @@ public class CertificateDaoImplTest {
     @Test
     public void create_ShouldSaveCertificateInDatabase() {
         //given
-        Certificate created = certificateDao.create(CERTIFICATE_TO_CREATE);
+        Certificate created = certificateRepository.save(CERTIFICATE_TO_CREATE);
         Long id = created.getId();
         //when
-        Optional<Certificate> found = certificateDao.findById(id);
+        Optional<Certificate> found = certificateRepository.findById(id);
         //then
         Certificate expected = Certificate.Builder
                 .from(CERTIFICATE_TO_CREATE)
@@ -495,9 +486,9 @@ public class CertificateDaoImplTest {
     @Test
     public void update_ShouldUpdateCertificateInDatabase() {
         //given
-        certificateDao.update(FIFTH_TO_UPDATE);
+        certificateRepository.save(FIFTH_TO_UPDATE);
         //when
-        Optional<Certificate> found = certificateDao.findById(5L);
+        Optional<Certificate> found = certificateRepository.findById(5L);
         //then
         Certificate actual = found.get();
         Assertions.assertEquals(FIFTH_TO_UPDATE, actual);
@@ -507,7 +498,7 @@ public class CertificateDaoImplTest {
     public void update_ShouldReturnUpdated() {
         //given
         //when
-        Certificate actual = certificateDao.update(FIFTH_TO_UPDATE);
+        Certificate actual = certificateRepository.save(FIFTH_TO_UPDATE);
         //then
         Assertions.assertEquals(FIFTH_TO_UPDATE, actual);
     }
@@ -516,8 +507,8 @@ public class CertificateDaoImplTest {
     public void delete_ShouldDeleteCertificateFromDatabase() {
         //given
         //when
-        certificateDao.delete(5L);
-        Optional<Certificate> found = certificateDao.findById(5L);
+        certificateRepository.delete(FIFTH);
+        Optional<Certificate> found = certificateRepository.findById(5L);
         //then
         boolean actual = found.isPresent();
         Assertions.assertFalse(actual);

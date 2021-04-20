@@ -15,8 +15,8 @@ public class TagValidatorTest {
 
     private static Stream<Tag> provideValidTags() {
         return Stream.of(
-                new Tag(1L, "name"),
-                new Tag(null, "name")
+                new Tag(1L, "name", null),
+                new Tag(null, "name", null)
         );
     }
 
@@ -24,13 +24,13 @@ public class TagValidatorTest {
         String nameLengthExceeded = buildStringExceedingLength(MAX_TAG_NAME_LENGTH);
         return Stream.of(
                 null,
-                new Tag(0L, "name"),
-                new Tag(-1L, "name"),
-                new Tag(1L, null),
-                new Tag(1L, ""),
-                new Tag(1L, "  "),
-                new Tag(1L, " \n "),
-                new Tag(1L, nameLengthExceeded)
+                new Tag(0L, "name", null),
+                new Tag(-1L, "name", null),
+                new Tag(1L, null, null),
+                new Tag(1L, "", null),
+                new Tag(1L, "  ", null),
+                new Tag(1L, " \n ", null),
+                new Tag(1L, nameLengthExceeded, null)
         );
     }
 

@@ -1,4 +1,4 @@
-package com.epam.esm.persistence.dao;
+package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.config.TestPersistenceConfig;
 import com.epam.esm.persistence.entity.Tag;
@@ -15,23 +15,23 @@ import java.util.Optional;
 @SpringBootTest(classes = {TestPersistenceConfig.class})
 @ActiveProfiles("integrationTest")
 @Transactional
-public class TagDaoImplTest {
+public class TagRepositoryImplTest {
 
-    private static final Tag TAG_FIRST = new Tag(1L, "tag1");
-    private static final Tag TAG_TO_CREATE = new Tag(null, "tag6");
+    private static final Tag TAG_FIRST = new Tag(1L, "tag1", null);
+    private static final Tag TAG_TO_CREATE = new Tag(null, "tag6", null);
 
-    private final TagDaoImpl tagDao;
+    private final TagRepositoryImpl tagRepository;
 
     @Autowired
-    public TagDaoImplTest(TagDaoImpl tagDao) {
-        this.tagDao = tagDao;
+    public TagRepositoryImplTest(TagRepositoryImpl tagRepository) {
+        this.tagRepository = tagRepository;
     }
 
     @Test
     public void findById_WhenFound_ShouldReturnOptionalOfTag() {
         //given
         //when
-        Optional<Tag> actual = tagDao.findById(1L);
+        Optional<Tag> actual = tagRepository.findById(1L);
         //then
         Optional<Tag> expected = Optional.of(TAG_FIRST);
         Assertions.assertEquals(expected, actual);
@@ -41,7 +41,7 @@ public class TagDaoImplTest {
     public void findById_WhenTagNotFound_ShouldReturnOptionalEmpty() {
         //given
         //when
-        Optional<Tag> actual = tagDao.findById(10000L);
+        Optional<Tag> actual = tagRepository.findById(10000L);
         //then
         Optional<Tag> expected = Optional.empty();
         Assertions.assertEquals(expected, actual);
@@ -51,7 +51,7 @@ public class TagDaoImplTest {
     public void findByName_WhenFound_ShouldReturnOptionalOfTag() {
         //given
         //when
-        Optional<Tag> actual = tagDao.findByName("tag1");
+        Optional<Tag> actual = tagRepository.findByName("tag1");
         //then
         Optional<Tag> expected = Optional.of(TAG_FIRST);
         Assertions.assertEquals(expected, actual);
@@ -61,7 +61,7 @@ public class TagDaoImplTest {
     public void findByName_WhenTagNotFound_ShouldReturnOptionalEmpty() {
         //given
         //when
-        Optional<Tag> actual = tagDao.findByName("such name does not exists");
+        Optional<Tag> actual = tagRepository.findByName("such name does not exists");
         //then
         Optional<Tag> expected = Optional.empty();
         Assertions.assertEquals(expected, actual);
@@ -71,7 +71,7 @@ public class TagDaoImplTest {
     public void findAll_ShouldReturnListOfAllTags() {
         //given
         //when
-        List<Tag> results = tagDao.findAll();
+        List<Tag> results = tagRepository.findAll();
         //then
         int size = results.size();
         Assertions.assertEquals(5, size);
@@ -81,7 +81,7 @@ public class TagDaoImplTest {
     public void create_ShouldReturnCreatedWithId() {
         //given
         //when
-        Tag created = tagDao.create(TAG_TO_CREATE);
+        Tag created = tagRepository.save(TAG_TO_CREATE);
         //then
         Long actual = created.getId();
         Assertions.assertNotNull(actual);
@@ -90,10 +90,10 @@ public class TagDaoImplTest {
     @Test
     public void create_ShouldSaveTagInDatabase() {
         //given
-        Tag created = tagDao.create(TAG_TO_CREATE);
+        Tag created = tagRepository.save(TAG_TO_CREATE);
         Long id = created.getId();
         //when
-        Optional<Tag> found = tagDao.findById(id);
+        Optional<Tag> found = tagRepository.findById(id);
         //then
         Tag expected = Tag.Builder
                 .from(TAG_TO_CREATE)
@@ -107,22 +107,12 @@ public class TagDaoImplTest {
     public void delete_ShouldDeleteTagFromDatabase() {
         //given
         //when
-        tagDao.delete(5L);
-        Optional<Tag> found = tagDao.findById(5L);
+        tagRepository.delete(TAG_FIRST);
+        Optional<Tag> found = tagRepository.findById(1L);
         //then
         boolean actual = found.isPresent();
         Assertions.assertFalse(actual);
     }
 
-    @Test
-    public void deleteUnused_ShouldDeleteAllTagNotAttachedToAnyCertificate() {
-        //given
-        //when
-        tagDao.deleteUnused();
-        List<Tag> actual = tagDao.findAll();
-        //then
-        int size = actual.size();
-        Assertions.assertEquals(2, size);
-    }
 
 }

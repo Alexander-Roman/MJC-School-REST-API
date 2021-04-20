@@ -44,7 +44,7 @@ public class CertificateRepositoryImpl implements CertificateRepository {
         CriteriaQuery<Certificate> criteriaQuery = criteriaBuilder.createQuery(Certificate.class);
         Root<Certificate> certificateRoot = criteriaQuery.from(Certificate.class);
         certificateRoot.fetch(Certificate_.tags, JoinType.LEFT);
-        criteriaQuery.select(certificateRoot).distinct(true);
+        criteriaQuery = criteriaQuery.select(certificateRoot).distinct(true);
         criteriaQuery = this.buildFilterCriteria(criteriaQuery, certificateRoot, filterRequest);
         criteriaQuery = this.buildSortCriteria(criteriaQuery, certificateRoot, sortRequest);
         return entityManager.createQuery(criteriaQuery).getResultList();

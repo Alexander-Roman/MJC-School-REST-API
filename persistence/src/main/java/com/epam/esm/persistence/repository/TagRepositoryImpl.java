@@ -1,6 +1,5 @@
 package com.epam.esm.persistence.repository;
 
-import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.entity.Tag_;
 import org.springframework.stereotype.Repository;
@@ -77,11 +76,6 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public void delete(Tag tag) {
         entityManager.remove(tag);
-    }
-
-    @Override
-    public void deleteUnused() {
-
     }
 
 }

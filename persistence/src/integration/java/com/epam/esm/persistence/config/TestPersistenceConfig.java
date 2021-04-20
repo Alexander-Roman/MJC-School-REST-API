@@ -1,16 +1,14 @@
 package com.epam.esm.persistence.config;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
@@ -25,7 +23,9 @@ import java.nio.charset.StandardCharsets;
                 value = Configuration.class
         )
 )
+@EntityScan(basePackages = "com.epam.esm.persistence.entity")
 @EnableTransactionManagement
+@EnableAutoConfiguration
 public class TestPersistenceConfig {
 
     private static final String SQL_H2_DDL = "classpath:sql.h2/ddl.sql";
@@ -43,18 +43,6 @@ public class TestPersistenceConfig {
                 .addScript(SQL_H2_DDL)
                 .addScript(SQL_H2_DML)
                 .build();
-    }
-
-    @Bean
-    public NamedParameterJdbcOperations namedParameterJdbcOperations() {
-        DataSource dataSource = dataSource();
-        return new NamedParameterJdbcTemplate(dataSource);
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        DataSource dataSource = dataSource();
-        return new DataSourceTransactionManager(dataSource);
     }
 
 }

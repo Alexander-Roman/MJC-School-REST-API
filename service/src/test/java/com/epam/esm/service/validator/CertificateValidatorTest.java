@@ -25,7 +25,7 @@ public class CertificateValidatorTest {
     private static final int MAX_DESCRIPTION_LENGTH = 255;
 
     private static final List<Tag> TAGS_LIST = Collections.singletonList(
-            new Tag(1L, "name")
+            new Tag(1L, "name", null)
     );
 
     private static final Certificate CERTIFICATE_WITH_ID = new Certificate(

@@ -61,9 +61,4 @@ public interface TagService {
      */
     Tag deleteById(Long id);
 
-    /**
-     * Deletes all Tags not attached to any certificate
-     */
-    void deleteUnused();
-
 }
