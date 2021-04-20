@@ -167,7 +167,7 @@ public class CertificateServiceImpl implements CertificateService {
         Certificate target = certificateRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
-        certificateRepository.delete(target);
+        certificateRepository.delete(id);
         return target;
     }
 

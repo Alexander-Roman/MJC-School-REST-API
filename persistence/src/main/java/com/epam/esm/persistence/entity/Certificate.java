@@ -20,14 +20,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "certificate")
-@NamedQuery(
-        name = Certificate.FIND_BY_ID,
-        query = "SELECT DISTINCT c FROM Certificate c \n" +
-                "LEFT JOIN FETCH c.tags t \n" +
-                "WHERE c.id = :id \n")
 public final class Certificate {
-
-    public static final String FIND_BY_ID = "Certificate.findById";
 
     @Id
     @Column(name = "id", updatable = false)

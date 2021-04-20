@@ -20,10 +20,10 @@ public class TagRepositoryImplTest {
     private static final Tag TAG_FIRST = new Tag(1L, "tag1", null);
     private static final Tag TAG_TO_CREATE = new Tag(null, "tag6", null);
 
-    private final TagRepositoryImpl tagRepository;
+    private final TagRepository tagRepository;
 
     @Autowired
-    public TagRepositoryImplTest(TagRepositoryImpl tagRepository) {
+    public TagRepositoryImplTest(TagRepository tagRepository) {
         this.tagRepository = tagRepository;
     }
 
@@ -107,7 +107,7 @@ public class TagRepositoryImplTest {
     public void delete_ShouldDeleteTagFromDatabase() {
         //given
         //when
-        tagRepository.delete(TAG_FIRST);
+        tagRepository.delete(1L);
         Optional<Tag> found = tagRepository.findById(1L);
         //then
         boolean actual = found.isPresent();

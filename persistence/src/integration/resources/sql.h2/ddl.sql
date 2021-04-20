@@ -1,6 +1,8 @@
+CREATE SEQUENCE certificate_id_seq;
+
 CREATE TABLE certificate
 (
-    id               BIGINT AUTO_INCREMENT,
+    id               BIGINT DEFAULT certificate_id_seq.nextval,
     name             VARCHAR(150)  NOT NULL,
     description      VARCHAR(255)  NOT NULL,
     price            DECIMAL(5, 2) NOT NULL,
@@ -10,9 +12,11 @@ CREATE TABLE certificate
     PRIMARY KEY (id)
 );
 
+CREATE SEQUENCE tag_id_seq;
+
 CREATE TABLE tag
 (
-    id   BIGINT AUTO_INCREMENT,
+    id   BIGINT DEFAULT tag_id_seq.nextval,
     name VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );

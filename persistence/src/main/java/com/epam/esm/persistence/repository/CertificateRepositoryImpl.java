@@ -124,7 +124,8 @@ public class CertificateRepositoryImpl implements CertificateRepository {
     }
 
     @Override
-    public void delete(Certificate certificate) {
+    public void delete(Long id) {
+        Certificate certificate = entityManager.find(Certificate.class, id);
         entityManager.remove(certificate);
     }
 

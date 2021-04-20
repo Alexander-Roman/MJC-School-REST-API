@@ -93,7 +93,7 @@ public class TagServiceImpl implements TagService {
         Tag target = tagRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_TAG_NOT_FOUND + id));
-        tagRepository.delete(target);
+        tagRepository.delete(id);
         return target;
     }
 

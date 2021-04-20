@@ -3,7 +3,6 @@ package com.epam.esm.persistence.repository;
 import com.epam.esm.persistence.config.TestPersistenceConfig;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.persistence.init.TestApplication;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.Sort;
 import com.epam.esm.persistence.model.SortRequest;
@@ -507,7 +506,7 @@ public class CertificateRepositoryImplTest {
     public void delete_ShouldDeleteCertificateFromDatabase() {
         //given
         //when
-        certificateRepository.delete(FIFTH);
+        certificateRepository.delete(5L);
         Optional<Certificate> found = certificateRepository.findById(5L);
         //then
         boolean actual = found.isPresent();
