@@ -15,4 +15,6 @@ public interface CertificateRepository {
 
     Certificate save(Certificate certificate);
 
+    void delete(Certificate certificate);
+
 }

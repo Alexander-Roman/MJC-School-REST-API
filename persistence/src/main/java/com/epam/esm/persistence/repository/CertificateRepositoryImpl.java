@@ -33,7 +33,6 @@ public class CertificateRepositoryImpl implements CertificateRepository {
     private EntityManager entityManager;
 
     @Override
-    @Transactional()
     public Optional<Certificate> findById(Long id) {
         Certificate certificate = entityManager.find(Certificate.class, id);
         return Optional.ofNullable(certificate);
@@ -122,6 +121,11 @@ public class CertificateRepositoryImpl implements CertificateRepository {
             entityManager.merge(certificate);
         }
         return certificate;
+    }
+
+    @Override
+    public void delete(Certificate certificate) {
+        entityManager.remove(certificate);
     }
 
 }

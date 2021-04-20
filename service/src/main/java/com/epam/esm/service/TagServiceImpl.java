@@ -2,7 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.persistence.dao.TagDao;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.service.exception.EntityAlreadyExistsException;
+import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.Validator;
@@ -27,12 +27,17 @@ public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
     private final CertificateTagService certificateTagService;
     private final Validator<Tag> tagValidator;
+    private final TagRepository tagRepository;
 
     @Autowired
-    public TagServiceImpl(TagDao tagDao, CertificateTagService certificateTagService, Validator<Tag> tagValidator) {
+    public TagServiceImpl(TagDao tagDao,
+                          CertificateTagService certificateTagService,
+                          Validator<Tag> tagValidator,
+                          TagRepository tagRepository) {
         this.tagDao = tagDao;
         this.certificateTagService = certificateTagService;
         this.tagValidator = tagValidator;
+        this.tagRepository = tagRepository;
     }
 
     @Override
@@ -40,14 +45,14 @@ public class TagServiceImpl implements TagService {
         Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
         Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
 
-        return tagDao
+        return tagRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_TAG_NOT_FOUND + id));
     }
 
     @Override
     public List<Tag> findAll() {
-        return tagDao.findAll();
+        return tagRepository.findAll();
     }
 
     @Override
@@ -56,8 +61,8 @@ public class TagServiceImpl implements TagService {
             throw new ServiceException(ERROR_MESSAGE_TAG_INVALID + tag);
         }
         String name = tag.getName();
-        Optional<Tag> found = tagDao.findByName(name);
-        return found.orElseGet(() -> tagDao.create(tag));
+        Optional<Tag> found = tagRepository.findByName(name);
+        return found.orElseGet(() -> tagRepository.save(tag));
     }
 
     @Override
@@ -74,12 +79,12 @@ public class TagServiceImpl implements TagService {
         Set<Tag> results = new HashSet<>();
         for (Tag tag : tags) {
             String name = tag.getName();
-            Optional<Tag> result = tagDao.findByName(name);
+            Optional<Tag> result = tagRepository.findByName(name);
             if (result.isPresent()) {
                 Tag found = result.get();
                 results.add(found);
             } else {
-                Tag created = tagDao.create(tag);
+                Tag created = tagRepository.save(tag);
                 results.add(created);
             }
         }
@@ -92,19 +97,16 @@ public class TagServiceImpl implements TagService {
         Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
         Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
 
-        Tag target = tagDao
+        Tag target = tagRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_TAG_NOT_FOUND + id));
-
-        certificateTagService.deleteByTagId(id);
-        tagDao.delete(id);
-
+        tagRepository.delete(target);
         return target;
     }
 
     @Override
     public void deleteUnused() {
-        tagDao.deleteUnused();
+        tagRepository.deleteUnused();
     }
 
 }

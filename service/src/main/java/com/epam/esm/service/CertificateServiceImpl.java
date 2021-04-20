@@ -90,21 +90,16 @@ public class CertificateServiceImpl implements CertificateService {
             throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_INVALID + dated);
         }
 
-        return certificateRepository.save(dated);
+        Set<Tag> tags = certificate.getTags();
+        if (!tags.isEmpty()) {
+            Set<Tag> consistentTags = tagService.createIfNotExist(tags);
+            dated = Certificate.Builder
+                    .from(dated)
+                    .setTags(consistentTags)
+                    .build();
+        }
 
-//        Certificate savedCertificate = certificateDao.create(dated);
-//
-//        Set<Tag> tags = certificate.getTags();
-//        if (!tags.isEmpty()) {
-//            Set<Tag> savedTags = tagService.createIfNotExist(tags);
-//            savedCertificate = Certificate.Builder
-//                    .from(savedCertificate)
-//                    .setTags(savedTags)
-//                    .build();
-//            Long generatedId = savedCertificate.getId();
-//            certificateTagService.addTags(generatedId, savedTags);
-//        }
-//        return savedCertificate;
+        return certificateRepository.save(dated);
     }
 
     @Override
@@ -115,7 +110,7 @@ public class CertificateServiceImpl implements CertificateService {
         if (id == null || id < MIN_ID_VALUE) {
             throw new ServiceException("Unable to update certificate! Id is not specified or invalid: " + id);
         }
-        Certificate target = certificateDao
+        Certificate target = certificateRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
 
@@ -161,18 +156,14 @@ public class CertificateServiceImpl implements CertificateService {
                 .from(certificate)
                 .setLastUpdateDate(now)
                 .build();
-        Certificate updated = certificateDao.update(dated);
 
         Set<Tag> tags = certificate.getTags();
-        Set<Tag> savedTags = tagService.createIfNotExist(tags);
+        Set<Tag> consistentTags = tagService.createIfNotExist(tags);
         Certificate updatedWithTags = Certificate.Builder
-                .from(updated)
-                .setTags(savedTags)
+                .from(dated)
+                .setTags(consistentTags)
                 .build();
-
-        Long id = updatedWithTags.getId();
-        certificateTagService.updateTags(id, savedTags);
-        return updatedWithTags;
+        return certificateRepository.save(updatedWithTags);
     }
 
     @Override
@@ -180,11 +171,10 @@ public class CertificateServiceImpl implements CertificateService {
     public Certificate deleteById(Long id) {
         Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
         Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
-        Certificate target = certificateDao
+        Certificate target = certificateRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
-        certificateTagService.deleteByCertificateId(id);
-        certificateDao.delete(id);
+        certificateRepository.delete(target);
         return target;
     }
 
