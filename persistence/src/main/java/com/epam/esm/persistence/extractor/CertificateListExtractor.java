@@ -68,7 +68,7 @@ public class CertificateListExtractor implements ResultSetExtractor<List<Certifi
             Long tagId = resultSet.getObject(COLUMN_TAG_ID, Long.class);
             if (tagId != null) {
                 String tagName = resultSet.getString(COLUMN_TAG_NAME);
-                Tag tag = new Tag(tagId, tagName);
+                Tag tag = new Tag(tagId, tagName, null);
                 Set<Tag> tags = mappedTags.get(certificateId);
                 tags.add(tag);
             }

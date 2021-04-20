@@ -104,8 +104,8 @@ public class CertificateServiceImplTest {
             tagService,
             certificateTagService,
             certificateValidator,
-            certificateSortRequestValidator
-    );
+            certificateSortRequestValidator,
+            certificateRepository);
 
     @BeforeEach
     public void setUp() {

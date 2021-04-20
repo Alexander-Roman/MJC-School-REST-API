@@ -1,21 +1,66 @@
 package com.epam.esm.persistence.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
+@Table(name = "certificate")
+@NamedQuery(
+        name = Certificate.FIND_BY_ID,
+        query = "SELECT DISTINCT c FROM Certificate c \n" +
+                "LEFT JOIN FETCH c.tags t \n" +
+                "WHERE c.id = :id \n")
 public final class Certificate {
 
-    private final Long id;
-    private final String name;
-    private final String description;
-    private final BigDecimal price;
-    private final Integer duration;
-    private final LocalDateTime createDate;
-    private final LocalDateTime lastUpdateDate;
-    private final Set<Tag> tags;
+    public static final String FIND_BY_ID = "Certificate.findById";
+
+    @Id
+    @Column(name = "id", updatable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "certificate_id_seq")
+    @SequenceGenerator(name = "certificate_id_seq", sequenceName = "certificate_id_seq", allocationSize = 1)
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "price")
+    private BigDecimal price;
+
+    @Column(name = "duration")
+    private Integer duration;
+
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
+
+    @Column(name = "last_update_date")
+    private LocalDateTime lastUpdateDate;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "certificate_tag",
+            joinColumns = @JoinColumn(name = "certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags;
+
+    protected Certificate() {
+    }
 
     public Certificate(Long id,
                        String name,
@@ -202,6 +247,7 @@ public final class Certificate {
         }
 
     }
+
 
     public static final class Field {
 

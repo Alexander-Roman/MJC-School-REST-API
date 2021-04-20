@@ -3,6 +3,11 @@ plugins {
 }
 
 sourceSets {
+    generated {
+        java {
+            srcDirs file('src/generated/java')
+        }
+    }
     integration {
         java {
             srcDir file('src/integration/java')
@@ -22,10 +27,17 @@ configurations {
 dependencies {
 
     implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.3'
+
     runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
+
+    annotationProcessor group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.4.30.Final'
 
     integrationCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}"
     integrationRuntime group: 'com.h2database', name: 'h2', version: '1.4.200'
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file('src/generated/java')
 }
 
 task integration(type: Test) {

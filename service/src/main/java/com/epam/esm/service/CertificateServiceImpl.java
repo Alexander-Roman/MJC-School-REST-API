@@ -5,6 +5,7 @@ import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
+import com.epam.esm.persistence.repository.CertificateRepository;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.CertificateSortRequestValidator;
@@ -35,18 +36,21 @@ public class CertificateServiceImpl implements CertificateService {
     private final CertificateTagService certificateTagService;
     private final Validator<Certificate> certificateValidator;
     private final CertificateSortRequestValidator certificateSortRequestValidator;
+    private final CertificateRepository certificateRepository;
 
     @Autowired
     public CertificateServiceImpl(CertificateDao certificateDao,
                                   TagService tagService,
                                   CertificateTagService certificateTagService,
                                   Validator<Certificate> certificateValidator,
-                                  CertificateSortRequestValidator certificateSortRequestValidator) {
+                                  CertificateSortRequestValidator certificateSortRequestValidator,
+                                  CertificateRepository certificateRepository) {
         this.certificateDao = certificateDao;
         this.tagService = tagService;
         this.certificateTagService = certificateTagService;
         this.certificateValidator = certificateValidator;
         this.certificateSortRequestValidator = certificateSortRequestValidator;
+        this.certificateRepository = certificateRepository;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class CertificateServiceImpl implements CertificateService {
         Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
         Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
 
-        Optional<Certificate> certificate = certificateDao.findById(id);
+        Optional<Certificate> certificate = certificateRepository.findById(id);
         return certificate
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
     }
@@ -67,7 +71,7 @@ public class CertificateServiceImpl implements CertificateService {
         if (!certificateSortRequestValidator.isValid(sortRequest)) {
             throw new ServiceException(ERROR_MESSAGE_SORT_REQUEST_INVALID + sortRequest);
         }
-        return certificateDao.findAll(sortRequest, filterRequest);
+        return certificateRepository.findAll(sortRequest, filterRequest);
     }
 
     @Override
@@ -85,19 +89,22 @@ public class CertificateServiceImpl implements CertificateService {
         if (!certificateValidator.isValid(dated)) {
             throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_INVALID + dated);
         }
-        Certificate savedCertificate = certificateDao.create(dated);
 
-        Set<Tag> tags = certificate.getTags();
-        if (!tags.isEmpty()) {
-            Set<Tag> savedTags = tagService.createIfNotExist(tags);
-            savedCertificate = Certificate.Builder
-                    .from(savedCertificate)
-                    .setTags(savedTags)
-                    .build();
-            Long generatedId = savedCertificate.getId();
-            certificateTagService.addTags(generatedId, savedTags);
-        }
-        return savedCertificate;
+        return certificateRepository.save(dated);
+
+//        Certificate savedCertificate = certificateDao.create(dated);
+//
+//        Set<Tag> tags = certificate.getTags();
+//        if (!tags.isEmpty()) {
+//            Set<Tag> savedTags = tagService.createIfNotExist(tags);
+//            savedCertificate = Certificate.Builder
+//                    .from(savedCertificate)
+//                    .setTags(savedTags)
+//                    .build();
+//            Long generatedId = savedCertificate.getId();
+//            certificateTagService.addTags(generatedId, savedTags);
+//        }
+//        return savedCertificate;
     }
 
     @Override
