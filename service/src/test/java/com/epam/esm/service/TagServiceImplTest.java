@@ -174,7 +174,7 @@ public class TagServiceImplTest {
         //when
         tagService.deleteById(ID_VALID);
         //then
-        verify(tagRepository).delete(TAG_WITH_ID);
+        verify(tagRepository).delete(1L);
     }
 
     @Test

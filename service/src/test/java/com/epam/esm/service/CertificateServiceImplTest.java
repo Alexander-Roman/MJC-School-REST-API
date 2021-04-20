@@ -524,7 +524,7 @@ public class CertificateServiceImplTest {
         //when
         certificateService.deleteById(ID_VALID);
         //then
-        verify(certificateRepository).delete(CERTIFICATE_WITH_ID);
+        verify(certificateRepository).delete(1L);
     }
 
 }
