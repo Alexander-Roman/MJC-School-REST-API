@@ -2,6 +2,7 @@ package com.epam.esm.web.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,7 +11,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
-public final class CertificateDto implements Serializable {
+public final class CertificateDto extends RepresentationModel<CertificateDto> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

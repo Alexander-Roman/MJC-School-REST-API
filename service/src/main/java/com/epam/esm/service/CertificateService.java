@@ -5,6 +5,9 @@ import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -70,4 +73,5 @@ public interface CertificateService {
      */
     Certificate deleteById(Long id);
 
+    Page<Certificate> findPage(Pageable pageable, Specification<Certificate> filterRequestSpecification);
 }

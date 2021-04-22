@@ -11,6 +11,9 @@ import com.epam.esm.service.validator.CertificateSortRequestValidator;
 import com.epam.esm.service.validator.Validator;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -169,6 +172,11 @@ public class CertificateServiceImpl implements CertificateService {
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
         certificateRepository.delete(id);
         return target;
+    }
+
+    @Override
+    public Page<Certificate> findPage(Pageable pageable, Specification<Certificate> filterRequestSpecification) {
+        return certificateRepository.find(pageable, filterRequestSpecification);
     }
 
 }

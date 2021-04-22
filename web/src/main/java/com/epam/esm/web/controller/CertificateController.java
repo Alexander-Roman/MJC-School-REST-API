@@ -3,6 +3,7 @@ package com.epam.esm.web.controller;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
+import com.epam.esm.persistence.specification.certificate.FindAllSpecification;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.web.mapper.CertificateMapper;
 import com.epam.esm.web.mapper.FilterRequestMapper;
@@ -10,10 +11,19 @@ import com.epam.esm.web.mapper.SortRequestMapper;
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.model.FilterRequestDto;
 import com.epam.esm.web.model.SortRequestDto;
+import com.epam.esm.web.specification.certificate.AllOfTagNamesSearchSpecification;
+import com.epam.esm.web.specification.certificate.NameOrDescriptionSearchSpecification;
+import com.epam.esm.web.specification.certificate.AnyOfTagNamesSearchSpecification;
 import com.epam.esm.web.validator.CertificateDtoCreateValidator;
 import com.epam.esm.web.validator.CertificateDtoUpdateValidator;
 import com.epam.esm.web.validator.CertificateSortRequestDtoValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -26,16 +36,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/certificates")
 @Validated
 public class CertificateController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CertificateController.class);
 
     private static final String MSG_CODE_ID_INVALID = "controller.id.invalid";
     private static final long MIN_ID = 1L;
@@ -92,6 +107,18 @@ public class CertificateController {
         return new ResponseEntity<>(resultDto, HttpStatus.OK);
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<Page<CertificateDto>> getCertificatePage(Pageable pageable,
+                                                                    NameOrDescriptionSearchSpecification nameOrDescriptionSearchSpecification,
+                                                                   AllOfTagNamesSearchSpecification allOfTagNamesSearchSpecification) {
+        Specification<Certificate> specification = new FindAllSpecification()
+                .and(nameOrDescriptionSearchSpecification)
+                .and(allOfTagNamesSearchSpecification);
+        Page<Certificate> certificatePage = certificateService.findPage(pageable, specification);
+        Page<CertificateDto> certificateDtoPage = certificatePage.map(certificateMapper::map);
+        return new ResponseEntity<>(certificateDtoPage, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<CertificateDto> createCertificate(@RequestBody CertificateDto certificateDto,
                                                             BindingResult bindingResult) throws BindException {
@@ -125,6 +152,23 @@ public class CertificateController {
         Certificate deleted = certificateService.deleteById(id);
         CertificateDto deletedDto = certificateMapper.map(deleted);
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test(Pageable pageable, @RequestParam Map<String, String> parameters) {
+//        LOGGER.trace("TRACE");
+//        LOGGER.debug("DEBUG");
+//        LOGGER.info("INFO");
+//        LOGGER.warn("WARN");
+//        LOGGER.error("ERROR");
+        LOGGER.info(String.valueOf(pageable));
+
+        pageable.getSort();
+        pageable.getSort().get().findFirst().get().getProperty();
+        Page<String> page = new PageImpl<String>(Arrays.asList("string1", "string2"));
+
+        LOGGER.info(String.valueOf(parameters));
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
 }

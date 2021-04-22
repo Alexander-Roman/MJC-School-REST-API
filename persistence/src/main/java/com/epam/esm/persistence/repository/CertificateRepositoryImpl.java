@@ -5,12 +5,18 @@ import com.epam.esm.persistence.entity.Certificate_;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.entity.Tag_;
 import com.epam.esm.persistence.model.FilterRequest;
-import com.epam.esm.persistence.model.Sort;
 import com.epam.esm.persistence.model.SortRequest;
+import com.epam.esm.persistence.specification.certificate.FindAllSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -22,8 +28,10 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @Transactional
@@ -86,12 +94,12 @@ public class CertificateRepositoryImpl implements CertificateRepository {
                                                          Root<Certificate> certificateRoot,
                                                          SortRequest sortRequest) {
         List<Order> orderList = new ArrayList<>();
-        Sort sort = sortRequest.getSort();
+        com.epam.esm.persistence.model.Sort sort = sortRequest.getSort();
         if (sort != null) {
             Order order = this.convert(sort, certificateRoot);
             orderList.add(order);
         }
-        Sort thenSort = sortRequest.getThenSort();
+        com.epam.esm.persistence.model.Sort thenSort = sortRequest.getThenSort();
         if (thenSort != null) {
             Order order = this.convert(thenSort, certificateRoot);
             orderList.add(order);
@@ -99,10 +107,10 @@ public class CertificateRepositoryImpl implements CertificateRepository {
         return criteriaQuery.orderBy(orderList);
     }
 
-    private Order convert(Sort sort, Root<Certificate> certificateRoot) {
+    private Order convert(com.epam.esm.persistence.model.Sort sort, Root<Certificate> certificateRoot) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         String field = sort.getField();
-        Sort.Direction direction = sort.getDirection();
+        com.epam.esm.persistence.model.Sort.Direction direction = sort.getDirection();
         switch (direction) {
             case ASC:
                 return criteriaBuilder.asc(certificateRoot.get(field));
@@ -127,6 +135,48 @@ public class CertificateRepositoryImpl implements CertificateRepository {
     public void delete(Long id) {
         Certificate certificate = entityManager.find(Certificate.class, id);
         entityManager.remove(certificate);
+    }
+
+    @Override
+    public Page<Certificate> find(Pageable pageable, Specification<Certificate> specification) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Certificate> criteriaQuery = criteriaBuilder.createQuery(Certificate.class);
+        Root<Certificate> certificateRoot = criteriaQuery.from(Certificate.class);
+//        certificateRoot.fetch(Certificate_.tags, JoinType.LEFT);
+        criteriaQuery = criteriaQuery.select(certificateRoot).distinct(true);
+
+        Specification<Certificate> findAllSpecification = new FindAllSpecification();
+        Specification<Certificate> conjunctionSpecification = findAllSpecification.and(specification);
+        Predicate predicate = conjunctionSpecification.toPredicate(certificateRoot, criteriaQuery, criteriaBuilder);
+        criteriaQuery = criteriaQuery.where(predicate);
+
+        Sort sort = pageable.getSort();
+        List<Order> orderList = sort
+                .get()
+                .map(order -> this.convert(order, certificateRoot))
+                .collect(Collectors.toList());
+        criteriaQuery = criteriaQuery.orderBy(orderList);
+
+
+        TypedQuery<Certificate> typedQuery = entityManager.createQuery(criteriaQuery);
+        long offset = pageable.getOffset() + 1;
+        typedQuery.setFirstResult((int) offset);
+        int pageSize = pageable.getPageSize();
+        typedQuery.setMaxResults(pageSize);
+
+        List<Certificate> resultList = typedQuery.getResultList();
+        return new PageImpl<>(resultList, pageable, 200);
+    }
+
+    private Order convert(Sort.Order order, Root<Certificate> certificateRoot) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        String property = order.getProperty();
+        Sort.Direction direction = order.getDirection();
+        if (Sort.Direction.DESC.equals(direction)) {
+            return criteriaBuilder.desc(certificateRoot.get(property));
+        } else {
+            return criteriaBuilder.asc(certificateRoot.get(property));
+        }
     }
 
 }
