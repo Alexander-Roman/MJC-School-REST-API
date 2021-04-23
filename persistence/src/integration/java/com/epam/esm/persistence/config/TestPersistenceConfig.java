@@ -5,6 +5,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
@@ -33,6 +37,7 @@ public class TestPersistenceConfig {
 
     private static final String SQL_H2_DDL = "classpath:sql.h2/ddl.sql";
     private static final String SQL_H2_DML = "classpath:sql.h2/dml.sql";
+    private static final String HIBERNATE_PROPS = "property/hibernate.properties";
 
     @Bean
     public DataSource dataSource() {
@@ -49,7 +54,7 @@ public class TestPersistenceConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    public PlatformTransactionManager transactionManager() throws IOException {
         return new JpaTransactionManager(entityManagerFactory());
     }
 
@@ -59,20 +64,13 @@ public class TestPersistenceConfig {
     }
 
     @Bean
-    public Properties hibernateProperties() {
-        Properties hibernateProp = new Properties();
-        hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        hibernateProp.put("hibernate.format_sql", true);
-        hibernateProp.put("hibernate.use_sql_comments", true);
-        hibernateProp.put("hibernate.show_sql", true);
-        hibernateProp.put("hibernate.max_fetch_depth", 3);
-        hibernateProp.put("hibernate.jdbc.batch_size", 10);
-        hibernateProp.put("hibernate.jdbc.fetch_size", 50);
-        return hibernateProp;
+    public Properties hibernateProperties() throws IOException {
+        Resource resource = new ClassPathResource(HIBERNATE_PROPS);
+        return PropertiesLoaderUtils.loadProperties(resource);
     }
 
     @Bean
-    public EntityManagerFactory entityManagerFactory() {
+    public EntityManagerFactory entityManagerFactory() throws IOException {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setPackagesToScan("com.epam.esm.persistence.entity");
         factoryBean.setDataSource(dataSource());
