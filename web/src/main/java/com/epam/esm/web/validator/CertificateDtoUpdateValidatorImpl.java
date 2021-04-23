@@ -2,6 +2,7 @@ package com.epam.esm.web.validator;
 
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.model.TagDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -17,7 +18,13 @@ public class CertificateDtoUpdateValidatorImpl implements CertificateDtoUpdateVa
     private static final int MAX_DESCRIPTION_LENGTH = 255;
     private static final BigDecimal MAX_PRICE = new BigDecimal("99999.99");
     private static final int MIN_DURATION = 1;
-    private static final int MAX_TAG_NAME_LENGTH = 50;
+
+    private final CertificateDtoTagsValidator certificateDtoTagsValidator;
+
+    @Autowired
+    public CertificateDtoUpdateValidatorImpl(CertificateDtoTagsValidator certificateDtoTagsValidator) {
+        this.certificateDtoTagsValidator = certificateDtoTagsValidator;
+    }
 
     @Override
     public void validate(@NonNull Object object,
@@ -77,17 +84,7 @@ public class CertificateDtoUpdateValidatorImpl implements CertificateDtoUpdateVa
             if (tagDto == null) {
                 errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.null", "Certificate tags should not contain NULL values!");
             } else {
-                String name = tagDto.getName();
-                if (name == null) {
-                    errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.name.null", "Certificate tags should not contain tags without name!");
-                } else {
-                    if (name.length() > MAX_TAG_NAME_LENGTH) {
-                        errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.name.invalid", "Certificate tags should not contain tags with name greater than 50 characters!");
-                    }
-                    if (name.trim().isEmpty()) {
-                        errors.rejectValue(CertificateDto.Field.TAGS, "certificate.dto.tags.name.blank", "Certificate tags should not contain tags with blank name!");
-                    }
-                }
+                certificateDtoTagsValidator.validate(tagDto, errors);
             }
         }
     }

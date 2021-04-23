@@ -1,15 +1,11 @@
 package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Certificate;
-import com.epam.esm.persistence.model.FilterRequest;
-import com.epam.esm.persistence.model.SortRequest;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.util.List;
 
 /**
  * Business logic interface for Certificates
@@ -27,17 +23,7 @@ public interface CertificateService {
      */
     Certificate findById(Long id);
 
-    /**
-     * Finds and returns a list of certificates based on filtering and sorting options
-     *
-     * @param sortRequest   an object that encapsulates sorting options
-     * @param filterRequest an object that encapsulates filtering options
-     * @return sorted List of certificates found
-     * @throws NullPointerException    when sortRequest or filterRequest is null
-     * @throws ServiceException        when sortRequest is not valid for Certificate entity
-     * @throws EntityNotFoundException if found noting
-     */
-    List<Certificate> findAll(SortRequest sortRequest, FilterRequest filterRequest);
+    Page<Certificate> findPage(Pageable pageable, Specification<Certificate> specification);
 
     /**
      * Creates new certificate
@@ -73,5 +59,4 @@ public interface CertificateService {
      */
     Certificate deleteById(Long id);
 
-    Page<Certificate> findPage(Pageable pageable, Specification<Certificate> filterRequestSpecification);
 }

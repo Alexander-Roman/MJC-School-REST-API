@@ -1,4 +1,4 @@
-package com.epam.esm.web.specification;
+package com.epam.esm.web.specification.domain;
 
 import net.kaczmarzyk.spring.data.jpa.domain.PathSpecification;
 import net.kaczmarzyk.spring.data.jpa.utils.Converter;
@@ -81,11 +81,10 @@ public class HaveAll<T> extends PathSpecification<T> {
         if (!Arrays.equals(allowedValues, other.allowedValues))
             return false;
         if (converter == null) {
-            if (other.converter != null)
-                return false;
-        } else if (!converter.equals(other.converter))
-            return false;
-        return true;
+            return other.converter == null;
+        } else {
+            return converter.equals(other.converter);
+        }
     }
 
     @Override

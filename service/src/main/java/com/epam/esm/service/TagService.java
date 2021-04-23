@@ -3,8 +3,10 @@ package com.epam.esm.service;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,12 +25,7 @@ public interface TagService {
      */
     Tag findById(Long id);
 
-    /**
-     * Finds and returns list of all Tags
-     *
-     * @return List of all Tags
-     */
-    List<Tag> findAll();
+    Page<Tag> find(Pageable pageable, Specification<Tag> specification);
 
     /**
      * Creates new Tag

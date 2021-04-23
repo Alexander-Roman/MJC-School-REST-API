@@ -10,8 +10,11 @@ CREATE TABLE certificate
     price            DECIMAL(5, 2) NOT NULL,
     duration         INT           NOT NULL,
     create_date      TIMESTAMP     NOT NULL,
-    last_update_date TIMESTAMP     NOT NULL
+    last_update_date TIMESTAMP     NOT NULL,
+    deleted          BOOLEAN       NOT NULL DEFAULT FALSE
 );
+
+-- ALTER TABLE certificate ADD deleted BOOLEAN NOT NULL DEFAULT FALSE;
 
 CREATE TABLE tag
 (

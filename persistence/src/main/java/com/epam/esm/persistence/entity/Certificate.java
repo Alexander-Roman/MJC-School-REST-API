@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -20,7 +19,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "certificate")
-public final class Certificate {
+public final class Certificate implements Identifiable {
 
     @Id
     @Column(name = "id", updatable = false)
@@ -50,7 +49,10 @@ public final class Certificate {
     @JoinTable(name = "certificate_tag",
             joinColumns = @JoinColumn(name = "certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags;
+    private Set<Tag> tags = Collections.emptySet();
+
+    @Column(name = "deleted")
+    private Boolean deleted = false;
 
     protected Certificate() {
     }
@@ -62,7 +64,8 @@ public final class Certificate {
                        Integer duration,
                        LocalDateTime createDate,
                        LocalDateTime lastUpdateDate,
-                       Set<Tag> tags) {
+                       Set<Tag> tags,
+                       Boolean deleted) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -71,12 +74,14 @@ public final class Certificate {
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
         this.tags = tags;
+        this.deleted = deleted;
     }
 
     public static Certificate.Builder builder() {
         return new Certificate.Builder();
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -111,6 +116,10 @@ public final class Certificate {
                 : Collections.unmodifiableSet(tags);
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -127,7 +136,8 @@ public final class Certificate {
                 Objects.equals(duration, that.duration) &&
                 Objects.equals(createDate, that.createDate) &&
                 Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
-                Objects.equals(tags, that.tags);
+                Objects.equals(tags, that.tags) &&
+                Objects.equals(deleted, that.deleted);
     }
 
     @Override
@@ -140,6 +150,7 @@ public final class Certificate {
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 31 * result + (deleted != null ? deleted.hashCode() : 0);
         return result;
     }
 
@@ -154,6 +165,7 @@ public final class Certificate {
                 ", createDate=" + createDate +
                 ", lastUpdateDate=" + lastUpdateDate +
                 ", tags=" + tags +
+                ", deleted=" + deleted +
                 '}';
     }
 
@@ -167,7 +179,8 @@ public final class Certificate {
         private Integer duration;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
-        private Set<Tag> tags;
+        private Set<Tag> tags = Collections.emptySet();
+        private Boolean deleted = false;
 
         public Builder() {
         }
@@ -181,6 +194,7 @@ public final class Certificate {
             createDate = certificate.createDate;
             lastUpdateDate = certificate.lastUpdateDate;
             tags = certificate.tags;
+            deleted = certificate.deleted;
         }
 
         public static Builder from(Certificate certificate) {
@@ -227,6 +241,11 @@ public final class Certificate {
             return this;
         }
 
+        public Builder setDeleted(Boolean deleted) {
+            this.deleted = deleted;
+            return this;
+        }
+
         public Certificate build() {
             return new Certificate(
                     id,
@@ -236,22 +255,9 @@ public final class Certificate {
                     duration,
                     createDate,
                     lastUpdateDate,
-                    tags);
+                    tags,
+                    deleted);
         }
-
-    }
-
-
-    public static final class Field {
-
-        public static final String ID = "id";
-        public static final String NAME = "name";
-        public static final String DESCRIPTION = "description";
-        public static final String PRICE = "price";
-        public static final String DURATION = "duration";
-        public static final String CREATE_DATE = "createDate";
-        public static final String LAST_UPDATE_DATE = "lastUpdateDate";
-        public static final String TAGS = "tags";
 
     }
 

@@ -1,11 +1,18 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.persistence.entity.Tag;
+import com.epam.esm.persistence.specification.FindAllSpecification;
 import com.epam.esm.service.TagService;
+import com.epam.esm.web.assember.TagDtoAssembler;
 import com.epam.esm.web.mapper.TagMapper;
 import com.epam.esm.web.model.TagDto;
 import com.epam.esm.web.validator.TagDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -20,8 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/v1/tags")
@@ -34,14 +42,21 @@ public class TagController {
     private final TagService tagService;
     private final TagDtoValidator tagDtoValidator;
     private final TagMapper tagMapper;
+    private final PagedResourcesAssembler<Tag> tagPagedResourcesAssembler;
+    private final TagDtoAssembler tagDtoAssembler;
+
 
     @Autowired
     public TagController(TagService tagService,
                          TagDtoValidator tagDtoValidator,
-                         TagMapper tagMapper) {
+                         TagMapper tagMapper,
+                         PagedResourcesAssembler<Tag> tagPagedResourcesAssembler,
+                         TagDtoAssembler tagDtoAssembler) {
         this.tagService = tagService;
         this.tagDtoValidator = tagDtoValidator;
         this.tagMapper = tagMapper;
+        this.tagPagedResourcesAssembler = tagPagedResourcesAssembler;
+        this.tagDtoAssembler = tagDtoAssembler;
     }
 
     @GetMapping("/{id}")
@@ -50,17 +65,17 @@ public class TagController {
             @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id) {
         Tag tag = tagService.findById(id);
         TagDto tagDto = tagMapper.map(tag);
+
+        this.addLinks(tagDto);
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
     @GetMapping()
-    public ResponseEntity<List<TagDto>> findAll() {
-        List<Tag> tagList = tagService.findAll();
-        List<TagDto> tagDtoList = tagList
-                .stream()
-                .map(tagMapper::map)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(tagDtoList, HttpStatus.OK);
+    public ResponseEntity<PagedModel<TagDto>> findAll(Pageable pageable) {
+        Specification<Tag> specification = new FindAllSpecification<>();
+        Page<Tag> tagPage = tagService.find(pageable, specification);
+        PagedModel<TagDto> tagDtoPagedModel = tagPagedResourcesAssembler.toModel(tagPage, tagDtoAssembler);
+        return new ResponseEntity<>(tagDtoPagedModel, HttpStatus.OK);
     }
 
     @PostMapping
@@ -72,6 +87,8 @@ public class TagController {
         Tag tag = tagMapper.map(tagDto);
         Tag created = tagService.create(tag);
         TagDto createdDto = tagMapper.map(created);
+
+        this.addLinks(tagDto);
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
@@ -82,6 +99,11 @@ public class TagController {
         Tag deleted = tagService.deleteById(id);
         TagDto deletedDto = tagMapper.map(deleted);
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);
+    }
+
+    private void addLinks(TagDto tagDto) {
+        Long id = tagDto.getId();
+        tagDto.add(linkTo(methodOn(TagController.class).findById(id)).withSelfRel());
     }
 
 }

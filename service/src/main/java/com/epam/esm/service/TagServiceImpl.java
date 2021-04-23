@@ -1,17 +1,20 @@
 package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.persistence.repository.TagRepository;
+import com.epam.esm.persistence.repository.Repository;
+import com.epam.esm.persistence.specification.tag.FindByNameSpecification;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.Validator;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -23,11 +26,11 @@ public class TagServiceImpl implements TagService {
     private static final String ERROR_MESSAGE_TAG_INVALID = "Tag invalid: ";
     private static final long MIN_ID_VALUE = 1L;
 
-    private final TagRepository tagRepository;
+    private final Repository<Tag> tagRepository;
     private final Validator<Tag> tagValidator;
 
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository,
+    public TagServiceImpl(Repository<Tag> tagRepository,
                           Validator<Tag> tagValidator) {
         this.tagRepository = tagRepository;
         this.tagValidator = tagValidator;
@@ -44,8 +47,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> findAll() {
-        return tagRepository.findAll();
+    public Page<Tag> find(Pageable pageable, Specification<Tag> specification) {
+        Preconditions.checkNotNull(pageable, "Pageable argument invalid: " + pageable);
+        Preconditions.checkNotNull(specification, "Specification argument invalid: " + specification);
+
+        return tagRepository.find(pageable, specification);
     }
 
     @Override
@@ -54,7 +60,8 @@ public class TagServiceImpl implements TagService {
             throw new ServiceException(ERROR_MESSAGE_TAG_INVALID + tag);
         }
         String name = tag.getName();
-        Optional<Tag> found = tagRepository.findByName(name);
+        Specification<Tag> specification = new FindByNameSpecification(name);
+        Optional<Tag> found = tagRepository.findSingle(specification);
         return found.orElseGet(() -> tagRepository.save(tag));
     }
 
@@ -72,7 +79,8 @@ public class TagServiceImpl implements TagService {
         Set<Tag> results = new HashSet<>();
         for (Tag tag : tags) {
             String name = tag.getName();
-            Optional<Tag> result = tagRepository.findByName(name);
+            Specification<Tag> specification = new FindByNameSpecification(name);
+            Optional<Tag> result = tagRepository.findSingle(specification);
             if (result.isPresent()) {
                 Tag found = result.get();
                 results.add(found);

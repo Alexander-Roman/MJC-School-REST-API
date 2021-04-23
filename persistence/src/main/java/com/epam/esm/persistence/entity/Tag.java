@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tag")
-public final class Tag {
+public final class Tag implements Identifiable {
 
     @Id
     @Column(name = "id", updatable = false)
@@ -32,7 +32,7 @@ public final class Tag {
     @JoinTable(name = "certificate_tag",
             joinColumns = @JoinColumn(name = "tag_id"),
             inverseJoinColumns = @JoinColumn(name = "certificate_id"))
-    private Set<Certificate> certificates;
+    private Set<Certificate> certificates = Collections.emptySet();
 
     protected Tag() {
     }
@@ -49,6 +49,7 @@ public final class Tag {
         return new Tag.Builder();
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -94,7 +95,7 @@ public final class Tag {
     public static final class Builder {
         private Long id;
         private String name;
-        private Set<Certificate> certificates;
+        private Set<Certificate> certificates = Collections.emptySet();
 
         public Builder() {
         }
@@ -131,15 +132,6 @@ public final class Tag {
                     certificates
             );
         }
-
-    }
-
-
-    private static final class Field {
-
-        public static final String ID = "id";
-        public static final String NAME = "name";
-        public static final String CERTIFICATES = "certificates";
 
     }
 

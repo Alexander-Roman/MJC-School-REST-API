@@ -77,7 +77,8 @@ public class CertificateValidator implements Validator<Certificate> {
             }
         }
 
-        return true;
+        Boolean deleted = certificate.getDeleted();
+        return deleted != null;
     }
 
 }

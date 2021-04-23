@@ -2,12 +2,10 @@ package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.persistence.model.FilterRequest;
-import com.epam.esm.persistence.model.SortRequest;
-import com.epam.esm.persistence.repository.CertificateRepository;
+import com.epam.esm.persistence.repository.Repository;
+import com.epam.esm.persistence.specification.certificare.FindNotDeletedByIdSpecification;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.validator.CertificateSortRequestValidator;
 import com.epam.esm.service.validator.Validator;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,24 +26,19 @@ public class CertificateServiceImpl implements CertificateService {
     private static final String ERROR_MESSAGE_ID_INVALID = "Invalid ID parameter: ";
     private static final String ERROR_MESSAGE_CERTIFICATE_NOT_FOUND = "Certificate does not exists! ID: ";
     private static final String ERROR_MESSAGE_CERTIFICATE_INVALID = "Certificate invalid: ";
-    private static final String ERROR_MESSAGE_FILTER_REQUEST_INVALID = "Invalid FilterRequest parameter: ";
-    private static final String ERROR_MESSAGE_SORT_REQUEST_INVALID = "Invalid SortRequest parameter: ";
     private static final long MIN_ID_VALUE = 1L;
 
-    private final CertificateRepository certificateRepository;
+    private final Repository<Certificate> certificateRepository;
     private final TagService tagService;
     private final Validator<Certificate> certificateValidator;
-    private final CertificateSortRequestValidator certificateSortRequestValidator;
 
     @Autowired
-    public CertificateServiceImpl(CertificateRepository certificateRepository,
+    public CertificateServiceImpl(Repository<Certificate> certificateRepository,
                                   TagService tagService,
-                                  Validator<Certificate> certificateValidator,
-                                  CertificateSortRequestValidator certificateSortRequestValidator) {
+                                  Validator<Certificate> certificateValidator) {
         this.certificateRepository = certificateRepository;
         this.tagService = tagService;
         this.certificateValidator = certificateValidator;
-        this.certificateSortRequestValidator = certificateSortRequestValidator;
     }
 
     @Override
@@ -54,20 +46,18 @@ public class CertificateServiceImpl implements CertificateService {
         Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
         Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
 
-        Optional<Certificate> certificate = certificateRepository.findById(id);
+        Specification<Certificate> specification = new FindNotDeletedByIdSpecification(id);
+        Optional<Certificate> certificate = certificateRepository.findSingle(specification);
         return certificate
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
     }
 
     @Override
-    public List<Certificate> findAll(SortRequest sortRequest, FilterRequest filterRequest) {
-        Preconditions.checkNotNull(filterRequest, ERROR_MESSAGE_FILTER_REQUEST_INVALID + filterRequest);
-        Preconditions.checkNotNull(sortRequest, ERROR_MESSAGE_SORT_REQUEST_INVALID + sortRequest);
+    public Page<Certificate> findPage(Pageable pageable, Specification<Certificate> specification) {
+        Preconditions.checkNotNull(pageable, "Pageable argument invalid: " + pageable);
+        Preconditions.checkNotNull(specification, "Specification argument invalid: " + specification);
 
-        if (!certificateSortRequestValidator.isValid(sortRequest)) {
-            throw new ServiceException(ERROR_MESSAGE_SORT_REQUEST_INVALID + sortRequest);
-        }
-        return certificateRepository.findAll(sortRequest, filterRequest);
+        return certificateRepository.find(pageable, specification);
     }
 
     @Override
@@ -167,16 +157,16 @@ public class CertificateServiceImpl implements CertificateService {
     public Certificate deleteById(Long id) {
         Preconditions.checkNotNull(id, ERROR_MESSAGE_ID_INVALID + id);
         Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
-        Certificate target = certificateRepository
-                .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
-        certificateRepository.delete(id);
-        return target;
-    }
 
-    @Override
-    public Page<Certificate> findPage(Pageable pageable, Specification<Certificate> filterRequestSpecification) {
-        return certificateRepository.find(pageable, filterRequestSpecification);
+        Specification<Certificate> specification = new FindNotDeletedByIdSpecification(id);
+        Certificate target = certificateRepository
+                .findSingle(specification)
+                .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
+        Certificate deleted = Certificate.Builder
+                .from(target)
+                .setDeleted(true)
+                .build();
+        return certificateRepository.save(deleted);
     }
 
 }
