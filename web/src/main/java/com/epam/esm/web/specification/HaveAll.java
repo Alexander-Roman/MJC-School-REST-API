@@ -1,6 +1,5 @@
 package com.epam.esm.web.specification;
 
-import net.kaczmarzyk.spring.data.jpa.domain.In;
 import net.kaczmarzyk.spring.data.jpa.domain.PathSpecification;
 import net.kaczmarzyk.spring.data.jpa.utils.Converter;
 import net.kaczmarzyk.spring.data.jpa.utils.QueryContext;
@@ -11,16 +10,18 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class ExclusivelyIn<T> extends PathSpecification<T> {
+public class HaveAll<T> extends PathSpecification<T> {
 
     private static final long serialVersionUID = 1L;
 
-    private String[] allowedValues;
-    private Converter converter;
+    private final String[] allowedValues;
+    private final Converter converter;
 
-    public ExclusivelyIn(QueryContext queryContext, String path, String[] httpParamValues, Converter converter) {
+    public HaveAll(QueryContext queryContext, String path, String[] httpParamValues, Converter converter) {
         super(queryContext, path);
         if (httpParamValues == null || httpParamValues.length < 1) {
             throw new IllegalArgumentException();
@@ -34,14 +35,29 @@ public class ExclusivelyIn<T> extends PathSpecification<T> {
         Path<?> path = path(root);
         Class<?> typeOnPath = path.getJavaType();
 
-        Subquery<T> subQuery = query.subquery((Class<T>) root.getJavaType());
-        Root<T> subQueryRoot = subQuery.from((Class<T>) root.getJavaType());
-        Path<?> subQueryPath = path(subQueryRoot);
-        Predicate predicate = subQueryPath.in(converter.convert(Arrays.asList(allowedValues), typeOnPath));
-        subQuery.select(subQueryRoot).where(predicate);
+        List<Predicate> predicates = new ArrayList<>();
+        for (String value : allowedValues) {
+            Subquery<T> subQuery = this.buildSubQuery(root, query, criteriaBuilder, value, typeOnPath);
+            Predicate predicate = criteriaBuilder.in(root).value(subQuery);
+            predicates.add(predicate);
+        }
 
-        return criteriaBuilder.in(root).value(subQuery);
-//        return path.in(converter.convert(Arrays.asList(allowedValues), typeOnPath)).not();
+        int size = predicates.size();
+        Predicate[] restrictions = new Predicate[size];
+        predicates.toArray(restrictions);
+
+        return criteriaBuilder.and(restrictions);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private Subquery<T> buildSubQuery(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, String value, Class<?> typeOnPath) {
+        Class<T> rootType = (Class<T>) root.getJavaType();
+        Subquery<T> subQuery = query.subquery(rootType);
+        Root<T> subQueryRoot = subQuery.from(rootType);
+        Path<?> subQueryPath = this.path(subQueryRoot);
+        Predicate predicate = criteriaBuilder.equal(subQueryPath, converter.convert(value, typeOnPath));
+        return subQuery.select(subQueryRoot).where(predicate);
     }
 
     @Override
@@ -61,7 +77,7 @@ public class ExclusivelyIn<T> extends PathSpecification<T> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ExclusivelyIn other = (ExclusivelyIn) obj;
+        HaveAll other = (HaveAll) obj;
         if (!Arrays.equals(allowedValues, other.allowedValues))
             return false;
         if (converter == null) {
@@ -74,6 +90,6 @@ public class ExclusivelyIn<T> extends PathSpecification<T> {
 
     @Override
     public String toString() {
-        return "In [allowedValues=" + Arrays.toString(allowedValues) + ", converter=" + converter + "]";
+        return "HaveAll [allowedValues=" + Arrays.toString(allowedValues) + ", converter=" + converter + "]";
     }
 }

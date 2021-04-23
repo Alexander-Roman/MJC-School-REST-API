@@ -3,17 +3,15 @@ package com.epam.esm.web.controller;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
-import com.epam.esm.persistence.specification.certificate.FindAllSpecification;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.web.assember.CertificateDtoAssembler;
 import com.epam.esm.web.mapper.CertificateMapper;
 import com.epam.esm.web.mapper.FilterRequestMapper;
 import com.epam.esm.web.mapper.SortRequestMapper;
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.model.FilterRequestDto;
 import com.epam.esm.web.model.SortRequestDto;
-import com.epam.esm.web.specification.certificate.AllOfTagNamesSearchSpecification;
-import com.epam.esm.web.specification.certificate.NameOrDescriptionSearchSpecification;
-import com.epam.esm.web.specification.certificate.AnyOfTagNamesSearchSpecification;
+import com.epam.esm.web.specification.certificate.FilterRequestSpecification;
 import com.epam.esm.web.validator.CertificateDtoCreateValidator;
 import com.epam.esm.web.validator.CertificateDtoUpdateValidator;
 import com.epam.esm.web.validator.CertificateSortRequestDtoValidator;
@@ -23,7 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -62,6 +61,8 @@ public class CertificateController {
     private final FilterRequestMapper filterRequestMapper;
     private final CertificateMapper certificateMapper;
     private final SortRequestMapper sortRequestMapper;
+    private final PagedResourcesAssembler<Certificate> certificatePagedResourcesAssembler;
+    private final CertificateDtoAssembler certificateDtoAssembler;
 
     @Autowired
     public CertificateController(CertificateService certificateService,
@@ -70,7 +71,9 @@ public class CertificateController {
                                  CertificateSortRequestDtoValidator certificateSortRequestDtoValidator,
                                  FilterRequestMapper filterRequestMapper,
                                  CertificateMapper certificateMapper,
-                                 SortRequestMapper sortRequestMapper) {
+                                 SortRequestMapper sortRequestMapper,
+                                 PagedResourcesAssembler<Certificate> certificatePagedResourcesAssembler,
+                                 CertificateDtoAssembler certificateDtoAssembler) {
         this.certificateService = certificateService;
         this.certificateDtoUpdateValidator = certificateDtoUpdateValidator;
         this.certificateDtoCreateValidator = certificateDtoCreateValidator;
@@ -78,6 +81,8 @@ public class CertificateController {
         this.filterRequestMapper = filterRequestMapper;
         this.certificateMapper = certificateMapper;
         this.sortRequestMapper = sortRequestMapper;
+        this.certificatePagedResourcesAssembler = certificatePagedResourcesAssembler;
+        this.certificateDtoAssembler = certificateDtoAssembler;
     }
 
     @GetMapping("/{id}")
@@ -108,15 +113,16 @@ public class CertificateController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<CertificateDto>> getCertificatePage(Pageable pageable,
-                                                                    NameOrDescriptionSearchSpecification nameOrDescriptionSearchSpecification,
-                                                                   AllOfTagNamesSearchSpecification allOfTagNamesSearchSpecification) {
-        Specification<Certificate> specification = new FindAllSpecification()
-                .and(nameOrDescriptionSearchSpecification)
-                .and(allOfTagNamesSearchSpecification);
-        Page<Certificate> certificatePage = certificateService.findPage(pageable, specification);
-        Page<CertificateDto> certificateDtoPage = certificatePage.map(certificateMapper::map);
-        return new ResponseEntity<>(certificateDtoPage, HttpStatus.OK);
+    public ResponseEntity<PagedModel<CertificateDto>> getCertificatePage(Pageable pageable,
+                                                                         FilterRequestSpecification filterRequestSpecification) {
+//        Specification<Certificate> specification = filterRequestSpecification == null
+//                ? new FindAllSpecification()
+//                : filterRequestSpecification;
+        Page<Certificate> certificatePage = certificateService.findPage(pageable, filterRequestSpecification);
+//        Page<CertificateDto> certificateDtoPage = certificatePage.map(certificateMapper::map);
+        PagedModel<CertificateDto> certificateDtoPageModel = certificatePagedResourcesAssembler.toModel(certificatePage, certificateDtoAssembler);
+
+        return new ResponseEntity<>(certificateDtoPageModel, HttpStatus.OK);
     }
 
     @PostMapping
@@ -168,7 +174,7 @@ public class CertificateController {
         Page<String> page = new PageImpl<String>(Arrays.asList("string1", "string2"));
 
         LOGGER.info(String.valueOf(parameters));
-        return new ResponseEntity<>(page, HttpStatus.OK);
+        return new ResponseEntity<>(pageable, HttpStatus.OK);
     }
 
 }

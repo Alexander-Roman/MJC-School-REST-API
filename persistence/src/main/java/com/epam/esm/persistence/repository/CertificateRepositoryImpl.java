@@ -6,7 +6,6 @@ import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.entity.Tag_;
 import com.epam.esm.persistence.model.FilterRequest;
 import com.epam.esm.persistence.model.SortRequest;
-import com.epam.esm.persistence.specification.certificate.FindAllSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -28,7 +26,6 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -142,12 +139,9 @@ public class CertificateRepositoryImpl implements CertificateRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Certificate> criteriaQuery = criteriaBuilder.createQuery(Certificate.class);
         Root<Certificate> certificateRoot = criteriaQuery.from(Certificate.class);
-//        certificateRoot.fetch(Certificate_.tags, JoinType.LEFT);
         criteriaQuery = criteriaQuery.select(certificateRoot).distinct(true);
 
-        Specification<Certificate> findAllSpecification = new FindAllSpecification();
-        Specification<Certificate> conjunctionSpecification = findAllSpecification.and(specification);
-        Predicate predicate = conjunctionSpecification.toPredicate(certificateRoot, criteriaQuery, criteriaBuilder);
+        Predicate predicate = specification.toPredicate(certificateRoot, criteriaQuery, criteriaBuilder);
         criteriaQuery = criteriaQuery.where(predicate);
 
         Sort sort = pageable.getSort();
@@ -157,15 +151,21 @@ public class CertificateRepositoryImpl implements CertificateRepository {
                 .collect(Collectors.toList());
         criteriaQuery = criteriaQuery.orderBy(orderList);
 
-
-        TypedQuery<Certificate> typedQuery = entityManager.createQuery(criteriaQuery);
-        long offset = pageable.getOffset() + 1;
-        typedQuery.setFirstResult((int) offset);
+        int offset = (int) pageable.getOffset();
         int pageSize = pageable.getPageSize();
-        typedQuery.setMaxResults(pageSize);
+        List<Certificate> resultList = entityManager
+                .createQuery(criteriaQuery)
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
 
-        List<Certificate> resultList = typedQuery.getResultList();
-        return new PageImpl<>(resultList, pageable, 200);
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Certificate> certificateCountRoot = countQuery.from(Certificate.class);
+        Expression<Long> countExpression = criteriaBuilder.count(certificateCountRoot);
+        countQuery.select(countExpression).where(predicate);
+        Long count = entityManager.createQuery(countQuery).getSingleResult();
+
+        return new PageImpl<>(resultList, pageable, count);
     }
 
     private Order convert(Sort.Order order, Root<Certificate> certificateRoot) {
