@@ -15,7 +15,6 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -32,7 +31,6 @@ import java.util.Properties;
                 value = Configuration.class
         )
 )
-@EnableTransactionManagement
 public class TestPersistenceConfig {
 
     private static final String SQL_H2_DDL = "classpath:sql.h2/ddl.sql";
