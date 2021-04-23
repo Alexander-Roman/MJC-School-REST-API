@@ -2,10 +2,6 @@ plugins {
     id 'com.epam.esm.java-spring-boot-common-conventions'
 }
 
-ext {
-    mapstructVersion = '1.4.2.Final'
-}
-
 dependencies {
     implementation project(':service')
     implementation project(':persistence')
@@ -14,7 +10,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springBootVersion}"
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: "${springBootVersion}"
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: "${springBootVersion}"
-    implementation group: 'net.kaczmarzyk', name: 'specification-arg-resolver', version: '2.6.2'
+    implementation group: 'net.kaczmarzyk', name: 'specification-arg-resolver', version: "${specificationArgResolverVersion}"
 
     implementation group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: "${mapstructVersion}"
