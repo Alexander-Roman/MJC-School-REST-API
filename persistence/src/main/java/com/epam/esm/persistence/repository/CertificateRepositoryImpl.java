@@ -7,6 +7,6 @@ import javax.transaction.Transactional;
 
 @Repository
 @Transactional
-public class CertificateRepositoryImpl extends AbstractRepository<Certificate> {
+public class CertificateRepositoryImpl extends AbstractRepository<Certificate> implements CertificateRepository {
 
 }

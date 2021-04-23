@@ -2,14 +2,19 @@ package com.epam.esm.persistence.repository;
 
 import com.epam.esm.persistence.config.TestPersistenceConfig;
 import com.epam.esm.persistence.entity.Tag;
+import com.epam.esm.persistence.specification.FindAllSpecification;
+import com.epam.esm.persistence.specification.tag.FindByNameSpecification;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest(classes = {TestPersistenceConfig.class})
@@ -50,8 +55,9 @@ public class TagRepositoryImplTest {
     @Test
     public void findByName_WhenFound_ShouldReturnOptionalOfTag() {
         //given
+        Specification<Tag> specification = new FindByNameSpecification("tag1");
         //when
-        Optional<Tag> actual = tagRepository.findByName("tag1");
+        Optional<Tag> actual = tagRepository.findSingle(specification);
         //then
         Optional<Tag> expected = Optional.of(TAG_FIRST);
         Assertions.assertEquals(expected, actual);
@@ -60,20 +66,23 @@ public class TagRepositoryImplTest {
     @Test
     public void findByName_WhenTagNotFound_ShouldReturnOptionalEmpty() {
         //given
+        Specification<Tag> specification = new FindByNameSpecification("such name does not exists");
         //when
-        Optional<Tag> actual = tagRepository.findByName("such name does not exists");
+        Optional<Tag> actual = tagRepository.findSingle(specification);
         //then
         Optional<Tag> expected = Optional.empty();
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void findAll_ShouldReturnListOfAllTags() {
+    public void findAll_ShouldReturnPageOfAllTags() {
         //given
+        Pageable pageable = PageRequest.of(0, 20);
+        Specification<Tag> specification = new FindAllSpecification<>();
         //when
-        List<Tag> results = tagRepository.findAll();
+        Page<Tag> results = tagRepository.find(pageable, specification);
         //then
-        int size = results.size();
+        int size = results.getNumberOfElements();
         Assertions.assertEquals(5, size);
     }
 
@@ -113,6 +122,5 @@ public class TagRepositoryImplTest {
         boolean actual = found.isPresent();
         Assertions.assertFalse(actual);
     }
-
 
 }

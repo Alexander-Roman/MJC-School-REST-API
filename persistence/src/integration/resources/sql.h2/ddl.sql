@@ -2,13 +2,14 @@ CREATE SEQUENCE certificate_id_seq;
 
 CREATE TABLE certificate
 (
-    id               BIGINT DEFAULT certificate_id_seq.nextval,
+    id               BIGINT                 DEFAULT certificate_id_seq.nextval,
     name             VARCHAR(150)  NOT NULL,
     description      VARCHAR(255)  NOT NULL,
     price            DECIMAL(5, 2) NOT NULL,
     duration         INT           NOT NULL,
     create_date      DATETIME      NOT NULL,
     last_update_date DATETIME      NOT NULL,
+    deleted          BOOLEAN       NOT NULL DEFAULT FALSE,
     PRIMARY KEY (id)
 );
 

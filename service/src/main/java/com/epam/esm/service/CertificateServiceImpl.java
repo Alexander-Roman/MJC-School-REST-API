@@ -2,7 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.persistence.repository.Repository;
+import com.epam.esm.persistence.repository.CertificateRepository;
 import com.epam.esm.persistence.specification.certificare.FindNotDeletedByIdSpecification;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
@@ -28,12 +28,12 @@ public class CertificateServiceImpl implements CertificateService {
     private static final String ERROR_MESSAGE_CERTIFICATE_INVALID = "Certificate invalid: ";
     private static final long MIN_ID_VALUE = 1L;
 
-    private final Repository<Certificate> certificateRepository;
+    private final CertificateRepository certificateRepository;
     private final TagService tagService;
     private final Validator<Certificate> certificateValidator;
 
     @Autowired
-    public CertificateServiceImpl(Repository<Certificate> certificateRepository,
+    public CertificateServiceImpl(CertificateRepository certificateRepository,
                                   TagService tagService,
                                   Validator<Certificate> certificateValidator) {
         this.certificateRepository = certificateRepository;
@@ -96,8 +96,9 @@ public class CertificateServiceImpl implements CertificateService {
         if (id == null || id < MIN_ID_VALUE) {
             throw new ServiceException("Unable to update certificate! Id is not specified or invalid: " + id);
         }
+        Specification<Certificate> specification = new FindNotDeletedByIdSpecification(id);
         Certificate target = certificateRepository
-                .findById(id)
+                .findSingle(specification)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
 
         String sourceName = source.getName();

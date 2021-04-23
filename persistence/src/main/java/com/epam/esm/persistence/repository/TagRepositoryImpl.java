@@ -7,6 +7,6 @@ import javax.transaction.Transactional;
 
 @Repository
 @Transactional
-public class TagRepositoryImpl extends AbstractRepository<Tag> {
+public class TagRepositoryImpl extends AbstractRepository<Tag> implements TagRepository {
 
 }

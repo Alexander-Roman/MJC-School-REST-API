@@ -49,7 +49,7 @@ public final class Certificate implements Identifiable {
     @JoinTable(name = "certificate_tag",
             joinColumns = @JoinColumn(name = "certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags = Collections.emptySet();
+    private Set<Tag> tags;
 
     @Column(name = "deleted")
     private Boolean deleted = false;
@@ -179,7 +179,7 @@ public final class Certificate implements Identifiable {
         private Integer duration;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
-        private Set<Tag> tags = Collections.emptySet();
+        private Set<Tag> tags;
         private Boolean deleted = false;
 
         public Builder() {

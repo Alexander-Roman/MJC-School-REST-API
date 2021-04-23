@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Tag;
-import com.epam.esm.persistence.repository.Repository;
+import com.epam.esm.persistence.repository.TagRepository;
 import com.epam.esm.persistence.specification.tag.FindByNameSpecification;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
@@ -26,11 +26,11 @@ public class TagServiceImpl implements TagService {
     private static final String ERROR_MESSAGE_TAG_INVALID = "Tag invalid: ";
     private static final long MIN_ID_VALUE = 1L;
 
-    private final Repository<Tag> tagRepository;
+    private final TagRepository tagRepository;
     private final Validator<Tag> tagValidator;
 
     @Autowired
-    public TagServiceImpl(Repository<Tag> tagRepository,
+    public TagServiceImpl(TagRepository tagRepository,
                           Validator<Tag> tagValidator) {
         this.tagRepository = tagRepository;
         this.tagValidator = tagValidator;

@@ -30,7 +30,8 @@ public class TagValidatorTest {
                 new Tag(1L, "", null),
                 new Tag(1L, "  ", null),
                 new Tag(1L, " \n ", null),
-                new Tag(1L, nameLengthExceeded, null)
+                new Tag(1L, nameLengthExceeded, null),
+                new Tag(1L, "_", null)
         );
     }
 
