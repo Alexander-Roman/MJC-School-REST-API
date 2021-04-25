@@ -4,20 +4,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public final class BindApiError extends ApiError {
+public final class BindApiError extends ApiError implements RootError {
 
     private static final long serialVersionUID = 1L;
 
-    private final List<FieldApiError> errors;
+    private final List<NestedError> errors;
 
     public BindApiError(String message,
                         Integer code,
-                        List<FieldApiError> errors) {
+                        List<NestedError> errors) {
         super(message, code);
         this.errors = errors;
     }
 
-    public List<FieldApiError> getErrors() {
+    public List<NestedError> getErrors() {
         return errors == null
                 ? null
                 : Collections.unmodifiableList(errors);

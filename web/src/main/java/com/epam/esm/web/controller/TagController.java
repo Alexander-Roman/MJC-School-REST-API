@@ -1,12 +1,14 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.persistence.entity.Tag;
+import com.epam.esm.persistence.entity.Tag_;
 import com.epam.esm.persistence.specification.FindAllSpecification;
 import com.epam.esm.service.TagService;
 import com.epam.esm.web.assember.TagDtoAssembler;
 import com.epam.esm.web.mapper.TagMapper;
 import com.epam.esm.web.model.TagDto;
 import com.epam.esm.web.validator.TagDtoValidator;
+import com.epam.esm.web.validator.constraint.AllowedOrderProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +38,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Validated
 public class TagController {
 
-    private static final String MSG_CODE_ID_INVALID = "controller.id.invalid";
+    private static final String MSG_CODE_ID_INVALID = "id.invalid";
+    private static final String MSG_SORT_INVALID = "sort.invalid";
     private static final long MIN_ID = 1L;
 
     private final TagService tagService;
@@ -71,7 +74,8 @@ public class TagController {
     }
 
     @GetMapping()
-    public ResponseEntity<PagedModel<TagDto>> findAll(Pageable pageable) {
+    public ResponseEntity<PagedModel<TagDto>> findAll(
+            @AllowedOrderProperties(value = Tag_.NAME, message = MSG_SORT_INVALID) Pageable pageable) {
         Specification<Tag> specification = new FindAllSpecification<>();
         Page<Tag> tagPage = tagService.find(pageable, specification);
         PagedModel<TagDto> tagDtoPagedModel = tagPagedResourcesAssembler.toModel(tagPage, tagDtoAssembler);

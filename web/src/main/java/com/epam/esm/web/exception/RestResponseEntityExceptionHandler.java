@@ -3,8 +3,9 @@ package com.epam.esm.web.exception;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.web.exception.model.ApiError;
 import com.epam.esm.web.exception.model.BindApiError;
-import com.epam.esm.web.exception.model.FieldApiError;
-
+import com.epam.esm.web.exception.model.ConstraintError;
+import com.epam.esm.web.exception.model.FieldConstraintError;
+import com.epam.esm.web.exception.model.NestedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -24,10 +25,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -107,7 +110,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         LOGGER.debug(exception.getMessage(), exception);
 
         BindingResult bindingResult = exception.getBindingResult();
-        List<FieldApiError> errors = new ArrayList<>();
+        List<NestedError> errors = new ArrayList<>();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         for (FieldError fieldError : fieldErrors) {
             String field = fieldError.getField();
@@ -115,11 +118,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             String code = fieldError.getCode();
             String localizedMessage = this.getLocalizedMessage(code, null, request);
 
-            FieldApiError error = new FieldApiError(
-                    field,
-                    rejectedValue,
+            NestedError error = new FieldConstraintError(
                     localizedMessage,
-                    code
+                    code,
+                    field,
+                    rejectedValue
             );
             errors.add(error);
         }
@@ -159,15 +162,21 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleConflict(ConstraintViolationException exception, WebRequest request) {
         LOGGER.debug(exception.getMessage(), exception);
 
-        String message = exception.getMessage();
-        String[] parts = message.split(" ");
-        String code = parts[1];
-        String localizedMessage = this.getLocalizedMessage(code, null, request);
-        ApiError apiError = new ApiError(
-                localizedMessage,
-                CONSTRAINT_VIOLATION_EXCEPTION_CODE
-        );
-        return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        List<NestedError> errors = new ArrayList<>();
+        Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+            String code = constraintViolation.getMessageTemplate();
+            String localizedMessage = this.getLocalizedMessage(code, null, request);
+
+            NestedError error = new ConstraintError(
+                    localizedMessage,
+                    code
+            );
+            errors.add(error);
+        }
+        String localizedMessage = this.getLocalizedMessage("constraint.violation.exception", null, request);
+        BindApiError bindApiError = new BindApiError(localizedMessage, CONSTRAINT_VIOLATION_EXCEPTION_CODE, errors);
+        return new ResponseEntity<>(bindApiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
 

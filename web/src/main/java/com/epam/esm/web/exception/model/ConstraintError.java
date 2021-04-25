@@ -2,14 +2,14 @@ package com.epam.esm.web.exception.model;
 
 import java.util.Objects;
 
-public class ApiError implements RootError {
+public class ConstraintError implements NestedError {
 
     private static final long serialVersionUID = 1L;
 
     private final String message;
-    private final Integer code;
+    private final String code;
 
-    public ApiError(String message, Integer code) {
+    public ConstraintError(String message, String code) {
         this.message = message;
         this.code = code;
     }
@@ -20,21 +20,21 @@ public class ApiError implements RootError {
     }
 
     @Override
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (this == object) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (object == null || getClass() != object.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ApiError rootApiErrorImpl = (ApiError) object;
-        return Objects.equals(message, rootApiErrorImpl.message) &&
-                Objects.equals(code, rootApiErrorImpl.code);
+        ConstraintError that = (ConstraintError) o;
+        return Objects.equals(message, that.message) &&
+                Objects.equals(code, that.code);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ApiError implements RootError {
     public String toString() {
         return getClass().getSimpleName() + "{" +
                 "message='" + message + '\'' +
-                ", code=" + code +
+                ", code='" + code + '\'' +
                 '}';
     }
 

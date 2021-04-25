@@ -1,6 +1,7 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.persistence.entity.Certificate;
+import com.epam.esm.persistence.entity.Certificate_;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.web.assember.CertificateDtoAssembler;
 import com.epam.esm.web.mapper.CertificateMapper;
@@ -8,7 +9,7 @@ import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.specification.certificate.FilterRequestSpecification;
 import com.epam.esm.web.validator.CertificateDtoCreateValidator;
 import com.epam.esm.web.validator.CertificateDtoUpdateValidator;
-import com.epam.esm.web.validator.CertificatePageableValidator;
+import com.epam.esm.web.validator.constraint.AllowedOrderProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +45,13 @@ public class CertificateController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CertificateController.class);
 
-    private static final String MSG_CODE_ID_INVALID = "controller.id.invalid";
+    private static final String MSG_CODE_ID_INVALID = "id.invalid";
+    private static final String MSG_SORT_INVALID = "sort.invalid";
     private static final long MIN_ID = 1L;
 
     private final CertificateService certificateService;
     private final CertificateDtoUpdateValidator certificateDtoUpdateValidator;
     private final CertificateDtoCreateValidator certificateDtoCreateValidator;
-    private final CertificatePageableValidator certificatePageableValidator;
     private final CertificateMapper certificateMapper;
     private final PagedResourcesAssembler<Certificate> certificatePagedResourcesAssembler;
     private final CertificateDtoAssembler certificateDtoAssembler;
@@ -59,14 +60,12 @@ public class CertificateController {
     public CertificateController(CertificateService certificateService,
                                  CertificateDtoUpdateValidator certificateDtoUpdateValidator,
                                  CertificateDtoCreateValidator certificateDtoCreateValidator,
-                                 CertificatePageableValidator certificatePageableValidator,
                                  CertificateMapper certificateMapper,
                                  PagedResourcesAssembler<Certificate> certificatePagedResourcesAssembler,
                                  CertificateDtoAssembler certificateDtoAssembler) {
         this.certificateService = certificateService;
         this.certificateDtoUpdateValidator = certificateDtoUpdateValidator;
         this.certificateDtoCreateValidator = certificateDtoCreateValidator;
-        this.certificatePageableValidator = certificatePageableValidator;
         this.certificateMapper = certificateMapper;
         this.certificatePagedResourcesAssembler = certificatePagedResourcesAssembler;
         this.certificateDtoAssembler = certificateDtoAssembler;
@@ -84,13 +83,16 @@ public class CertificateController {
     }
 
     @GetMapping()
-    public ResponseEntity<PagedModel<CertificateDto>> getCertificatePage(Pageable pageable,
-//                                                                         BindingResult bindingResult,
-                                                                         FilterRequestSpecification filterRequestSpecification) throws BindException {
-//        certificatePageableValidator.validate(pageable, bindingResult);
-//        if (bindingResult.hasErrors()) {
-//            throw new BindException(bindingResult);
-//        }
+    public ResponseEntity<PagedModel<CertificateDto>> getCertificatePage(
+            @AllowedOrderProperties(message = MSG_SORT_INVALID, value = {
+                    Certificate_.NAME,
+                    Certificate_.DESCRIPTION,
+                    Certificate_.PRICE,
+                    Certificate_.DURATION,
+                    Certificate_.CREATE_DATE,
+                    Certificate_.LAST_UPDATE_DATE
+            }) Pageable pageable, FilterRequestSpecification filterRequestSpecification) {
+
         Page<Certificate> certificatePage = certificateService.findPage(pageable, filterRequestSpecification);
         PagedModel<CertificateDto> certificateDtoPageModel = certificatePagedResourcesAssembler.toModel(certificatePage, certificateDtoAssembler);
         return new ResponseEntity<>(certificateDtoPageModel, HttpStatus.OK);
