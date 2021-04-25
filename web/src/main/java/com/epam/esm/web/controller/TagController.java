@@ -41,6 +41,7 @@ public class TagController {
     private static final String MSG_CODE_ID_INVALID = "id.invalid";
     private static final String MSG_SORT_INVALID = "sort.invalid";
     private static final long MIN_ID = 1L;
+    private static final String REL_ALL_TAGS = "tags";
 
     private final TagService tagService;
     private final TagDtoValidator tagDtoValidator;
@@ -69,7 +70,8 @@ public class TagController {
         Tag tag = tagService.findById(id);
         TagDto tagDto = tagMapper.map(tag);
 
-        this.addLinks(tagDto);
+        tagDto.add(linkTo(methodOn(TagController.class).findById(id)).withSelfRel());
+        tagDto.add(linkTo(methodOn(TagController.class).findAll(null)).withRel(REL_ALL_TAGS));
         return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
@@ -92,7 +94,8 @@ public class TagController {
         Tag created = tagService.create(tag);
         TagDto createdDto = tagMapper.map(created);
 
-        this.addLinks(tagDto);
+        createdDto.add(linkTo(methodOn(TagController.class).findById(createdDto.getId())).withSelfRel());
+        createdDto.add(linkTo(methodOn(TagController.class).findAll(null)).withRel(REL_ALL_TAGS));
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
@@ -102,12 +105,9 @@ public class TagController {
             @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id) {
         Tag deleted = tagService.deleteById(id);
         TagDto deletedDto = tagMapper.map(deleted);
-        return new ResponseEntity<>(deletedDto, HttpStatus.OK);
-    }
 
-    private void addLinks(TagDto tagDto) {
-        Long id = tagDto.getId();
-        tagDto.add(linkTo(methodOn(TagController.class).findById(id)).withSelfRel());
+        deletedDto.add(linkTo(methodOn(TagController.class).findAll(null)).withRel(REL_ALL_TAGS));
+        return new ResponseEntity<>(deletedDto, HttpStatus.OK);
     }
 
 }

@@ -48,6 +48,7 @@ public class CertificateController {
     private static final String MSG_CODE_ID_INVALID = "id.invalid";
     private static final String MSG_SORT_INVALID = "sort.invalid";
     private static final long MIN_ID = 1L;
+    private static final String REL_ALL_CERTIFICATES = "certificates";
 
     private final CertificateService certificateService;
     private final CertificateDtoUpdateValidator certificateDtoUpdateValidator;
@@ -78,7 +79,8 @@ public class CertificateController {
         Certificate certificate = certificateService.findById(id);
         CertificateDto certificateDto = certificateMapper.map(certificate);
 
-        this.addLinks(certificateDto);
+        certificateDto.add(linkTo(methodOn(CertificateController.class).getCertificateById(id)).withSelfRel());
+        certificateDto.add(linkTo(methodOn(CertificateController.class).getCertificatePage(null, null)).withRel(REL_ALL_CERTIFICATES));
         return new ResponseEntity<>(certificateDto, HttpStatus.OK);
     }
 
@@ -109,7 +111,8 @@ public class CertificateController {
         Certificate created = certificateService.create(certificate);
         CertificateDto createdDto = certificateMapper.map(created);
 
-        this.addLinks(certificateDto);
+        createdDto.add(linkTo(methodOn(CertificateController.class).getCertificateById(createdDto.getId())).withSelfRel());
+        createdDto.add(linkTo(methodOn(CertificateController.class).getCertificatePage(null, null)).withRel(REL_ALL_CERTIFICATES));
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
@@ -124,7 +127,8 @@ public class CertificateController {
         Certificate updated = certificateService.selectiveUpdate(certificate);
         CertificateDto updatedDto = certificateMapper.map(updated);
 
-        this.addLinks(certificateDto);
+        updatedDto.add(linkTo(methodOn(CertificateController.class).getCertificateById(updatedDto.getId())).withSelfRel());
+        updatedDto.add(linkTo(methodOn(CertificateController.class).getCertificatePage(null, null)).withRel(REL_ALL_CERTIFICATES));
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
@@ -134,12 +138,9 @@ public class CertificateController {
             @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id) {
         Certificate deleted = certificateService.deleteById(id);
         CertificateDto deletedDto = certificateMapper.map(deleted);
-        return new ResponseEntity<>(deletedDto, HttpStatus.OK);
-    }
 
-    private void addLinks(CertificateDto certificateDto) {
-        Long id = certificateDto.getId();
-        certificateDto.add(linkTo(methodOn(CertificateController.class).getCertificateById(id)).withSelfRel());
+        deletedDto.add(linkTo(methodOn(CertificateController.class).getCertificatePage(null, null)).withRel(REL_ALL_CERTIFICATES));
+        return new ResponseEntity<>(deletedDto, HttpStatus.OK);
     }
 
     @GetMapping("/test")
