@@ -10,8 +10,6 @@ import com.epam.esm.web.specification.certificate.FilterRequestSpecification;
 import com.epam.esm.web.validator.CertificateDtoCreateValidator;
 import com.epam.esm.web.validator.CertificateDtoUpdateValidator;
 import com.epam.esm.web.validator.constraint.AllowedOrderProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,11 +27,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
-import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -43,7 +39,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Validated
 public class CertificateController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CertificateController.class);
 
     private static final String MSG_CODE_ID_INVALID = "id.invalid";
     private static final String MSG_SORT_INVALID = "sort.invalid";
@@ -141,16 +136,6 @@ public class CertificateController {
 
         deletedDto.add(linkTo(methodOn(CertificateController.class).getCertificatePage(null, null)).withRel(REL_ALL_CERTIFICATES));
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> test(@RequestParam Map<String, String> parameters) {
-        LOGGER.trace("TRACE");
-        LOGGER.debug("DEBUG");
-        LOGGER.info("INFO");
-        LOGGER.warn("WARN");
-        LOGGER.error("ERROR");
-        return new ResponseEntity<>(parameters, HttpStatus.OK);
     }
 
 }

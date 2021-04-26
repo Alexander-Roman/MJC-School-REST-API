@@ -17,8 +17,11 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -102,12 +105,21 @@ public class AbstractRepository<T extends Identifiable> implements Repository<T>
 
     @Override
     public T save(T entity) {
-        if (entity.getId() == null) {
-            entityManager.persist(entity);
-        } else {
-            entityManager.merge(entity);
+        if (entity.getId() != null) {
+            return entityManager.merge(entity);
         }
+        entityManager.persist(entity);
         return entity;
+    }
+
+    @Override
+    public Set<T> batchSave(Set<T> entities) {
+        Set<T> savedEntities = new HashSet<>();
+        for (T entity: entities) {
+            T saved = this.save(entity);
+            savedEntities.add(saved);
+        }
+        return savedEntities;
     }
 
     @Override
