@@ -1,7 +1,6 @@
 package com.epam.esm.persistence.entity;
 
-import org.graalvm.compiler.lir.CompositeValue;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -35,7 +34,7 @@ public final class Purchase implements Identifiable {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "purchase_item",
             joinColumns = @JoinColumn(name = "purchase_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id"))
@@ -51,10 +50,10 @@ public final class Purchase implements Identifiable {
     }
 
     public Purchase(Long id,
-                 Account account,
-                 Set<Item> items,
-                 BigDecimal cost,
-                 LocalDateTime date) {
+                    Account account,
+                    Set<Item> items,
+                    BigDecimal cost,
+                    LocalDateTime date) {
         this.id = id;
         this.account = account;
         this.items = items;
@@ -183,7 +182,7 @@ public final class Purchase implements Identifiable {
 
     @Entity
     @Table(name = "item")
-    public static final class Item implements Identifiable {
+    public static final class Item {
 
         @Id
         @Column(name = "id", updatable = false)
@@ -197,9 +196,6 @@ public final class Purchase implements Identifiable {
 
         @Column(name = "count")
         private Integer count;
-
-
-//        private Long purchaseId;
 
         protected Item() {
         }
@@ -216,7 +212,6 @@ public final class Purchase implements Identifiable {
             return new Builder();
         }
 
-        @Override
         public Long getId() {
             return id;
         }
