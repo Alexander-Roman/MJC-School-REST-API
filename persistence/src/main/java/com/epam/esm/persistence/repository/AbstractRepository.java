@@ -83,7 +83,11 @@ public class AbstractRepository<T extends Identifiable> implements Repository<T>
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<T> entityCountRoot = countQuery.from(entityClass);
         Expression<Long> countExpression = criteriaBuilder.count(entityCountRoot);
-        countQuery.select(countExpression).where(predicate);
+        countQuery = countQuery.select(countExpression);
+
+        Predicate countPredicate = specification.toPredicate(entityCountRoot, countQuery, criteriaBuilder);
+        countQuery = countQuery.where(countPredicate);
+
         Long count = entityManager.createQuery(countQuery).getSingleResult();
 
         return new PageImpl<>(resultList, pageable, count);

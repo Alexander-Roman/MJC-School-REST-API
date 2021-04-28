@@ -10,4 +10,6 @@ public interface AccountMapper {
 
     AccountDto map(Account account);
 
+    Account map(AccountDto accountDto);
+
 }

@@ -1,6 +1,7 @@
 package com.epam.esm.web.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -22,6 +23,9 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
     private final Integer duration;
     private final LocalDateTime createDate;
     private final LocalDateTime lastUpdateDate;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private final Integer quantity;
     private final Set<TagDto> tags;
 
     @JsonCreator
@@ -32,6 +36,7 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
                           @JsonProperty("duration") Integer duration,
                           @JsonProperty("createDate") LocalDateTime createDate,
                           @JsonProperty("lastUpdateDate") LocalDateTime lastUpdateDate,
+                          @JsonProperty("quantity") Integer quantity,
                           @JsonProperty("tags") Set<TagDto> tags) {
         this.id = id;
         this.name = name;
@@ -40,6 +45,7 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
+        this.quantity = quantity;
         this.tags = tags;
     }
 
@@ -75,6 +81,10 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
         return lastUpdateDate;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
     public Set<TagDto> getTags() {
         return tags == null
                 ? null
@@ -97,6 +107,7 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
                 Objects.equals(duration, that.duration) &&
                 Objects.equals(createDate, that.createDate) &&
                 Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
+                Objects.equals(quantity, that.quantity) &&
                 Objects.equals(tags, that.tags);
     }
 
@@ -109,6 +120,7 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
         result = 31 * result + (duration != null ? duration.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
+        result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         return result;
     }
@@ -123,6 +135,7 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
                 ", duration=" + duration +
                 ", createDate=" + createDate +
                 ", lastUpdateDate=" + lastUpdateDate +
+                ", quantity=" + quantity +
                 ", tags=" + tags +
                 '}';
     }
@@ -137,6 +150,7 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
         private Integer duration;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
+        private Integer quantity;
         private Set<TagDto> tags;
 
         public Builder() {
@@ -151,6 +165,7 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
             createDate = certificateDto.createDate;
             lastUpdateDate = certificateDto.lastUpdateDate;
             tags = certificateDto.tags;
+            quantity = certificateDto.quantity;
         }
 
         public static Builder from(CertificateDto certificateDto) {
@@ -192,6 +207,11 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
             return this;
         }
 
+        public Builder setQuantity(Integer quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
         public Builder setTags(Set<TagDto> tags) {
             this.tags = tags;
             return this;
@@ -206,6 +226,7 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
                     duration,
                     createDate,
                     lastUpdateDate,
+                    quantity,
                     tags
             );
         }
@@ -221,6 +242,7 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
         public static final String DURATION = "duration";
         public static final String CREATE_DATE = "createDate";
         public static final String LAST_UPDATE_DATE = "lastUpdateDate";
+        public static final String QUANTITY = "quantity";
         public static final String TAGS = "tags";
 
     }

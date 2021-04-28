@@ -2,13 +2,9 @@ package com.epam.esm.web.controller;
 
 import com.epam.esm.persistence.entity.Account;
 import com.epam.esm.persistence.entity.Account_;
-import com.epam.esm.persistence.entity.Purchase;
-import com.epam.esm.persistence.entity.Purchase_;
 import com.epam.esm.service.AccountService;
 import com.epam.esm.web.assember.AccountDtoAssembler;
-import com.epam.esm.web.mapper.AccountMapper;
 import com.epam.esm.web.model.AccountDto;
-import com.epam.esm.web.model.PurchaseDto;
 import com.epam.esm.web.validator.constraint.AllowedOrderProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,17 +35,15 @@ public class AccountController {
     private static final String REL_ALL_ACCOUNTS = "accounts";
 
     private final AccountService accountService;
-    private final AccountMapper accountMapper;
     private final PagedResourcesAssembler<Account> accountPagedResourcesAssembler;
     private final AccountDtoAssembler accountDtoAssembler;
 
+
     @Autowired
     public AccountController(AccountService accountService,
-                             AccountMapper accountMapper,
                              PagedResourcesAssembler<Account> accountPagedResourcesAssembler,
                              AccountDtoAssembler accountDtoAssembler) {
         this.accountService = accountService;
-        this.accountMapper = accountMapper;
         this.accountPagedResourcesAssembler = accountPagedResourcesAssembler;
         this.accountDtoAssembler = accountDtoAssembler;
     }
@@ -59,11 +53,9 @@ public class AccountController {
             @PathVariable("id")
             @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id) {
         Account account = accountService.findById(id);
-        AccountDto accountDto = accountMapper.map(account);
+        AccountDto accountDto = accountDtoAssembler.toModel(account);
 
-        accountDto.add(linkTo(methodOn(AccountController.class).getAccountById(id)).withSelfRel());
-//        accountDto.add(linkTo(methodOn(AccountController.class).getAccountPage(null, null)).withRel(REL_ALL_ACCOUNTS));
-        //orders
+        accountDto.add(linkTo(methodOn(AccountController.class).getAccountPage(null)).withRel(REL_ALL_ACCOUNTS));
         return new ResponseEntity<>(accountDto, HttpStatus.OK);
     }
 
@@ -75,17 +67,5 @@ public class AccountController {
         PagedModel<AccountDto> accountDtoPagedModel = accountPagedResourcesAssembler.toModel(accountPage, accountDtoAssembler);
         return new ResponseEntity<>(accountDtoPagedModel, HttpStatus.OK);
     }
-
-//    @GetMapping("/{id}/purchases")
-//    public ResponseEntity<PagedModel<PurchaseDto>> getAccountPurchasePage(
-//            @PathVariable("id")
-//            @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id,
-//            @AllowedOrderProperties(message = MSG_SORT_INVALID, value = {Purchase_.COST, Purchase_.DATE}) Pageable pageable) {
-//
-//        Purchase
-//        Page<Account> accountPage = accountService.findPage(pageable);
-//        PagedModel<AccountDto> accountDtoPagedModel = accountPagedResourcesAssembler.toModel(accountPage, accountDtoAssembler);
-//        return new ResponseEntity<>(accountDtoPagedModel, HttpStatus.OK);
-//    }
 
 }

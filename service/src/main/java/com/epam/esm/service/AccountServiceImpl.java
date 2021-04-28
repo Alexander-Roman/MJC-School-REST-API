@@ -17,7 +17,7 @@ import java.util.Optional;
 public class AccountServiceImpl implements AccountService {
 
     private static final String ERROR_MESSAGE_ID_INVALID = "Invalid ID parameter: ";
-    private static final String ERROR_MESSAGE_ACCOUNT_NOT_FOUND = "Certificate does not exists! ID: ";
+    private static final String ERROR_MESSAGE_ACCOUNT_NOT_FOUND = "Account does not exists! ID: ";
     private static final long MIN_ID_VALUE = 1L;
 
     private final AccountRepository accountRepository;
