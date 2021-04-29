@@ -41,7 +41,7 @@ CREATE TABLE account
     email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     name     VARCHAR(255) NOT NULL,
-    role     VARCHAR(255) NOT NULL,
+    role     VARCHAR(255) NOT NULL DEFAULT 'USER',
     blocked  BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
@@ -58,14 +58,16 @@ CREATE TABLE purchase
 CREATE TABLE item
 (
     id             BIGSERIAL NOT NULL PRIMARY KEY,
+    purchase_id    BIGINT    NOT NULL REFERENCES purchase (id),
     certificate_id BIGINT    NOT NULL REFERENCES certificate (id),
-    count          INTEGER   NOT NULL
+    count          INTEGER   NOT NULL,
+    UNIQUE (purchase_id, certificate_id)
 );
 
-CREATE TABLE purchase_item
-(
-    id          BIGSERIAL NOT NULL PRIMARY KEY,
-    purchase_id BIGINT    NOT NULL REFERENCES purchase (id),
-    item_id     BIGINT    NOT NULL REFERENCES item (id),
-    UNIQUE (purchase_id, item_id)
-);
+-- CREATE TABLE purchase_item
+-- (
+--     id          BIGSERIAL NOT NULL PRIMARY KEY,
+--     purchase_id BIGINT    NOT NULL REFERENCES purchase (id),
+--     item_id     BIGINT    NOT NULL REFERENCES item (id),
+--     UNIQUE (purchase_id, item_id)
+-- );

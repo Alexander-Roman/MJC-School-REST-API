@@ -11,6 +11,7 @@ public interface PurchaseItemMapper {
 
     @Mapping(source = "count", target = "quantity")
     @Mapping(source = "certificate", target = ".")
+    @Mapping(target = "tags", ignore = true)
     CertificateDto map(Purchase.Item item);
 
 }

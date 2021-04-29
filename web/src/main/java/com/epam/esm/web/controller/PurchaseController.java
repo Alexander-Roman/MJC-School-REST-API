@@ -9,6 +9,7 @@ import com.epam.esm.web.assember.PurchaseDtoAssembler;
 import com.epam.esm.web.mapper.PurchaseMapper;
 import com.epam.esm.web.model.PurchaseDto;
 import com.epam.esm.web.validator.constraint.AllowedOrderProperties;
+import com.epam.esm.web.validator.group.PurchaseCreate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.groups.Default;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -85,7 +88,7 @@ public class PurchaseController {
     }
 
     @PostMapping()
-    public ResponseEntity<PurchaseDto> createPurchase(@RequestBody PurchaseDto purchaseDto) {
+    public ResponseEntity<PurchaseDto> createPurchase(@RequestBody @Validated({Default.class, PurchaseCreate.class}) PurchaseDto purchaseDto) {
         Purchase purchase = purchaseMapper.map(purchaseDto);
         Purchase created = purchaseService.createPurchase(purchase);
         PurchaseDto createdDto = purchaseDtoAssembler.toModel(created);

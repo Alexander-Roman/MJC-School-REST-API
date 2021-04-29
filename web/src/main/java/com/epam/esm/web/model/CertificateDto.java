@@ -1,10 +1,13 @@
 package com.epam.esm.web.model;
 
+import com.epam.esm.web.validator.group.PurchaseCreate;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,11 +15,15 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
+
 public final class CertificateDto extends RepresentationModel<CertificateDto> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Min(value = 1L, message = "{certificate.dto.id.lower.constraint}")
+    @NotNull(message = "{purchase.dto.create.certificate.id.null}", groups = PurchaseCreate.class)
     private final Long id;
+
     private final String name;
     private final String description;
     private final BigDecimal price;
@@ -25,7 +32,10 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
     private final LocalDateTime lastUpdateDate;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Min(value = 1, message = "{purchase.dto.create.certificate.quantity.lower.constraint}", groups = PurchaseCreate.class)
     private final Integer quantity;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private final Set<TagDto> tags;
 
     @JsonCreator

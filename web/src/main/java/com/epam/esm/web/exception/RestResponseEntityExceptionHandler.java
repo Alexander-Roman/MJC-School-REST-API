@@ -18,8 +18,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -40,6 +42,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     private static final Integer TYPE_MISMATCH_CODE = 40001;
     private static final Integer BIND_EXCEPTION_CODE = 40002;
     private static final Integer CONSTRAINT_VIOLATION_EXCEPTION_CODE = 40003;
+    private static final Integer METHOD_ARGUMENT_NOT_VALID_EXCEPTION_CODE = 40004;
     private static final Integer ENTITY_NOT_FOUND_EXCEPTION_CODE = 40401;
     private static final Integer HTTP_REQUEST_METHOD_NOT_SUPPORTED_EXCEPTION_CODE = 40501;
     private static final Integer HTTP_MEDIA_TYPE_NOT_SUPPORTED_EXCEPTION = 41501;
@@ -50,6 +53,38 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @Autowired
     public RestResponseEntityExceptionHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
+    }
+
+    @Override
+    @NonNull
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException exception,
+                                                                  @NonNull HttpHeaders headers,
+                                                                  @NonNull HttpStatus status,
+                                                                  @NonNull WebRequest request) {
+        LOGGER.debug(exception.getMessage(), exception);
+
+        BindingResult bindingResult = exception.getBindingResult();
+        List<NestedError> errors = new ArrayList<>();
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            String field = fieldError.getField();
+            Object rejectedValue = fieldError.getRejectedValue();
+            String code = fieldError.getCode();
+            String localizedMessage = fieldError.getDefaultMessage();
+
+            NestedError error = new FieldConstraintError(
+                    localizedMessage,
+                    code,
+                    field,
+                    rejectedValue
+            );
+            errors.add(error);
+        }
+
+        String objectName = exception.getObjectName();
+        String localizedMessage = this.getLocalizedMessage("method.argument.not.valid.exception", new Object[]{objectName}, request);
+        BindApiError bindApiError = new BindApiError(localizedMessage, METHOD_ARGUMENT_NOT_VALID_EXCEPTION_CODE, errors);
+        return new ResponseEntity<>(bindApiError, headers, HttpStatus.BAD_REQUEST);
     }
 
     @Override

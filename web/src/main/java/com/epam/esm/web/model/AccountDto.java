@@ -1,17 +1,24 @@
 package com.epam.esm.web.model;
 
+import com.epam.esm.web.validator.group.PurchaseCreate;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
+
 
 public class AccountDto extends RepresentationModel<AccountDto> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Min(value = 1L, message = "{account.dto.id.lower.constraint}")
+    @NotNull(message = "{purchase.dto.create.account.id.null}", groups = PurchaseCreate.class)
     private final Long id;
+
     private final String name;
 
     @JsonCreator

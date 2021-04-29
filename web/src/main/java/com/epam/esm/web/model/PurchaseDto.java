@@ -1,9 +1,15 @@
 package com.epam.esm.web.model;
 
+import com.epam.esm.web.validator.group.PurchaseCreate;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,15 +17,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+
 public final class PurchaseDto extends RepresentationModel<PurchaseDto> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
+    @Min(value = 1L, message = "{purchase.dto.id.lower.constraint}")
+    @Null(message = "{purchase.dto.create.id.null}", groups = PurchaseCreate.class)
     private final Long id;
+
+    @NotNull(message = "{purchase.dto.account.null}")
+    @Valid
     private final AccountDto account;
+
     private final BigDecimal cost;
+
     private final LocalDateTime date;
-    private final List<CertificateDto> items;
+
+    @NotNull(message = "{purchase.dto.items.null}")
+    @NotEmpty(message = "{purchase.dto.items.empty}")
+    private final List<@Valid @NotNull(message = "{certificate.dto.null}") CertificateDto> items;
 
     @JsonCreator
     public PurchaseDto(@JsonProperty("id") Long id,
