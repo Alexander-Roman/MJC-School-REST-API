@@ -5,6 +5,7 @@ import com.epam.esm.persistence.entity.Purchase_;
 import com.epam.esm.persistence.specification.FindAllSpecification;
 import com.epam.esm.persistence.specification.purchase.FindByAccountIdSpecification;
 import com.epam.esm.service.PurchaseService;
+import com.epam.esm.service.model.PurchaseRequest;
 import com.epam.esm.web.assember.PurchaseDtoAssembler;
 import com.epam.esm.web.mapper.PurchaseMapper;
 import com.epam.esm.web.model.PurchaseDto;
@@ -89,8 +90,8 @@ public class PurchaseController {
 
     @PostMapping()
     public ResponseEntity<PurchaseDto> createPurchase(@RequestBody @Validated({Default.class, PurchaseCreate.class}) PurchaseDto purchaseDto) {
-        Purchase purchase = purchaseMapper.map(purchaseDto);
-        Purchase created = purchaseService.createPurchase(purchase);
+        PurchaseRequest purchaseRequest = purchaseMapper.map(purchaseDto);
+        Purchase created = purchaseService.createPurchase(purchaseRequest);
         PurchaseDto createdDto = purchaseDtoAssembler.toModel(created);
 
         createdDto.add(linkTo(methodOn(PurchaseController.class).getPurchasePage(null, null)).withRel(REL_ALL_PURCHASES));

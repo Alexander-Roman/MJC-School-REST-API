@@ -1,10 +1,9 @@
-DROP TABLE certificate_tag;
-DROP TABLE tag;
 DROP TABLE purchase_item;
-DROP TABLE certificate;
-DROP TABLE item;
 DROP TABLE purchase;
 DROP TABLE account;
+DROP TABLE certificate_tag;
+DROP TABLE tag;
+DROP TABLE certificate;
 
 CREATE TABLE certificate
 (
@@ -55,19 +54,11 @@ CREATE TABLE purchase
     account_id BIGINT    NOT NULL REFERENCES account (id)
 );
 
-CREATE TABLE item
+CREATE TABLE purchase_item
 (
     id             BIGSERIAL NOT NULL PRIMARY KEY,
     purchase_id    BIGINT    NOT NULL REFERENCES purchase (id),
     certificate_id BIGINT    NOT NULL REFERENCES certificate (id),
-    count          INTEGER   NOT NULL,
+    quantity       INTEGER   NOT NULL,
     UNIQUE (purchase_id, certificate_id)
 );
-
--- CREATE TABLE purchase_item
--- (
---     id          BIGSERIAL NOT NULL PRIMARY KEY,
---     purchase_id BIGINT    NOT NULL REFERENCES purchase (id),
---     item_id     BIGINT    NOT NULL REFERENCES item (id),
---     UNIQUE (purchase_id, item_id)
--- );

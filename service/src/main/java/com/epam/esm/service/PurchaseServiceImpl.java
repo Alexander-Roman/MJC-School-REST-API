@@ -5,6 +5,7 @@ import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Purchase;
 import com.epam.esm.persistence.repository.PurchaseRepository;
 import com.epam.esm.service.exception.EntityNotFoundException;
+import com.epam.esm.service.model.PurchaseRequest;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
@@ -59,38 +60,29 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     @Transactional
-    public Purchase createPurchase(Purchase purchase) {
-        Preconditions.checkNotNull(purchase, "Purchase argument invalid: " + purchase);
+    public Purchase createPurchase(PurchaseRequest purchaseRequest) {
+        Preconditions.checkNotNull(purchaseRequest, "PurchaseRequest argument invalid: " + purchaseRequest);
 
-        Account account = purchase.getAccount();
-        Long accountId = account.getId();
-        Account accountFound = accountService.findById(accountId);
+        Long accountId = purchaseRequest.getAccountId();
+        Account account = accountService.findById(accountId);
 
-        Set<Purchase.Item> items = purchase.getItems();
-        Set<Purchase.Item> verifiedItems = new HashSet<>();
-        for (Purchase.Item item : items) {
-            Certificate certificate = item.getCertificate();
-            Long id = certificate.getId();
-            Certificate found = certificateService.findById(id);
-            Purchase.Item verified = Purchase.Item.Builder
-                    .from(item)
-                    .setCertificate(found)
-                    .build();
-            verifiedItems.add(verified);
+        Map<Long, Integer> certificateIdQuantity = purchaseRequest.getCertificateIdQuantity();
+        Map<Certificate, Integer> certificateQuantity = new HashMap<>();
+        for (Map.Entry<Long, Integer> item : certificateIdQuantity.entrySet()) {
+            Long id = item.getKey();
+            Certificate certificate = certificateService.findById(id);
+            Integer quantity = item.getValue();
+            certificateQuantity.put(certificate, quantity);
         }
 
-        BigDecimal cost = BigDecimal.ZERO;
-        for (Purchase.Item item : verifiedItems) {
-            Certificate certificate = item.getCertificate();
-            BigDecimal price = certificate.getPrice();
-            Integer count = item.getCount();
-            BigDecimal subtotal = new BigDecimal(count).multiply(price);
-            cost = cost.add(subtotal);
-        }
+        BigDecimal cost = certificateQuantity.entrySet()
+                .stream()
+                .map(entry -> new BigDecimal(entry.getValue()).multiply(entry.getKey().getPrice()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         LocalDateTime date = LocalDateTime.now();
-        Purchase assembled = new Purchase(null, accountFound, verifiedItems, cost, date);
-        return purchaseRepository.save(assembled);
+        Purchase purchase = new Purchase(null, account, certificateQuantity, cost, date);
+        return purchaseRepository.save(purchase);
     }
 
 }

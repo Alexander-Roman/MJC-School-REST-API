@@ -1,6 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Purchase;
+import com.epam.esm.service.model.PurchaseRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,6 +12,6 @@ public interface PurchaseService {
 
     Page<Purchase> findPage(Pageable pageable, Specification<Purchase> specification);
 
-    Purchase createPurchase(Purchase purchase);
+    Purchase createPurchase(PurchaseRequest purchaseRequest);
 
 }

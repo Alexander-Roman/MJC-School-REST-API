@@ -1,56 +1,52 @@
 package com.epam.esm.web.mapper;
 
 import com.epam.esm.persistence.entity.Certificate;
-import com.epam.esm.persistence.entity.Purchase;
 import com.epam.esm.web.model.CertificateDto;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {PurchaseItemMapper.class, AccountMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring", uses = AccountMapper.class, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public abstract class AbstractPurchaseMapper implements PurchaseMapper {
 
     private static final Integer DEFAULT_QUANTITY = 1;
 
-    public Set<Purchase.Item> map(List<CertificateDto> purchaseDtoItems) {
-        if (purchaseDtoItems == null) {
-            return null;
-        }
+    @Mapping(source = "key", target = ".")
+    @Mapping(source = "value", target = "quantity")
+    @Mapping(target = "tags", ignore = true)
+    public abstract CertificateDto map(Map.Entry<Certificate, Integer> certificateQuantity);
 
-        Map<Long, Integer> quantityMap = new HashMap<>();
+    public List<CertificateDto> map(Map<Certificate, Integer> certificateQuantity) {
+        return certificateQuantity
+                .entrySet()
+                .stream()
+                .map(this::map)
+                .collect(Collectors.toList());
+    }
+
+
+    public Map<Long, Integer> map(List<CertificateDto> purchaseDtoItems) {
+        Map<Long, Integer> certificateIdQuantity = new HashMap<>();
         for (CertificateDto certificateDto : purchaseDtoItems) {
             Long id = certificateDto.getId();
             Integer quantity = certificateDto.getQuantity();
             if (quantity == null) {
                 quantity = DEFAULT_QUANTITY;
             }
-            Integer value = quantityMap.get(id);
+            Integer value = certificateIdQuantity.get(id);
             if (value == null) {
-                quantityMap.put(id, quantity);
+                certificateIdQuantity.put(id, quantity);
             } else {
                 Integer sum = value + quantity;
-                quantityMap.put(id, sum);
+                certificateIdQuantity.put(id, sum);
             }
         }
-
-        Set<Purchase.Item> stackedItems = new HashSet<>();
-        for (Map.Entry<Long, Integer> entry : quantityMap.entrySet()) {
-            Long id = entry.getKey();
-            Integer quantity = entry.getValue();
-            Certificate certificate = Certificate
-                    .builder()
-                    .setId(id)
-                    .build();
-            Purchase.Item item = new Purchase.Item(null, certificate, quantity);
-            stackedItems.add(item);
-        }
-
-        return stackedItems;
+        return certificateIdQuantity;
     }
 
 }
