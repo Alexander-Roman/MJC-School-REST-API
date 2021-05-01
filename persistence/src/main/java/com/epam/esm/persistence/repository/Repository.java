@@ -19,4 +19,6 @@ public interface Repository<T extends Identifiable> {
 
     void delete(Long id);
 
+    Optional<T> findSingleByNativeQuery(String sql);
+
 }

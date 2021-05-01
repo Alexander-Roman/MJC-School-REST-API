@@ -110,4 +110,13 @@ public class TagController {
         return new ResponseEntity<>(deletedDto, HttpStatus.OK);
     }
 
+    @GetMapping("/top")
+    public ResponseEntity<TagDto> findMostPurchasedByTopAccount() {
+        Tag tag = tagService.findMostPurchasedByTopAccount();
+        TagDto tagDto = tagDtoAssembler.toModel(tag);
+
+        tagDto.add(linkTo(methodOn(TagController.class).findAll(null)).withRel(REL_ALL_TAGS));
+        return new ResponseEntity<>(tagDto, HttpStatus.OK);
+    }
+
 }

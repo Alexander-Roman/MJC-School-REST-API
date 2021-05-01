@@ -105,4 +105,10 @@ public class TagServiceImpl implements TagService {
         return target;
     }
 
+    @Override
+    public Tag findMostPurchasedByTopAccount() {
+        Optional<Tag> found = tagRepository.findMostPurchasedByTopAccount();
+        return found
+                .orElseThrow(() -> new EntityNotFoundException("No tag found matching the conditions!"));
+    }
 }

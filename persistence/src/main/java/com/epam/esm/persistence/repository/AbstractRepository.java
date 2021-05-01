@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -117,6 +118,14 @@ public class AbstractRepository<T extends Identifiable> implements Repository<T>
     public void delete(Long id) {
         T entity = entityManager.find(entityClass, id);
         entityManager.remove(entity);
+    }
+
+    @Override
+    public Optional<T> findSingleByNativeQuery(String sql) {
+        Query nativeQuery = entityManager.createNativeQuery(sql, entityClass);
+        Object singleResult = nativeQuery.getSingleResult();
+        T entity = entityClass.cast(singleResult);
+        return Optional.ofNullable(entity);
     }
 
 }

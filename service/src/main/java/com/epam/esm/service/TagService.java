@@ -58,4 +58,6 @@ public interface TagService {
      */
     Tag deleteById(Long id);
 
+    Tag findMostPurchasedByTopAccount();
+
 }
