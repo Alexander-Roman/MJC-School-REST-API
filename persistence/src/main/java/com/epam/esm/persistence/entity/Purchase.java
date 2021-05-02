@@ -1,9 +1,12 @@
 package com.epam.esm.persistence.entity;
 
+import com.epam.esm.persistence.audit.listener.AuditListener;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +24,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "purchase")
+@EntityListeners(AuditListener.class)
 public class Purchase implements Identifiable {
 
     @Id

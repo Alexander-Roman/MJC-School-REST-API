@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 
-public class AccountDto extends RepresentationModel<AccountDto> implements Serializable {
+public final class AccountDto extends RepresentationModel<AccountDto> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

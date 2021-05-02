@@ -4,6 +4,7 @@ DROP TABLE account;
 DROP TABLE certificate_tag;
 DROP TABLE tag;
 DROP TABLE certificate;
+DROP TABLE audit_record;
 
 CREATE TABLE certificate
 (
@@ -40,7 +41,7 @@ CREATE TABLE account
     email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     name     VARCHAR(255) NOT NULL,
-    role     VARCHAR(255) NOT NULL DEFAULT 'USER',
+    role     VARCHAR(13)  NOT NULL DEFAULT 'USER',
     blocked  BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
@@ -62,3 +63,11 @@ CREATE TABLE purchase_item
     quantity       INTEGER   NOT NULL,
     UNIQUE (purchase_id, certificate_id)
 );
+
+CREATE TABLE audit_record
+(
+    id        BIGSERIAL  NOT NULL PRIMARY KEY,
+    operation VARCHAR(6) NOT NULL,
+    date      TIMESTAMP  NOT NULL,
+    entry     TEXT       NOT NULL
+)

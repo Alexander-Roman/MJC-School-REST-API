@@ -1,7 +1,10 @@
 package com.epam.esm.persistence.entity;
 
+import com.epam.esm.persistence.audit.listener.AuditListener;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +22,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "certificate")
+@EntityListeners(AuditListener.class)
 public class Certificate implements Identifiable {
 
     @Id
