@@ -55,8 +55,9 @@ public class HaveAll<T> extends PathSpecification<T> {
         Class<T> rootType = (Class<T>) root.getJavaType();
         Subquery<T> subQuery = query.subquery(rootType);
         Root<T> subQueryRoot = subQuery.from(rootType);
-        Path<?> subQueryPath = this.path(subQueryRoot);
-        Predicate predicate = criteriaBuilder.equal(subQueryPath, converter.convert(value, typeOnPath));
+        Path<String> subQueryPath = this.path(subQueryRoot);
+        String converted = (String) converter.convert(value, typeOnPath);
+        Predicate predicate = criteriaBuilder.equal(criteriaBuilder.lower(subQueryPath), converted.toLowerCase());
         return subQuery.select(subQueryRoot).where(predicate);
     }
 

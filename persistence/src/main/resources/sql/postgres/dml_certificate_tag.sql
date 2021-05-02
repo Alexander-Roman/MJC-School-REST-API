@@ -26977,3 +26977,8 @@ insert into certificate_tag (certificate_id, tag_id) values (9977, 629);
 insert into certificate_tag (certificate_id, tag_id) values (3706, 200);
 insert into certificate_tag (certificate_id, tag_id) values (1898, 846);
 insert into certificate_tag (certificate_id, tag_id) values (10333, 89);
+
+insert into certificate_tag (certificate_id, tag_id) values (8619, 86);
+insert into certificate_tag (certificate_id, tag_id) values (8619, 79);
+insert into certificate_tag (certificate_id, tag_id) values (2563, 86);
+insert into certificate_tag (certificate_id, tag_id) values (2563, 79);

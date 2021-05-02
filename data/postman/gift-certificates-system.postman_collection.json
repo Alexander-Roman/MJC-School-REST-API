@@ -13,598 +13,824 @@
 					"name": "Certificate",
 					"item": [
 						{
-							"name": "Certificate by ID (with tags)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates/1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates",
-										"1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Certificate by ID (with epmty tags)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates/4",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates",
-										"4"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Certificate by ID (not exists)",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept-Language",
-										"value": "ru-RU",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates/10000",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates",
-										"10000"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Certificate by ID (id invalid)",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept-Language",
-										"value": "ru-RU",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates/-1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates",
-										"-1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Certificate by ID (bad request)",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept-Language",
-										"value": "ru-Ru",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates/bad",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates",
-										"bad"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List (all)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List filtered (tag)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates?tag=advanced",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									],
-									"query": [
-										{
-											"key": "tag",
-											"value": "advanced"
+							"name": "GET",
+							"item": [
+								{
+									"name": "BY ID with tags",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates/1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates",
+												"1"
+											]
 										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List filtered (search name or description)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates?search=aTt",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									],
-									"query": [
-										{
-											"key": "search",
-											"value": "aTt"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List sorted (sort description asc)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates?sort=description",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									],
-									"query": [
-										{
-											"key": "sort",
-											"value": "description"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List sorted (sort duration desc)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates?sort=duration,desc",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									],
-									"query": [
-										{
-											"key": "sort",
-											"value": "duration,desc"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List sorted (no sort, thenSort lastUpdateDate asc)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates?thenSort=lastUpdateDate,ASC",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									],
-									"query": [
-										{
-											"key": "thenSort",
-											"value": "lastUpdateDate,ASC"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List sorted (no sort, thenSort createDate desc)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates?thenSort=createDate,DeSc",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									],
-									"query": [
-										{
-											"key": "thenSort",
-											"value": "createDate,DeSc"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List sorted (dual sort)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates?sort=duration,desc&thenSort=price,DESC",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									],
-									"query": [
-										{
-											"key": "sort",
-											"value": "duration,desc"
-										},
-										{
-											"key": "thenSort",
-											"value": "price,DESC"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List sorted (invalid)",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept-Language",
-										"value": "ru-RU",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates?sort=desc&thenSort=price,DE1SC",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									],
-									"query": [
-										{
-											"key": "sort",
-											"value": "desc"
-										},
-										{
-											"key": "thenSort",
-											"value": "price,DE1SC"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "List filtered and sorted (all params)",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates?tag=advanced&search=llc&sort=name,DESC&thenSort=price,desc",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									],
-									"query": [
-										{
-											"key": "tag",
-											"value": "advanced"
-										},
-										{
-											"key": "search",
-											"value": "llc"
-										},
-										{
-											"key": "sort",
-											"value": "name,DESC"
-										},
-										{
-											"key": "thenSort",
-											"value": "price,desc"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create valid",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Certificate valid name\",\r\n    \"description\": \"Certificate valid description\",\r\n    \"price\": 99.99,\r\n    \"duration\": 10,\r\n    \"tags\": [\r\n        {\r\n            \"name\": \"TagName1\"\r\n        },\r\n        {\r\n            \"name\": \"TagName2\"\r\n        },\r\n        {\r\n            \"name\": \"TagName3\"\r\n        }\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create invalid",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Accept-Language",
-										"value": "ru-Ru",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"         \",\r\n    \"description\": \"Certificate valid description\",\r\n    \"duration\": -1,\r\n    \"createDate\": \"2021-04-03T13:17:34.54587\",\r\n    \"tags\": [\r\n        {\r\n            \"name\": \"TagName1\"\r\n        },\r\n        {\r\n            \"name\": \"TagName.......................too.long....................................2\"\r\n        },\r\n        {\r\n            \"name\": \"        \"\r\n        }\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+								{
+									"name": "BY ID no tags",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates/12",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates",
+												"12"
+											]
 										}
-									}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update selective",
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"id\": 1016,\r\n    \"name\": \"Certificate UPDATED name\",\r\n    \"duration\": 3,\r\n    \"tags\": [\r\n        {\r\n            \"name\": \"TagName1\"\r\n        },\r\n        {\r\n            \"name\": \"TagName3\"\r\n        },\r\n        {\r\n            \"name\": \"TagName4\"\r\n        }\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+								{
+									"name": "BY ID deleted",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "ru-RU",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates/3",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates",
+												"3"
+											]
 										}
-									}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update selective (put)",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Accept-Language",
-										"value": "ru-RU",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"id\": 1016,\r\n    \"name\": \"Certificate UPDATED name\",\r\n    \"duration\": 3,\r\n    \"tags\": [\r\n        {\r\n            \"name\": \"TagName1\"\r\n        },\r\n        {\r\n            \"name\": \"TagName3\"\r\n        },\r\n        {\r\n            \"name\": \"TagName4\"\r\n        }\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+								{
+									"name": "BY ID not exists",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "ru-RU",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates/99999",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates",
+												"99999"
+											]
 										}
-									}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates"
-									]
+								{
+									"name": "BY ID negative",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "ru-RU",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates/-1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates",
+												"-1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "BY ID string",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "ru-RU",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates/bad",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates",
+												"bad"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PAGE",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PAGE number",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates?page=1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1",
+													"description": "first"
+												},
+												{
+													"key": "page",
+													"value": "2",
+													"description": "second",
+													"disabled": true
+												},
+												{
+													"key": "page",
+													"value": "1055",
+													"description": "last",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PAGE size",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates?size=20",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											],
+											"query": [
+												{
+													"key": "size",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "size",
+													"value": "20"
+												},
+												{
+													"key": "size",
+													"value": "100",
+													"disabled": true
+												},
+												{
+													"key": "size",
+													"value": "1000",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PAGE sort",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates?sort=name",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											],
+											"query": [
+												{
+													"key": "sort",
+													"value": "name"
+												},
+												{
+													"key": "sort",
+													"value": "name,desc",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "description",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "description,desc",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "price",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "price,desc",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "duration",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "duration,desc",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "createDate",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "createDate,desc",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "lastUpdateDate",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "lastUpdateDate,desc",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PAGE sort invalid",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "ru-RU",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates?sort=id",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											],
+											"query": [
+												{
+													"key": "sort",
+													"value": "id"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PAGE search",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "ru-RU",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates?search=aTt",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											],
+											"query": [
+												{
+													"key": "search",
+													"value": "aTt",
+													"description": "exists"
+												},
+												{
+													"key": "search",
+													"value": "Not Exists",
+													"description": "not exists",
+													"disabled": true
+												},
+												{
+													"key": "search",
+													"value": "NuVasive, Inc.",
+													"description": "name",
+													"disabled": true
+												},
+												{
+													"key": "search",
+													"value": "Extended Eco-centric toolset",
+													"description": "description",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PAGE tag names",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "ru-RU",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates?tag=advanced&tag=DataBase",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											],
+											"query": [
+												{
+													"key": "tag",
+													"value": "advanced",
+													"description": "usual"
+												},
+												{
+													"key": "tag",
+													"value": "DataBase",
+													"description": "case insensitive"
+												},
+												{
+													"key": "tag",
+													"value": "not exists",
+													"description": "not exists",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PAGE conjunction",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates?page=1&size=20&search=llc&tag=advanced&tag=database&sort=name,desc&sort=description",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "size",
+													"value": "20"
+												},
+												{
+													"key": "search",
+													"value": "llc"
+												},
+												{
+													"key": "tag",
+													"value": "advanced"
+												},
+												{
+													"key": "tag",
+													"value": "database"
+												},
+												{
+													"key": "sort",
+													"value": "name",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "name,desc"
+												},
+												{
+													"key": "sort",
+													"value": "description"
+												},
+												{
+													"key": "sort",
+													"value": "description,desc",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "price",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "price,desc",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "duration",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "duration,desc",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "createDate",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "createDate,desc",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "lastUpdateDate",
+													"disabled": true
+												},
+												{
+													"key": "sort",
+													"value": "lastUpdateDate,desc",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "Delete by ID",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates/1016",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates",
-										"1016"
-									]
+							"name": "POST",
+							"item": [
+								{
+									"name": "CREATE valid",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Certificate valid name\",\r\n    \"description\": \"Certificate valid description\",\r\n    \"price\": 99.99,\r\n    \"duration\": 10,\r\n    \"tags\": [\r\n        {\r\n            \"name\": \"TagName1\"\r\n        },\r\n        {\r\n            \"name\": \"TagName2\"\r\n        },\r\n        {\r\n            \"name\": \"TagName3\"\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CREATE invalid",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "ru-Ru",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"         \",\r\n    \"description\": \"Certificate valid description\",\r\n    \"duration\": -1,\r\n    \"tags\": [\r\n        {\r\n            \"name\": \"TagName1\"\r\n        },\r\n        {\r\n            \"name\": \"ToooooooooooooooooooooLoooooooooooooooooooooooooooong\"\r\n        },\r\n        {\r\n            \"name\": \"         \"\r\n        },\r\n        {\r\n            \"name\": \"1*2*3*4*5\"\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "Certificate by ID (request method not supported)",
-							"request": {
-								"method": "COPY",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/api/v1/certificates/1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"v1",
-										"certificates",
-										"1"
-									]
+							"name": "PATCH",
+							"item": [
+								{
+									"name": "UPDATE selective",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 11001,\r\n    \"name\": \"Certificate UPDATED name\",\r\n    \"duration\": 3,\r\n    \"tags\": [\r\n        {\r\n            \"name\": \"TagName1\"\r\n        },\r\n        {\r\n            \"name\": \"TagName3\"\r\n        },\r\n        {\r\n            \"name\": \"TagName4\"\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "UPDATE price",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 11001,\r\n    \"price\": 99.98\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "UPDATE tags",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 11001,\r\n    \"tags\": [\r\n        {\r\n            \"name\": \"TagName1\"\r\n        },\r\n        {\r\n            \"name\": \"TagName7\"\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
+						},
+						{
+							"name": "PUT",
+							"item": [
+								{
+									"name": "NOT SUPPORTED",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Accept-Language",
+												"value": "ru-RU",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 1016,\r\n    \"name\": \"Certificate UPDATED name\",\r\n    \"duration\": 3,\r\n    \"tags\": [\r\n        {\r\n            \"name\": \"TagName1\"\r\n        },\r\n        {\r\n            \"name\": \"TagName3\"\r\n        },\r\n        {\r\n            \"name\": \"TagName4\"\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "DELETE",
+							"item": [
+								{
+									"name": "BY ID",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/certificates/11002",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"certificates",
+												"11002"
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						}
 					]
 				},
@@ -612,7 +838,7 @@
 					"name": "Tag",
 					"item": [
 						{
-							"name": "Tag by ID",
+							"name": "BY ID",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -634,12 +860,12 @@
 							"response": []
 						},
 						{
-							"name": "List all",
+							"name": "PAGE",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/api/v1/tags",
+									"raw": "http://localhost:8080/api/v1/tags?page=1&size=15&sort=name,desc",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -649,13 +875,49 @@
 										"api",
 										"v1",
 										"tags"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "15"
+										},
+										{
+											"key": "sort",
+											"value": "name,desc"
+										}
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Create valid",
+							"name": "TOP",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/tags/top",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"tags",
+										"top"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CREATE valid",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -685,14 +947,15 @@
 							"response": []
 						},
 						{
-							"name": "Create invalid",
+							"name": "CREATE invalid",
 							"request": {
 								"method": "POST",
 								"header": [
 									{
 										"key": "Accept-Language",
 										"value": "ru-RU",
-										"type": "text"
+										"type": "text",
+										"disabled": true
 									}
 								],
 								"body": {
@@ -721,12 +984,12 @@
 							"response": []
 						},
 						{
-							"name": "Delete by ID",
+							"name": "BY ID",
 							"request": {
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/api/v1/tags/305",
+									"raw": "http://localhost:8080/api/v1/tags/1001",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -736,11 +999,263 @@
 										"api",
 										"v1",
 										"tags",
-										"305"
+										"1001"
 									]
 								}
 							},
 							"response": []
+						}
+					]
+				},
+				{
+					"name": "Account",
+					"item": [
+						{
+							"name": "BY ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/accounts/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"accounts",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PAGE",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/accounts?page=1&size=5&sort=name",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"accounts"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										},
+										{
+											"key": "sort",
+											"value": "name"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Purchase",
+					"item": [
+						{
+							"name": "GET",
+							"item": [
+								{
+									"name": "BY ID",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n                \"account\": {\r\n                    \"id\": 1,\r\n                    \"name\": \"name1\"\r\n                },\r\n                \"cost\": 99.98,\r\n                \"date\": \"2021-04-26T21:03:29.573718\",\r\n                \"items\": [\r\n                    {\r\n                        \"id\": 999,\r\n                        \"quantity\": 13\r\n                    },\r\n                    {\r\n                        \"id\": 999,\r\n                        \"quantity\": 13\r\n                    },\r\n                    {\r\n                        \"id\": 1000,\r\n                        \"quantity\": 1\r\n                    },\r\n                    {\r\n                        \"id\": 1000\r\n                    },\r\n                    {\r\n                        \"id\": 1000\r\n                    },\r\n                    {\r\n                        \"id\": 23\r\n                    }\r\n                ]\r\n            }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/purchases/20",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"purchases",
+												"20"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PAGE",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n                \"account\": {\r\n                    \"id\": 1,\r\n                    \"name\": \"name1\"\r\n                },\r\n                \"cost\": 99.98,\r\n                \"date\": \"2021-04-26T21:03:29.573718\",\r\n                \"items\": [\r\n                    {\r\n                        \"id\": 999,\r\n                        \"quantity\": 13\r\n                    },\r\n                    {\r\n                        \"id\": 999,\r\n                        \"quantity\": 13\r\n                    },\r\n                    {\r\n                        \"id\": 1000,\r\n                        \"quantity\": 1\r\n                    },\r\n                    {\r\n                        \"id\": 1000\r\n                    },\r\n                    {\r\n                        \"id\": 1000\r\n                    },\r\n                    {\r\n                        \"id\": 23\r\n                    }\r\n                ]\r\n            }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/purchases?page=1&size=2&sort=cost,desc&sort=date",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"purchases"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "size",
+													"value": "2"
+												},
+												{
+													"key": "sort",
+													"value": "cost,desc"
+												},
+												{
+													"key": "sort",
+													"value": "date"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "POST",
+							"item": [
+								{
+									"name": "CREATE as list",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"account\": {\r\n        \"id\": 1 \r\n    },\r\n    \"items\": [\r\n        {\r\n            \"id\": 2000\r\n        },\r\n        {\r\n            \"id\": 2000\r\n        },\r\n        {\r\n            \"id\": 2001\r\n        },\r\n        {\r\n            \"id\": 2002\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/purchases",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"purchases"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CREATE as positions",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"account\": {\r\n        \"id\": 1 \r\n    },\r\n    \"items\": [\r\n        {\r\n            \"id\": 2000,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"id\": 2001,\r\n            \"quantity\": 3\r\n        },\r\n        {\r\n            \"id\": 2002,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/purchases",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"purchases"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CREATE invalid",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"account\": {\r\n        \"name\": \"name\" \r\n    },\r\n    \"items\": [\r\n        {\r\n            \"id\": 2000,\r\n            \"quantity\": -1\r\n        },\r\n        null,\r\n        {\r\n            \"quantity\": 3\r\n        },\r\n        {\r\n            \"id\": -1,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/purchases",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"purchases"
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						}
 					]
 				}
