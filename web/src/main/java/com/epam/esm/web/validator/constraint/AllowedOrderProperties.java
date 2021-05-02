@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = PageableValidator.class)
+@Constraint(validatedBy = AllowedOrderPropertiesPageableValidator.class)
 @Target({
         ElementType.ANNOTATION_TYPE,
         ElementType.CONSTRUCTOR,
@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AllowedOrderProperties {
 
-    String message() default "{pageable.sort.order.property.invalid}";
+    String message() default "{validation.constraints.pageable.sort.order.property}";
 
     Class<?>[] groups() default {};
 

@@ -17251,7 +17251,6 @@ insert into purchase_item (purchase_id, certificate_id, quantity) values (128, 4
 insert into purchase_item (purchase_id, certificate_id, quantity) values (8477, 3277, 1);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (3900, 3523, 4);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (6750, 4454, 3);
-insert into purchase_item (purchase_id, certificate_id, quantity) values (6203, 280, 1);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (510, 8888, 1);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (5961, 6954, 4);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (7174, 8746, 1);
@@ -20544,7 +20543,6 @@ insert into purchase_item (purchase_id, certificate_id, quantity) values (9248, 
 insert into purchase_item (purchase_id, certificate_id, quantity) values (4444, 2631, 2);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (669, 3666, 4);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (7932, 3226, 4);
-insert into purchase_item (purchase_id, certificate_id, quantity) values (6624, 8966, 2);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (815, 9303, 3);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (5185, 3270, 4);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (1183, 737, 4);
@@ -23392,7 +23390,6 @@ insert into purchase_item (purchase_id, certificate_id, quantity) values (9851, 
 insert into purchase_item (purchase_id, certificate_id, quantity) values (8810, 630, 4);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (8789, 68, 3);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (4421, 2450, 3);
-insert into purchase_item (purchase_id, certificate_id, quantity) values (9078, 2825, 3);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (3051, 9964, 3);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (7874, 4308, 1);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (734, 2512, 3);
@@ -26075,7 +26072,6 @@ insert into purchase_item (purchase_id, certificate_id, quantity) values (4334, 
 insert into purchase_item (purchase_id, certificate_id, quantity) values (8938, 8049, 2);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (6481, 5167, 1);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (2268, 1152, 2);
-insert into purchase_item (purchase_id, certificate_id, quantity) values (8000, 6556, 1);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (8545, 9255, 3);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (5841, 34, 1);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (7224, 6625, 3);
@@ -28354,7 +28350,6 @@ insert into purchase_item (purchase_id, certificate_id, quantity) values (9506, 
 insert into purchase_item (purchase_id, certificate_id, quantity) values (3750, 7446, 1);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (7243, 9127, 2);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (9498, 7690, 4);
-insert into purchase_item (purchase_id, certificate_id, quantity) values (9856, 5335, 3);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (5853, 4100, 2);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (8236, 5707, 2);
 insert into purchase_item (purchase_id, certificate_id, quantity) values (2710, 6411, 3);

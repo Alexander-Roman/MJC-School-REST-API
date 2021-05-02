@@ -7,9 +7,9 @@ import com.epam.esm.web.assember.CertificateDtoAssembler;
 import com.epam.esm.web.mapper.CertificateMapper;
 import com.epam.esm.web.model.CertificateDto;
 import com.epam.esm.web.specification.certificate.FilterRequestSpecification;
-import com.epam.esm.web.validator.CertificateDtoCreateValidator;
-import com.epam.esm.web.validator.CertificateDtoUpdateValidator;
 import com.epam.esm.web.validator.constraint.AllowedOrderProperties;
+import com.epam.esm.web.validator.group.CertificateCreate;
+import com.epam.esm.web.validator.group.CertificateUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +17,6 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
+import javax.validation.groups.Default;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -40,28 +39,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class CertificateController {
 
 
-    private static final String MSG_CODE_ID_INVALID = "id.invalid";
-    private static final String MSG_SORT_INVALID = "sort.invalid";
+    private static final String MSG_CODE_ID_INVALID = "{validation.constraints.id.min}";
     private static final long MIN_ID = 1L;
     private static final String REL_ALL_CERTIFICATES = "certificates";
 
     private final CertificateService certificateService;
-    private final CertificateDtoUpdateValidator certificateDtoUpdateValidator;
-    private final CertificateDtoCreateValidator certificateDtoCreateValidator;
     private final CertificateMapper certificateMapper;
     private final PagedResourcesAssembler<Certificate> certificatePagedResourcesAssembler;
     private final CertificateDtoAssembler certificateDtoAssembler;
 
     @Autowired
     public CertificateController(CertificateService certificateService,
-                                 CertificateDtoUpdateValidator certificateDtoUpdateValidator,
-                                 CertificateDtoCreateValidator certificateDtoCreateValidator,
                                  CertificateMapper certificateMapper,
                                  PagedResourcesAssembler<Certificate> certificatePagedResourcesAssembler,
                                  CertificateDtoAssembler certificateDtoAssembler) {
         this.certificateService = certificateService;
-        this.certificateDtoUpdateValidator = certificateDtoUpdateValidator;
-        this.certificateDtoCreateValidator = certificateDtoCreateValidator;
         this.certificateMapper = certificateMapper;
         this.certificatePagedResourcesAssembler = certificatePagedResourcesAssembler;
         this.certificateDtoAssembler = certificateDtoAssembler;
@@ -72,16 +64,15 @@ public class CertificateController {
             @PathVariable("id")
             @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id) {
         Certificate certificate = certificateService.findById(id);
-        CertificateDto certificateDto = certificateMapper.map(certificate);
+        CertificateDto certificateDto = certificateDtoAssembler.toModel(certificate);
 
-        certificateDto.add(linkTo(methodOn(CertificateController.class).getCertificateById(id)).withSelfRel());
         certificateDto.add(linkTo(methodOn(CertificateController.class).getCertificatePage(null, null)).withRel(REL_ALL_CERTIFICATES));
         return new ResponseEntity<>(certificateDto, HttpStatus.OK);
     }
 
     @GetMapping()
     public ResponseEntity<PagedModel<CertificateDto>> getCertificatePage(
-            @AllowedOrderProperties(message = MSG_SORT_INVALID, value = {
+            @AllowedOrderProperties({
                     Certificate_.NAME,
                     Certificate_.DESCRIPTION,
                     Certificate_.PRICE,
@@ -96,33 +87,29 @@ public class CertificateController {
     }
 
     @PostMapping
-    public ResponseEntity<CertificateDto> createCertificate(@RequestBody CertificateDto certificateDto,
-                                                            BindingResult bindingResult) throws BindException {
-        certificateDtoCreateValidator.validate(certificateDto, bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
+    public ResponseEntity<CertificateDto> createCertificate(@RequestBody
+                                                            @Validated({
+                                                                    Default.class,
+                                                                    CertificateCreate.class
+                                                            }) CertificateDto certificateDto) {
         Certificate certificate = certificateMapper.map(certificateDto);
         Certificate created = certificateService.create(certificate);
-        CertificateDto createdDto = certificateMapper.map(created);
+        CertificateDto createdDto = certificateDtoAssembler.toModel(created);
 
-        createdDto.add(linkTo(methodOn(CertificateController.class).getCertificateById(createdDto.getId())).withSelfRel());
         createdDto.add(linkTo(methodOn(CertificateController.class).getCertificatePage(null, null)).withRel(REL_ALL_CERTIFICATES));
         return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
     }
 
     @PatchMapping
-    public ResponseEntity<CertificateDto> updateCertificate(@RequestBody CertificateDto certificateDto,
-                                                            BindingResult bindingResult) throws BindException {
-        certificateDtoUpdateValidator.validate(certificateDto, bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
-        }
+    public ResponseEntity<CertificateDto> updateCertificate(@RequestBody
+                                                            @Validated({
+                                                                    Default.class,
+                                                                    CertificateUpdate.class
+                                                            }) CertificateDto certificateDto) {
         Certificate certificate = certificateMapper.map(certificateDto);
         Certificate updated = certificateService.selectiveUpdate(certificate);
-        CertificateDto updatedDto = certificateMapper.map(updated);
+        CertificateDto updatedDto = certificateDtoAssembler.toModel(updated);
 
-        updatedDto.add(linkTo(methodOn(CertificateController.class).getCertificateById(updatedDto.getId())).withSelfRel());
         updatedDto.add(linkTo(methodOn(CertificateController.class).getCertificatePage(null, null)).withRel(REL_ALL_CERTIFICATES));
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }

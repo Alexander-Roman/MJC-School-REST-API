@@ -29,8 +29,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Validated
 public class AccountController {
 
-    private static final String MSG_CODE_ID_INVALID = "id.invalid";
-    private static final String MSG_SORT_INVALID = "sort.invalid";
+    private static final String MSG_CODE_ID_INVALID = "{validation.constraints.id.min}";
     private static final long MIN_ID = 1L;
     private static final String REL_ALL_ACCOUNTS = "accounts";
 
@@ -49,9 +48,7 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDto> getAccountById(
-            @PathVariable("id")
-            @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id) {
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable("id") @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long id) {
         Account account = accountService.findById(id);
         AccountDto accountDto = accountDtoAssembler.toModel(account);
 
@@ -60,9 +57,7 @@ public class AccountController {
     }
 
     @GetMapping()
-    public ResponseEntity<PagedModel<AccountDto>> getAccountPage(
-            @AllowedOrderProperties(message = MSG_SORT_INVALID, value = Account_.NAME) Pageable pageable) {
-
+    public ResponseEntity<PagedModel<AccountDto>> getAccountPage(@AllowedOrderProperties(Account_.NAME) Pageable pageable) {
         Page<Account> accountPage = accountService.findPage(pageable);
         PagedModel<AccountDto> accountDtoPagedModel = accountPagedResourcesAssembler.toModel(accountPage, accountDtoAssembler);
         return new ResponseEntity<>(accountDtoPagedModel, HttpStatus.OK);

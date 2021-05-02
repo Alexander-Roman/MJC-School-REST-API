@@ -1,13 +1,20 @@
 package com.epam.esm.web.model;
 
+import com.epam.esm.web.validator.constraint.NullOrNotBlank;
+import com.epam.esm.web.validator.group.CertificateCreate;
+import com.epam.esm.web.validator.group.CertificateUpdate;
 import com.epam.esm.web.validator.group.PurchaseCreate;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,23 +27,40 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
 
     private static final long serialVersionUID = 1L;
 
-    @Min(value = 1L, message = "{certificate.dto.id.lower.constraint}")
-    @NotNull(message = "{purchase.dto.create.certificate.id.null}", groups = PurchaseCreate.class)
+    @Min(value = 1L, message = "{certificate.dto.id.min}")
+    @NotNull(message = "{certificate.dto.id.null}", groups = {CertificateUpdate.class, PurchaseCreate.class})
     private final Long id;
 
+    @NotNull(message = "{certificate.dto.create.name.null}", groups = CertificateCreate.class)
+    @NullOrNotBlank(message = "{certificate.dto.name.blank}")
+    @Size(max = 150, message = "{certificate.dto.name.size}")
     private final String name;
+
+    @NotNull(message = "{certificate.dto.create.description.null}", groups = CertificateCreate.class)
+    @NullOrNotBlank(message = "{certificate.dto.description.blank}")
+    @Size(max = 255, message = "{certificate.dto.description.size}")
     private final String description;
+
+    @NotNull(message = "{certificate.dto.create.price.null}", groups = CertificateCreate.class)
+    @DecimalMin(value = "0.0", message = "{certificate.dto.price.negative}")
+    @DecimalMax(value = "99999.99", message = "{certificate.dto.price.overmuch}")
     private final BigDecimal price;
+
+    @NotNull(message = "{certificate.dto.create.duration.null}", groups = CertificateCreate.class)
+    @Min(value = 1, message = "{certificate.dto.duration.min}")
     private final Integer duration;
+
+
     private final LocalDateTime createDate;
     private final LocalDateTime lastUpdateDate;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Min(value = 1, message = "{purchase.dto.create.certificate.quantity.lower.constraint}", groups = PurchaseCreate.class)
+    @Min(value = 1, message = "{certificate.dto.quantity.min}", groups = PurchaseCreate.class)
     private final Integer quantity;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private final Set<TagDto> tags;
+    @NotNull(message = "{certificate.dto.create.tags.null}", groups = CertificateCreate.class)
+    private final Set<@Valid @NotNull(message = "{tag.dto.null}") TagDto> tags;
 
     @JsonCreator
     public CertificateDto(@JsonProperty("id") Long id,
@@ -240,20 +264,6 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
                     tags
             );
         }
-
-    }
-
-    public static final class Field {
-
-        public static final String ID = "id";
-        public static final String NAME = "name";
-        public static final String DESCRIPTION = "description";
-        public static final String PRICE = "price";
-        public static final String DURATION = "duration";
-        public static final String CREATE_DATE = "createDate";
-        public static final String LAST_UPDATE_DATE = "lastUpdateDate";
-        public static final String QUANTITY = "quantity";
-        public static final String TAGS = "tags";
 
     }
 

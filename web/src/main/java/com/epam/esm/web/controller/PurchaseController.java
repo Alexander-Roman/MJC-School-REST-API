@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.groups.Default;
 
@@ -40,8 +39,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Validated
 public class PurchaseController {
 
-    private static final String MSG_CODE_ID_INVALID = "id.invalid";
-    private static final String MSG_SORT_INVALID = "sort.invalid";
+    private static final String MSG_CODE_ID_INVALID = "{validation.constraints.id.min}";
     private static final long MIN_ID = 1L;
     private static final String REL_ALL_PURCHASES = "purchases";
 
@@ -76,7 +74,7 @@ public class PurchaseController {
     public ResponseEntity<PagedModel<PurchaseDto>> getPurchasePage(
             @RequestParam(value = "account", required = false)
             @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long accountId,
-            @AllowedOrderProperties(message = MSG_SORT_INVALID, value = {Purchase_.COST, Purchase_.DATE}) Pageable pageable) {
+            @AllowedOrderProperties({Purchase_.COST, Purchase_.DATE}) Pageable pageable) {
 
         Specification<Purchase> specification = new FindAllSpecification<>();
         if (accountId != null) {

@@ -18,7 +18,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -64,28 +63,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         LOGGER.debug(exception.getMessage(), exception);
 
         BindingResult bindingResult = exception.getBindingResult();
-        List<NestedError> errors = new ArrayList<>();
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            String field = fieldError.getField();
-            Object rejectedValue = fieldError.getRejectedValue();
-            String code = fieldError.getCode();
-            String localizedMessage = fieldError.getDefaultMessage();
-
-            NestedError error = new FieldConstraintError(
-                    localizedMessage,
-                    code,
-                    field,
-                    rejectedValue
-            );
-            errors.add(error);
-        }
-
+        List<NestedError> errors = this.handleBindingResult(bindingResult);
         String objectName = exception.getObjectName();
         String localizedMessage = this.getLocalizedMessage("method.argument.not.valid.exception", new Object[]{objectName}, request);
         BindApiError bindApiError = new BindApiError(localizedMessage, METHOD_ARGUMENT_NOT_VALID_EXCEPTION_CODE, errors);
         return new ResponseEntity<>(bindApiError, headers, HttpStatus.BAD_REQUEST);
     }
+
 
     @Override
     @NonNull
@@ -145,22 +129,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         LOGGER.debug(exception.getMessage(), exception);
 
         BindingResult bindingResult = exception.getBindingResult();
-        List<NestedError> errors = new ArrayList<>();
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            String field = fieldError.getField();
-            Object rejectedValue = fieldError.getRejectedValue();
-            String code = fieldError.getCode();
-            String localizedMessage = this.getLocalizedMessage(code, null, request);
-
-            NestedError error = new FieldConstraintError(
-                    localizedMessage,
-                    code,
-                    field,
-                    rejectedValue
-            );
-            errors.add(error);
-        }
+        List<NestedError> errors = this.handleBindingResult(bindingResult);
         String objectName = exception.getObjectName();
         String localizedMessage = this.getLocalizedMessage("bind.exception", new Object[]{objectName}, request);
         BindApiError bindApiError = new BindApiError(localizedMessage, BIND_EXCEPTION_CODE, errors);
@@ -201,7 +170,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
         for (ConstraintViolation<?> constraintViolation : constraintViolations) {
             String code = constraintViolation.getMessageTemplate();
-            String localizedMessage = this.getLocalizedMessage(code, null, request);
+            String localizedMessage = constraintViolation.getMessage();
 
             NestedError error = new ConstraintError(
                     localizedMessage,
@@ -227,6 +196,26 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     private String getLocalizedMessage(String code, Object[] args, WebRequest request) {
         Locale locale = request.getLocale();
         return messageSource.getMessage(code, args, locale);
+    }
+
+    private List<NestedError> handleBindingResult(BindingResult bindingResult) {
+        List<NestedError> errors = new ArrayList<>();
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            String field = fieldError.getField();
+            Object rejectedValue = fieldError.getRejectedValue();
+            String code = fieldError.getCode();
+            String localizedMessage = fieldError.getDefaultMessage();
+
+            NestedError error = new FieldConstraintError(
+                    localizedMessage,
+                    code,
+                    field,
+                    rejectedValue
+            );
+            errors.add(error);
+        }
+        return errors;
     }
 
 }

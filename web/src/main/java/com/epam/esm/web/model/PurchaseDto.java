@@ -1,15 +1,12 @@
 package com.epam.esm.web.model;
 
-import com.epam.esm.web.validator.group.PurchaseCreate;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,9 +19,6 @@ public final class PurchaseDto extends RepresentationModel<PurchaseDto> implemen
 
     private static final long serialVersionUID = 1L;
 
-
-    @Min(value = 1L, message = "{purchase.dto.id.lower.constraint}")
-    @Null(message = "{purchase.dto.create.id.null}", groups = PurchaseCreate.class)
     private final Long id;
 
     @NotNull(message = "{purchase.dto.account.null}")

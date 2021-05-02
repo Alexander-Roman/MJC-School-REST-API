@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "certificate")
-public final class Certificate implements Identifiable {
+public class Certificate implements Identifiable {
 
     @Id
     @Column(name = "id", updatable = false)

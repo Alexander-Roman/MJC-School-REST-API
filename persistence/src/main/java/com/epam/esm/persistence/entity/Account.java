@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "account")
-public final class Account implements Identifiable {
+public class Account implements Identifiable {
 
     @Id
     @Column(name = "id", updatable = false)

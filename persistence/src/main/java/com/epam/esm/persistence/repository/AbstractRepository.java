@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -20,7 +21,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Transactional
 public class AbstractRepository<T extends Identifiable> implements Repository<T> {
@@ -67,10 +67,7 @@ public class AbstractRepository<T extends Identifiable> implements Repository<T>
         criteriaQuery = criteriaQuery.where(predicate);
 
         Sort sort = pageable.getSort();
-        List<Order> orderList = sort
-                .get()
-                .map(order -> this.convert(order, entityRoot))
-                .collect(Collectors.toList());
+        List<Order> orderList = QueryUtils.toOrders(sort, entityRoot, criteriaBuilder);
         criteriaQuery = criteriaQuery.orderBy(orderList);
 
         int offset = (int) pageable.getOffset();
@@ -92,17 +89,6 @@ public class AbstractRepository<T extends Identifiable> implements Repository<T>
         Long count = entityManager.createQuery(countQuery).getSingleResult();
 
         return new PageImpl<>(resultList, pageable, count);
-    }
-
-    private Order convert(Sort.Order order, Root<T> certificateRoot) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        String property = order.getProperty();
-        Sort.Direction direction = order.getDirection();
-        if (Sort.Direction.DESC.equals(direction)) {
-            return criteriaBuilder.desc(certificateRoot.get(property));
-        } else {
-            return criteriaBuilder.asc(certificateRoot.get(property));
-        }
     }
 
     @Override

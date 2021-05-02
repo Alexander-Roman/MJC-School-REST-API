@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "purchase")
-public final class Purchase implements Identifiable {
+public class Purchase implements Identifiable {
 
     @Id
     @Column(name = "id", updatable = false)

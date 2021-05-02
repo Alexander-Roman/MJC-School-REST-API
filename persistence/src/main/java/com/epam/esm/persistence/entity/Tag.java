@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tag")
-public final class Tag implements Identifiable {
+public class Tag implements Identifiable {
 
     @Id
     @Column(name = "id", updatable = false)

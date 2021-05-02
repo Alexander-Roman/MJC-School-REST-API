@@ -15,8 +15,8 @@ public class AccountDto extends RepresentationModel<AccountDto> implements Seria
 
     private static final long serialVersionUID = 1L;
 
-    @Min(value = 1L, message = "{account.dto.id.lower.constraint}")
-    @NotNull(message = "{purchase.dto.create.account.id.null}", groups = PurchaseCreate.class)
+    @Min(value = 1L, message = "{account.dto.id.min}")
+    @NotNull(message = "{account.dto.id.null}", groups = PurchaseCreate.class)
     private final Long id;
 
     private final String name;

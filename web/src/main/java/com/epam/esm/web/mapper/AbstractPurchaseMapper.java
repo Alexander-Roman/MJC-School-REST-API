@@ -1,7 +1,10 @@
 package com.epam.esm.web.mapper;
 
 import com.epam.esm.persistence.entity.Certificate;
+import com.epam.esm.persistence.entity.Purchase;
+import com.epam.esm.service.model.PurchaseRequest;
 import com.epam.esm.web.model.CertificateDto;
+import com.epam.esm.web.model.PurchaseDto;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,6 +18,15 @@ import java.util.stream.Collectors;
 public abstract class AbstractPurchaseMapper implements PurchaseMapper {
 
     private static final Integer DEFAULT_QUANTITY = 1;
+
+    @Override
+    @Mapping(source = "certificateQuantity", target = "items")
+    public abstract PurchaseDto map(Purchase purchase);
+
+    @Override
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "items", target = "certificateIdQuantity")
+    public abstract PurchaseRequest map(PurchaseDto purchaseDto);
 
     @Mapping(source = "key", target = ".")
     @Mapping(source = "value", target = "quantity")
