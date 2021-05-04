@@ -2,6 +2,14 @@ plugins {
     id 'com.epam.esm.java-spring-boot-common-conventions'
 }
 
+sourceSets {
+    generated {
+        java {
+            srcDirs file('src/generated/java')
+        }
+    }
+}
+
 dependencies {
     implementation project(':service')
     implementation project(':persistence')
@@ -15,4 +23,8 @@ dependencies {
     implementation group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: "${mapstructVersion}"
 
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file('src/generated/java')
 }

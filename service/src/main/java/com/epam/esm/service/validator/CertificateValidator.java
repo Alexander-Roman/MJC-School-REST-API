@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Component
@@ -53,16 +52,6 @@ public class CertificateValidator implements Validator<Certificate> {
 
         Integer duration = certificate.getDuration();
         if (duration == null || duration < MIN_DURATION) {
-            return false;
-        }
-
-        LocalDateTime createDate = certificate.getCreateDate();
-        if (createDate == null) {
-            return false;
-        }
-
-        LocalDateTime lastUpdateDate = certificate.getLastUpdateDate();
-        if (lastUpdateDate == null) {
             return false;
         }
 

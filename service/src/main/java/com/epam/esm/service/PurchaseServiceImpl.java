@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -80,8 +79,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .map(entry -> new BigDecimal(entry.getValue()).multiply(entry.getKey().getPrice()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        LocalDateTime date = LocalDateTime.now();
-        Purchase purchase = new Purchase(null, account, certificateQuantity, cost, date);
+        Purchase purchase = new Purchase(null, account, certificateQuantity, cost, null);
         return purchaseRepository.save(purchase);
     }
 

@@ -1,6 +1,7 @@
 package com.epam.esm.persistence.audit.entity;
 
 import com.epam.esm.persistence.entity.Identifiable;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +30,7 @@ public class Record implements Identifiable {
     private Operation operation;
 
     @Column(name = "date")
+    @CreationTimestamp
     private LocalDateTime date;
 
     @Column(name = "entry")

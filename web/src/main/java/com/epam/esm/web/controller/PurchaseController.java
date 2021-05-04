@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
@@ -72,13 +71,12 @@ public class PurchaseController {
 
     @GetMapping()
     public ResponseEntity<PagedModel<PurchaseDto>> getPurchasePage(
-            @RequestParam(value = "account", required = false)
-            @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long accountId,
+            @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long account,
             @AllowedOrderProperties({Purchase_.COST, Purchase_.DATE}) Pageable pageable) {
 
         Specification<Purchase> specification = new FindAllSpecification<>();
-        if (accountId != null) {
-            FindByAccountIdSpecification findByAccountIdSpecification = new FindByAccountIdSpecification(accountId);
+        if (account != null) {
+            FindByAccountIdSpecification findByAccountIdSpecification = new FindByAccountIdSpecification(account);
             specification = specification.and(findByAccountIdSpecification);
         }
         Page<Purchase> purchasePage = purchaseService.findPage(pageable, specification);

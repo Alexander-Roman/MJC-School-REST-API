@@ -1,6 +1,7 @@
 package com.epam.esm.persistence.entity;
 
 import com.epam.esm.persistence.audit.listener.AuditListener;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -48,6 +49,7 @@ public class Purchase implements Identifiable {
     private BigDecimal cost;
 
     @Column(name = "date")
+    @CreationTimestamp
     private LocalDateTime date;
 
     protected Purchase() {

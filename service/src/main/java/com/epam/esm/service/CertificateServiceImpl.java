@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
@@ -65,27 +64,21 @@ public class CertificateServiceImpl implements CertificateService {
     public Certificate create(Certificate certificate) {
         Preconditions.checkNotNull(certificate, ERROR_MESSAGE_CERTIFICATE_INVALID + certificate);
 
-        LocalDateTime now = LocalDateTime.now();
-        Certificate dated = Certificate.Builder
-                .from(certificate)
-                .setCreateDate(now)
-                .setLastUpdateDate(now)
-                .build();
-
-        if (!certificateValidator.isValid(dated)) {
-            throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_INVALID + dated);
+        if (!certificateValidator.isValid(certificate)) {
+            throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_INVALID + certificate);
         }
 
         Set<Tag> tags = certificate.getTags();
-        if (!tags.isEmpty()) {
-            Set<Tag> consistentTags = tagService.createIfNotExist(tags);
-            dated = Certificate.Builder
-                    .from(dated)
-                    .setTags(consistentTags)
-                    .build();
+        if (tags.isEmpty()) {
+            return certificateRepository.save(certificate);
         }
 
-        return certificateRepository.save(dated);
+        Set<Tag> consistentTags = tagService.createIfNotExist(tags);
+        Certificate certificateWithTags = Certificate.Builder
+                .from(certificate)
+                .setTags(consistentTags)
+                .build();
+        return certificateRepository.save(certificateWithTags);
     }
 
     @Override
@@ -138,16 +131,11 @@ public class CertificateServiceImpl implements CertificateService {
         if (!certificateValidator.isValid(certificate)) {
             throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_INVALID + certificate);
         }
-        LocalDateTime now = LocalDateTime.now();
-        Certificate dated = Certificate.Builder
-                .from(certificate)
-                .setLastUpdateDate(now)
-                .build();
 
         Set<Tag> tags = certificate.getTags();
         Set<Tag> consistentTags = tagService.createIfNotExist(tags);
         Certificate updatedWithTags = Certificate.Builder
-                .from(dated)
+                .from(certificate)
                 .setTags(consistentTags)
                 .build();
         return certificateRepository.save(updatedWithTags);

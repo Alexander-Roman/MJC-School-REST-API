@@ -1,6 +1,8 @@
 package com.epam.esm.persistence.entity;
 
 import com.epam.esm.persistence.audit.listener.AuditListener;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,9 +46,11 @@ public class Certificate implements Identifiable {
     private Integer duration;
 
     @Column(name = "create_date")
+    @CreationTimestamp
     private LocalDateTime createDate;
 
     @Column(name = "last_update_date")
+    @UpdateTimestamp
     private LocalDateTime lastUpdateDate;
 
     @ManyToMany(fetch = FetchType.LAZY)

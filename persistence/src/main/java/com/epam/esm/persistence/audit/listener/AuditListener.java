@@ -8,7 +8,6 @@ import com.epam.esm.persistence.repository.audit.RecordRepositoryFactory;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
-import java.time.LocalDateTime;
 
 public class AuditListener {
 
@@ -33,9 +32,8 @@ public class AuditListener {
         if (recordRepository == null) {
             recordRepository = RecordRepositoryFactory.getRecordRepository();
         }
-        LocalDateTime date = LocalDateTime.now();
         String entry = identifiable.toString();
-        Record record = new Record(null, operation, date, entry);
+        Record record = new Record(null, operation, null, entry);
         recordRepository.save(record);
     }
 
