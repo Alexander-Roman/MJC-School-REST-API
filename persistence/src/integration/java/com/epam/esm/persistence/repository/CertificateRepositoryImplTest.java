@@ -3,10 +3,18 @@ package com.epam.esm.persistence.repository;
 import com.epam.esm.persistence.config.TestPersistenceConfig;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
+import com.epam.esm.persistence.specification.FindAllSpecification;
+import com.epam.esm.persistence.specification.certificare.FindNotDeletedByIdSpecification;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -136,332 +144,32 @@ public class CertificateRepositoryImplTest {
         Assertions.assertEquals(expected, actual);
     }
 
-//    @Test
-//    public void findAll_WhenNoRequestConditions_ShouldReturnListOfAllCertificates() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(null, null);
-//        //when
-//        List<Certificate> results = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        int size = results.size();
-//        Assertions.assertEquals(5, size);
-//    }
-//
-//    @Test
-//    public void findAll_WhenSearchByNameOrDescriptionSpecified_ShouldReturnListOfSelection() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest("number 1", null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIRST, FIFTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_WhenSearchByNameOrDescriptionMatchesNothing_ShouldReturnEmptyList() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest("_Should found nothing", null);
-//        SortRequest sortRequest = new SortRequest(null, null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Collections.emptyList();
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_WhenSearchByTagNameSpecified_ShouldReturnListOfSelection() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, "tag2");
-//        SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIRST, SECOND);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_WhenSearchByTagNameMatchesNothing_ShouldEmptyList() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, "such tag does not exists");
-//        SortRequest sortRequest = new SortRequest(null, null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Collections.emptyList();
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_WhenConjunctionSearchSpecified_ShouldReturnListOfSelection() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest("number 2", "tag1");
-//        SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Collections.singletonList(FIRST);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByNameAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("name"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIRST, SECOND, THIRD, FOURTH, FIFTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByNameDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("name"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIFTH, FOURTH, THIRD, SECOND, FIRST);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByDescriptionAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("description"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIFTH, FIRST, SECOND, THIRD, FOURTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByDescriptionDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("description"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FOURTH, THIRD, SECOND, FIRST, FIFTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByPriceAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("price"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FOURTH, FIFTH, FIRST, SECOND, THIRD);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByPriceDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("price"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(THIRD, SECOND, FIRST, FIFTH, FOURTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByCreateDateAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("createDate"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(SECOND, THIRD, FOURTH, FIFTH, FIRST);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByCreateDateDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("createDate"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIRST, FIFTH, FOURTH, THIRD, SECOND);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByLastUpdateDateAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("lastUpdateDate"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIRST, SECOND, THIRD, FOURTH, FIFTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListOrderedByLastUpdateDateDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("lastUpdateDate"), null);
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIFTH, FOURTH, THIRD, SECOND, FIRST);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByNameAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("name"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIFTH, THIRD, FOURTH, FIRST, SECOND);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByNameDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("name"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(SECOND, FIRST, FOURTH, THIRD, FIFTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByDescriptionAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("description"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIFTH, THIRD, FOURTH, FIRST, SECOND);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByDescriptionDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("description"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(SECOND, FIRST, FOURTH, THIRD, FIFTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByPriceAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("price"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIFTH, FOURTH, THIRD, FIRST, SECOND);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByPriceDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("price"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(SECOND, FIRST, THIRD, FOURTH, FIFTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByCreateDateAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("createDate"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIFTH, THIRD, FOURTH, SECOND, FIRST);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByCreateDateDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("createDate"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIRST, SECOND, FOURTH, THIRD, FIFTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByLastUpdateDateAsc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.desc("duration"), Sort.asc("lastUpdateDate"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(FIFTH, THIRD, FOURTH, FIRST, SECOND);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_ShouldReturnListThenOrderedByLastUpdateDateDesc() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest(null, null);
-//        SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("lastUpdateDate"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(SECOND, FIRST, FOURTH, THIRD, FIFTH);
-//        Assertions.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void findAll_WhenAllOptionsSpecified_ShouldReturnListOfSelection() {
-//        //given
-//        FilterRequest filterRequest = new FilterRequest("number", "tag2");
-//        SortRequest sortRequest = new SortRequest(Sort.asc("duration"), Sort.desc("lastUpdateDate"));
-//        //when
-//        List<Certificate> actual = certificateRepository.findAll(sortRequest, filterRequest);
-//        //then
-//        List<Certificate> expected = Arrays.asList(SECOND, FIRST);
-//        Assertions.assertEquals(expected, actual);
-//    }
+    @Test
+    public void findSingle_ShouldFindBySpecification() {
+        //given
+        Specification<Certificate> specification = new FindNotDeletedByIdSpecification(2L);
+        //when
+        Optional<Certificate> actual = certificateRepository.findSingle(specification);
+        //then
+        Optional<Certificate> expected = Optional.of(SECOND);
+        Assertions.assertEquals(expected, actual);
+    }
 
     @Test
-    public void create_ShouldReturnCreatedWithId() {
+    public void find_ShouldFindPageBySpecification() {
+        //given
+        Sort sort = Sort.by(Sort.Direction.DESC, "price");
+        Pageable pageable = PageRequest.of(0, 4, sort);
+        Specification<Certificate> specification = new FindAllSpecification<>();
+        //when
+        Page<Certificate> actual = certificateRepository.find(pageable, specification);
+        //then
+        Page<Certificate> expected = new PageImpl<>(Arrays.asList(THIRD, SECOND, FIRST, FIFTH), pageable, 5);
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void save_ShouldReturnCreatedWithId() {
         //given
         //when
         Certificate created = certificateRepository.save(CERTIFICATE_TO_CREATE);
@@ -471,7 +179,7 @@ public class CertificateRepositoryImplTest {
     }
 
     @Test
-    public void create_ShouldSaveCertificateInDatabase() {
+    public void save_ShouldSaveCertificateInDatabase() {
         //given
         Certificate created = certificateRepository.save(CERTIFICATE_TO_CREATE);
         Long id = created.getId();
@@ -487,7 +195,7 @@ public class CertificateRepositoryImplTest {
     }
 
     @Test
-    public void update_ShouldUpdateCertificateInDatabase() {
+    public void save_ShouldUpdateCertificateInDatabase() {
         //given
         certificateRepository.save(FIFTH_TO_UPDATE);
         //when
@@ -498,7 +206,7 @@ public class CertificateRepositoryImplTest {
     }
 
     @Test
-    public void update_ShouldReturnUpdated() {
+    public void save_ShouldReturnUpdated() {
         //given
         //when
         Certificate actual = certificateRepository.save(FIFTH_TO_UPDATE);

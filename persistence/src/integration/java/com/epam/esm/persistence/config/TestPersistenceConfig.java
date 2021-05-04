@@ -70,7 +70,7 @@ public class TestPersistenceConfig {
     @Bean
     public EntityManagerFactory entityManagerFactory() throws IOException {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-        factoryBean.setPackagesToScan("com.epam.esm.persistence.entity");
+        factoryBean.setPackagesToScan("com.epam.esm.persistence.entity", "com.epam.esm.persistence.audit.entity");
         factoryBean.setDataSource(dataSource());
         factoryBean.setJpaProperties(hibernateProperties());
         factoryBean.setJpaVendorAdapter(jpaVendorAdapter());

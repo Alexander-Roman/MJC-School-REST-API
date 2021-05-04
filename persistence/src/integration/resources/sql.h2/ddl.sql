@@ -34,3 +34,13 @@ CREATE TABLE certificate_tag
     FOREIGN KEY (tag_id) REFERENCES tag (id),
     CONSTRAINT certificate_tag_pair_constraint UNIQUE (certificate_id, tag_id)
 );
+
+CREATE SEQUENCE audit_record_id_seq;
+
+CREATE TABLE audit_record
+(
+    id        BIGINT AUTO_INCREMENT,
+    operation VARCHAR(6) NOT NULL,
+    date      DATETIME   NOT NULL,
+    entry     TEXT       NOT NULL
+)
