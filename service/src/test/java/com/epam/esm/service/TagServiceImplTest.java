@@ -59,6 +59,7 @@ public class TagServiceImplTest {
         lenient().when(tagValidator.isValid(any())).thenReturn(true);
         lenient().when(tagRepository.save(any())).thenReturn(TAG_WITH_ID);
         lenient().when(tagRepository.findSingle(any())).thenReturn(Optional.of(TAG_WITH_ID));
+        lenient().when(tagRepository.findMostPurchasedByTopAccount()).thenReturn(Optional.of(TAG_WITH_ID));
     }
 
     @Test
@@ -263,6 +264,26 @@ public class TagServiceImplTest {
         Set<Tag> actual = tagService.createIfNotExist(TAG_SET_WITHOUT_ID);
         //then
         Assertions.assertEquals(TAG_SET_WITH_ID, actual);
+    }
+
+    @Test
+    public void findMostPurchasedByTopAccount_ShouldCallRepositoryMethod() {
+        //given
+        //when
+        tagService.findMostPurchasedByTopAccount();
+        //then
+        verify(tagRepository).findMostPurchasedByTopAccount();
+    }
+
+    @Test
+    public void findMostPurchasedByTopAccount_WhenFoundNothing_ShouldThrowException() {
+        //given
+        lenient().when(tagRepository.findMostPurchasedByTopAccount()).thenReturn(Optional.empty());
+        //when
+        //then
+        Assertions.assertThrows(EntityNotFoundException.class, () ->
+                tagService.findMostPurchasedByTopAccount()
+        );
     }
 
 }

@@ -83,8 +83,6 @@ public class CertificateValidatorTest {
                 new Certificate(1L, "name", "description", new BigDecimal("100000.00"), 1, LocalDateTime.now(), LocalDateTime.now(), Collections.emptySet(), false),
                 new Certificate(1L, "name", "description", new BigDecimal("10.00"), 0, LocalDateTime.now(), LocalDateTime.now(), Collections.emptySet(), false),
                 new Certificate(1L, "name", "description", new BigDecimal("10.00"), -1, LocalDateTime.now(), LocalDateTime.now(), Collections.emptySet(), false),
-                new Certificate(1L, "name", "description", new BigDecimal("10.00"), 1, null, LocalDateTime.now(), Collections.emptySet(), false),
-                new Certificate(1L, "name", "description", new BigDecimal("10.00"), 1, LocalDateTime.now(), null, Collections.emptySet(), false),
                 new Certificate(1L, "name", "description", new BigDecimal("10.00"), 1, LocalDateTime.now(), LocalDateTime.now(), null, false),
                 new Certificate(1L, "name", "description", new BigDecimal("10.00"), 1, LocalDateTime.now(), LocalDateTime.now(), Collections.emptySet(), null)
         );

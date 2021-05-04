@@ -4,6 +4,7 @@ package com.epam.esm.service;
 import com.epam.esm.persistence.entity.Certificate;
 import com.epam.esm.persistence.entity.Tag;
 import com.epam.esm.persistence.repository.CertificateRepository;
+import com.epam.esm.persistence.specification.FindAllSpecification;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.CertificateValidator;
@@ -12,6 +13,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.lenient;
@@ -144,46 +148,38 @@ public class CertificateServiceImplTest {
         );
     }
 
-//    @Test
-//    public void findAll_WhenSortRequestIsNull_ShouldThrowException() {
-//        //given
-//        //when
-//        //then
-//        Assertions.assertThrows(NullPointerException.class, () ->
-//                certificateService.findAll(null, FILTER_REQUEST)
-//        );
-//    }
-//
-//    @Test
-//    public void findAll_WhenFilterRequestIsNull_ShouldThrowException() {
-//        //given
-//        //when
-//        //then
-//        Assertions.assertThrows(NullPointerException.class, () ->
-//                certificateService.findAll(SORT_REQUEST, null)
-//        );
-//    }
-//
-//    @Test
-//    public void findAll_WhenSortRequestInvalid_ShouldThrowException() {
-//        //given
-//        lenient().when(certificateSortRequestValidator.isValid(any())).thenReturn(false);
-//        //when
-//        //then
-//        Assertions.assertThrows(ServiceException.class, () ->
-//                certificateService.findAll(SORT_REQUEST, FILTER_REQUEST)
-//        );
-//    }
-//
-//    @Test
-//    public void findAll_ShouldFindListOfCertificates() {
-//        //given
-//        //when
-//        List<Certificate> actual = certificateService.findAll(SORT_REQUEST, FILTER_REQUEST);
-//        //then
-//        List<Certificate> expected = Collections.singletonList(CERTIFICATE_WITH_ID);
-//        Assertions.assertEquals(expected, actual);
-//    }
+    @Test
+    public void findPage_WhenPageableIsNull_ShouldThrowException() {
+        //given
+        Specification<Certificate> specification = new FindAllSpecification<>();
+        //when
+        //then
+        Assertions.assertThrows(NullPointerException.class, () ->
+                certificateService.findPage(null, specification)
+        );
+    }
+
+    @Test
+    public void findPage_WhenSpecificationIsNull_ShouldThrowException() {
+        //given
+        Pageable pageable = PageRequest.of(1, 10, Sort.unsorted());
+        //when
+        //then
+        Assertions.assertThrows(NullPointerException.class, () ->
+                certificateService.findPage(pageable, null)
+        );
+    }
+
+    @Test
+    public void findPage_ShouldFindPageOfPurchases() {
+        //given
+        Pageable pageable = PageRequest.of(1, 10, Sort.unsorted());
+        Specification<Certificate> specification = new FindAllSpecification<>();
+        //when
+        certificateService.findPage(pageable, specification);
+        //then
+        verify(certificateRepository).find(pageable, specification);
+    }
 
     @Test
     public void create_WhenCertificateIsNull_ShouldThrowException() {
@@ -193,28 +189,6 @@ public class CertificateServiceImplTest {
         Assertions.assertThrows(NullPointerException.class, () ->
                 certificateService.create(null)
         );
-    }
-
-    @Test
-    public void create_ShouldSetActualCreateDate() {
-        //given
-        lenient().when(certificateRepository.save(any())).then(returnsFirstArg());
-        //when
-        Certificate created = certificateService.create(CERTIFICATE_WITHOUT_ID);
-        LocalDateTime actual = created.getCreateDate();
-        //then
-        Assertions.assertTrue(actual.isAfter(LOCAL_DATE_TIME));
-    }
-
-    @Test
-    public void create_ShouldSetActualLastUpdateDate() {
-        //given
-        lenient().when(certificateRepository.save(any())).then(returnsFirstArg());
-        //when
-        Certificate created = certificateService.create(CERTIFICATE_WITHOUT_ID);
-        LocalDateTime actual = created.getLastUpdateDate();
-        //then
-        Assertions.assertTrue(actual.isAfter(LOCAL_DATE_TIME));
     }
 
     @Test
@@ -440,17 +414,6 @@ public class CertificateServiceImplTest {
         Assertions.assertThrows(ServiceException.class, () ->
                 certificateService.selectiveUpdate(CERTIFICATE_WITH_ID)
         );
-    }
-
-    @Test
-    public void selectiveUpdate_ShouldSetActualLastUpdateDate() {
-        //given
-        lenient().when(certificateRepository.save(any())).then(returnsFirstArg());
-        //when
-        Certificate updated = certificateService.selectiveUpdate(CERTIFICATE_WITH_ID);
-        LocalDateTime actual = updated.getLastUpdateDate();
-        //then
-        Assertions.assertTrue(actual.isAfter(LOCAL_DATE_TIME));
     }
 
     @Test
