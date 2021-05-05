@@ -25,6 +25,14 @@ public interface TagService {
      */
     Tag findById(Long id);
 
+    /**
+     * Finds page of Tags based on specification and pagination parameters.
+     *
+     * @param pageable      object with pagination parameters
+     * @param specification of Tag type
+     * @return Page of Tags found
+     * @throws NullPointerException when any of arguments is null
+     */
     Page<Tag> find(Pageable pageable, Specification<Tag> specification);
 
     /**
@@ -58,6 +66,12 @@ public interface TagService {
      */
     Tag deleteById(Long id);
 
+    /**
+     * Finds the most widely used tag of a Account with the highest cost of all Purchases
+     *
+     * @return Tag found
+     * @throws EntityNotFoundException when there are no tags satisfying the request
+     */
     Tag findMostPurchasedByTopAccount();
 
 }

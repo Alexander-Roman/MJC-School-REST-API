@@ -23,6 +23,14 @@ public interface CertificateService {
      */
     Certificate findById(Long id);
 
+    /**
+     * Finds page of Certificates based on specification and pagination parameters.
+     *
+     * @param pageable      object with pagination parameters
+     * @param specification of Certificate type
+     * @return Page of Certificates found
+     * @throws NullPointerException when any of arguments is null
+     */
     Page<Certificate> findPage(Pageable pageable, Specification<Certificate> specification);
 
     /**
