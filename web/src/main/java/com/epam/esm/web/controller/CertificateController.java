@@ -106,8 +106,10 @@ public class CertificateController {
                                                                     Default.class,
                                                                     CertificateUpdate.class
                                                             }) CertificateDto certificateDto) {
-        Certificate certificate = certificateMapper.map(certificateDto);
-        Certificate updated = certificateService.selectiveUpdate(certificate);
+        Long id = certificateDto.getId();
+        Certificate found = certificateService.findById(id);
+        Certificate certificate = certificateMapper.mapMerge(certificateDto, found);
+        Certificate updated = certificateService.update(certificate);
         CertificateDto updatedDto = certificateDtoAssembler.toModel(updated);
 
         updatedDto.add(linkTo(methodOn(CertificateController.class).getCertificatePage(null, null)).withRel(REL_ALL_CERTIFICATES));

@@ -31,9 +31,9 @@ public abstract class AbstractPurchaseMapper implements PurchaseMapper {
     @Mapping(source = "key", target = ".")
     @Mapping(source = "value", target = "quantity")
     @Mapping(target = "tags", ignore = true)
-    public abstract CertificateDto map(Map.Entry<Certificate, Integer> certificateQuantity);
+    protected abstract CertificateDto map(Map.Entry<Certificate, Integer> certificateQuantity);
 
-    public List<CertificateDto> map(Map<Certificate, Integer> certificateQuantity) {
+    protected List<CertificateDto> map(Map<Certificate, Integer> certificateQuantity) {
         return certificateQuantity
                 .entrySet()
                 .stream()
@@ -42,7 +42,7 @@ public abstract class AbstractPurchaseMapper implements PurchaseMapper {
     }
 
 
-    public Map<Long, Integer> map(List<CertificateDto> purchaseDtoItems) {
+    protected Map<Long, Integer> map(List<CertificateDto> purchaseDtoItems) {
         Map<Long, Integer> certificateIdQuantity = new HashMap<>();
         for (CertificateDto certificateDto : purchaseDtoItems) {
             Long id = certificateDto.getId();

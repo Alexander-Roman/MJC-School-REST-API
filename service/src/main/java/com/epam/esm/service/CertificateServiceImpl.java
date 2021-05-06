@@ -127,9 +127,15 @@ public class CertificateServiceImpl implements CertificateService {
         return this.update(certificate);
     }
 
-    private Certificate update(Certificate certificate) {
+    @Override
+    public Certificate update(Certificate certificate) {
+        Preconditions.checkNotNull(certificate, ERROR_MESSAGE_CERTIFICATE_INVALID + certificate);
         if (!certificateValidator.isValid(certificate)) {
             throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_INVALID + certificate);
+        }
+        Long id = certificate.getId();
+        if (id == null || id < MIN_ID_VALUE) {
+            throw new ServiceException("Unable to update certificate! Id is not specified or invalid: " + id);
         }
 
         Set<Tag> tags = certificate.getTags();
