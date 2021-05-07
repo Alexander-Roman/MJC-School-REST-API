@@ -1,0 +1,10 @@
+plugins {
+    id 'com.epam.esm.java-spring-boot-library-conventions'
+}
+
+dependencies {
+    implementation project(':persistence')
+
+    implementation group: 'com.google.guava', name: 'guava', version: "${guavaVersion}"
+
+}

@@ -1,0 +1,30 @@
+plugins {
+    id 'com.epam.esm.java-spring-boot-common-conventions'
+}
+
+sourceSets {
+    generated {
+        java {
+            srcDirs file('src/generated/java')
+        }
+    }
+}
+
+dependencies {
+    implementation project(':service')
+    implementation project(':persistence')
+    implementation project(':logging')
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: "${springBootVersion}"
+    implementation group: 'net.kaczmarzyk', name: 'specification-arg-resolver', version: "${specificationArgResolverVersion}"
+
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
+    annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: "${mapstructVersion}"
+
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file('src/generated/java')
+}

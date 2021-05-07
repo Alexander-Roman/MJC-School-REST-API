@@ -1,1 +1,8 @@
+pluginManagement {
+    plugins {
+        id 'org.springframework.boot' version "${springBootVersion}"
+        id 'io.spring.dependency-management' version "${dependencyManagementVersion}"
+    }
+}
 rootProject.name = 'gift-certificates-system'
+include('web', 'service', 'persistence', 'logging')

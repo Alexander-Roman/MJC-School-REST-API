@@ -1,0 +1,7 @@
+plugins {
+    id 'com.epam.esm.java-spring-boot-library-conventions'
+}
+
+dependencies {
+
+}

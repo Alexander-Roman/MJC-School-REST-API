@@ -1,0 +1,51 @@
+plugins {
+    id 'com.epam.esm.java-spring-boot-library-conventions'
+}
+
+sourceSets {
+    generated {
+        java {
+            srcDirs file('src/generated/java')
+        }
+    }
+    integration {
+        java {
+            srcDir file('src/integration/java')
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+        resources.srcDir file('src/integration/resources')
+    }
+}
+
+configurations {
+    integrationImplementation.extendsFrom implementation
+    integrationCompile.extendsFrom testCompile
+    integrationRuntime.extendsFrom testRuntime
+}
+
+dependencies {
+
+    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: "${jasyptBootVersion}"
+
+    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: "${postgresqlVervion}"
+
+    annotationProcessor group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: "${hibernateJpaModelGenVervion}"
+
+    integrationCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}"
+    integrationRuntime group: 'com.h2database', name: 'h2', version: "${h2databaseVersion}"
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file('src/generated/java')
+}
+
+task integration(type: Test) {
+    description = 'Runs the integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath = sourceSets.integration.runtimeClasspath
+
+    useJUnitPlatform()
+}
