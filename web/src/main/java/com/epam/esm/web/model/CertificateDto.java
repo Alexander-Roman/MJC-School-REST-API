@@ -14,6 +14,7 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -28,7 +29,8 @@ public final class CertificateDto extends RepresentationModel<CertificateDto> im
     private static final long serialVersionUID = 1L;
 
     @Min(value = 1L, message = "{certificate.dto.id.min}")
-    @NotNull(message = "{certificate.dto.id.null}", groups = {CertificateUpdate.class, PurchaseCreate.class})
+    @NotNull(message = "{certificate.dto.id.not.null}", groups = {CertificateUpdate.class, PurchaseCreate.class})
+    @Null(message = "{certificate.dto.create.id.null}", groups = CertificateCreate.class)
     private final Long id;
 
     @NotNull(message = "{certificate.dto.create.name.null}", groups = CertificateCreate.class)
