@@ -6,6 +6,7 @@ import com.epam.esm.persistence.repository.CertificateRepository;
 import com.epam.esm.persistence.specification.certificare.FindNotDeletedByIdSpecification;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.mapper.CertificateMapper;
 import com.epam.esm.service.validator.Validator;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,14 +30,17 @@ public class CertificateServiceImpl implements CertificateService {
     private final CertificateRepository certificateRepository;
     private final TagService tagService;
     private final Validator<Certificate> certificateValidator;
+    private final CertificateMapper certificateMapper;
 
     @Autowired
     public CertificateServiceImpl(CertificateRepository certificateRepository,
                                   TagService tagService,
-                                  Validator<Certificate> certificateValidator) {
+                                  Validator<Certificate> certificateValidator,
+                                  CertificateMapper certificateMapper) {
         this.certificateRepository = certificateRepository;
         this.tagService = tagService;
         this.certificateValidator = certificateValidator;
+        this.certificateMapper = certificateMapper;
     }
 
     @Override
@@ -94,48 +97,13 @@ public class CertificateServiceImpl implements CertificateService {
                 .findSingle(specification)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
 
-        String sourceName = source.getName();
-        String sourceDescription = source.getDescription();
-        BigDecimal sourcePrice = source.getPrice();
-        Integer sourceDuration = source.getDuration();
-        Set<Tag> sourceTags = source.getTags();
-
-        String name = sourceName == null
-                ? target.getName()
-                : sourceName;
-        String description = sourceDescription == null
-                ? target.getDescription()
-                : sourceDescription;
-        BigDecimal price = sourcePrice == null
-                ? target.getPrice()
-                : sourcePrice;
-        Integer duration = sourceDuration == null
-                ? target.getDuration()
-                : sourceDuration;
-        Set<Tag> tags = sourceTags == null
-                ? target.getTags()
-                : sourceTags;
-
-        Certificate certificate = Certificate.Builder
-                .from(target)
-                .setName(name)
-                .setDescription(description)
-                .setPrice(price)
-                .setDuration(duration)
-                .setTags(tags)
-                .build();
+        Certificate certificate = certificateMapper.merge(source, target);
         return this.update(certificate);
     }
 
-    @Override
-    public Certificate update(Certificate certificate) {
-        Preconditions.checkNotNull(certificate, ERROR_MESSAGE_CERTIFICATE_INVALID + certificate);
+    private Certificate update(Certificate certificate) {
         if (!certificateValidator.isValid(certificate)) {
             throw new ServiceException(ERROR_MESSAGE_CERTIFICATE_INVALID + certificate);
-        }
-        Long id = certificate.getId();
-        if (id == null || id < MIN_ID_VALUE) {
-            throw new ServiceException("Unable to update certificate! Id is not specified or invalid: " + id);
         }
 
         Set<Tag> tags = certificate.getTags();

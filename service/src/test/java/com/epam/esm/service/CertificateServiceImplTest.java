@@ -7,6 +7,7 @@ import com.epam.esm.persistence.repository.CertificateRepository;
 import com.epam.esm.persistence.specification.FindAllSpecification;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.mapper.CertificateMapper;
 import com.epam.esm.service.validator.CertificateValidator;
 import com.epam.esm.service.validator.Validator;
 import org.junit.jupiter.api.Assertions;
@@ -91,11 +92,13 @@ public class CertificateServiceImplTest {
     private final CertificateRepository certificateRepository = mock(CertificateRepository.class);
     private final TagService tagService = mock(TagService.class);
     private final Validator<Certificate> certificateValidator = mock(CertificateValidator.class);
+    private final CertificateMapper certificateMapper = mock(CertificateMapper.class);
 
     private final CertificateServiceImpl certificateService = new CertificateServiceImpl(
             certificateRepository,
             tagService,
-            certificateValidator);
+            certificateValidator,
+            certificateMapper);
 
     @BeforeEach
     public void setUp() {
@@ -106,6 +109,7 @@ public class CertificateServiceImplTest {
         lenient().when(certificateValidator.isValid(any())).thenReturn(true);
         lenient().when(certificateRepository.save(any())).thenReturn(CERTIFICATE_WITH_ID);
         lenient().when(tagService.createIfNotExist(any())).thenReturn(new HashSet<>(TAGS_WITH_ID));
+        lenient().when(certificateMapper.merge(any(), any())).thenReturn(CERTIFICATE_WITH_ID);
     }
 
     @Test
@@ -285,124 +289,16 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void selectiveUpdate_WhenOnlyNameUpdated_ShouldValidateCertificate() {
+    public void selectiveUpdate_ShouldMergeUpdates() {
         //given
-        Certificate updateName = new Certificate.Builder()
+        Certificate source = new Certificate.Builder()
                 .setId(ID_VALID)
                 .setName("Updated name")
                 .build();
         //when
-        certificateService.selectiveUpdate(updateName);
+        certificateService.selectiveUpdate(source);
         //then
-        Certificate expected = Certificate.Builder
-                .from(CERTIFICATE_WITH_ID)
-                .setName("Updated name")
-                .build();
-        verify(certificateValidator).isValid(expected);
-    }
-
-    @Test
-    public void selectiveUpdate_WhenOnlyDescriptionUpdated_ShouldValidateCertificate() {
-        //given
-        Certificate updateDescription = new Certificate.Builder()
-                .setId(ID_VALID)
-                .setDescription("Updated description")
-                .build();
-        //when
-        certificateService.selectiveUpdate(updateDescription);
-        //then
-        Certificate expected = Certificate.Builder
-                .from(CERTIFICATE_WITH_ID)
-                .setDescription("Updated description")
-                .build();
-        verify(certificateValidator).isValid(expected);
-    }
-
-    @Test
-    public void selectiveUpdate_WhenOnlyPriceUpdated_ShouldValidateCertificate() {
-        //given
-        Certificate updatePrice = new Certificate.Builder()
-                .setId(ID_VALID)
-                .setPrice(new BigDecimal("10.00"))
-                .build();
-        //when
-        certificateService.selectiveUpdate(updatePrice);
-        //then
-        Certificate expected = Certificate.Builder
-                .from(CERTIFICATE_WITH_ID)
-                .setPrice(new BigDecimal("10.00"))
-                .build();
-        verify(certificateValidator).isValid(expected);
-    }
-
-    @Test
-    public void selectiveUpdate_WhenOnlyDurationUpdated_ShouldValidateCertificate() {
-        //given
-        Certificate updateDuration = new Certificate.Builder()
-                .setId(ID_VALID)
-                .setDuration(1)
-                .build();
-        //when
-        certificateService.selectiveUpdate(updateDuration);
-        //then
-        Certificate expected = Certificate.Builder
-                .from(CERTIFICATE_WITH_ID)
-                .setDuration(1)
-                .build();
-        verify(certificateValidator).isValid(expected);
-    }
-
-    @Test
-    public void selectiveUpdate_WhenOnlyTagsUpdated_ShouldValidateCertificate() {
-        //given
-        Certificate updateTags = new Certificate.Builder()
-                .setId(ID_VALID)
-                .setTags(new HashSet<>(TAGS_WITHOUT_ID))
-                .build();
-        //when
-        certificateService.selectiveUpdate(updateTags);
-        //then
-        Certificate expected = Certificate.Builder
-                .from(CERTIFICATE_WITH_ID)
-                .setTags(new HashSet<>(TAGS_WITHOUT_ID))
-                .build();
-        verify(certificateValidator).isValid(expected);
-    }
-
-    @Test
-    public void selectiveUpdate_ShouldValidateCertificateWithoutCreateDateUpdate() {
-        //given
-        LocalDateTime createDate = LocalDateTime.now();
-        Certificate updateCreateDate = new Certificate.Builder()
-                .setId(ID_VALID)
-                .setCreateDate(createDate)
-                .build();
-        //when
-        certificateService.selectiveUpdate(updateCreateDate);
-        //then
-        Certificate unexpected = Certificate.Builder
-                .from(CERTIFICATE_WITH_ID)
-                .setCreateDate(createDate)
-                .build();
-        verify(certificateValidator, never()).isValid(unexpected);
-    }
-
-    @Test
-    public void selectiveUpdate_ShouldValidateCertificateWithoutLastUpdateDateUpdate() {
-        //given
-        LocalDateTime lastUpdateDate = LocalDateTime.now();
-        Certificate updateCreateDate = new Certificate.Builder()
-                .setId(ID_VALID)
-                .setLastUpdateDate(lastUpdateDate)
-                .build();
-        //when
-        certificateService.selectiveUpdate(updateCreateDate);
-        //then
-        Certificate unexpected = Certificate.Builder
-                .from(CERTIFICATE_WITH_ID)
-                .setLastUpdateDate(lastUpdateDate)
-                .build();
-        verify(certificateValidator, never()).isValid(unexpected);
+        verify(certificateMapper).merge(source, CERTIFICATE_WITH_ID);
     }
 
     @Test

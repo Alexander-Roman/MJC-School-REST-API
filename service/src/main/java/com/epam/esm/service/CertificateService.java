@@ -57,17 +57,6 @@ public interface CertificateService {
     Certificate selectiveUpdate(Certificate certificate);
 
     /**
-     * Updates existing certificate based on specified id.
-     *
-     * @param certificate to update
-     * @return Certificate updated
-     * @throws NullPointerException    when certificate parameter is null
-     * @throws ServiceException        when certificate id not specified, or certificate invalid
-     * @throws EntityNotFoundException when updating certificate does not exists
-     */
-    Certificate update(Certificate certificate);
-
-    /**
      * Deletes certificate by id, returns successfully deleted certificate
      *
      * @param id of certificate to delete

@@ -2,9 +2,23 @@ plugins {
     id 'com.epam.esm.java-spring-boot-library-conventions'
 }
 
+sourceSets {
+    generated {
+        java {
+            srcDirs file('src/generated/java')
+        }
+    }
+}
+
 dependencies {
     implementation project(':persistence')
 
     implementation group: 'com.google.guava', name: 'guava', version: "${guavaVersion}"
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
+    annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: "${mapstructVersion}"
 
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file('src/generated/java')
 }
