@@ -998,3 +998,5 @@ insert into account (email, password, name) values ('thaycoxro@youtube.com', 'ad
 insert into account (email, password, name) values ('dstoderp@discuz.net', 'd8659ef1-2142-472f-8707-11a142b890fd', 'Drud Stode');
 insert into account (email, password, name) values ('hmangenetrq@google.com.br', '4bff0df0-63e3-4db4-843a-e839e9318505', 'Harrietta Mangenet');
 insert into account (email, password, name) values ('ebrierlyrr@yahoo.com', '50bb44c3-4e55-4ab8-b4d1-c96af0fc6a5d', 'Esme Brierly');
+insert into account (email, password, name, role) values ('admin@mail.com', '$2y$13$zaww7ZJ9OWfAK7rIHiXLnufbGNAxOiK2FuKASY0VU2rEfiwaVGbsO', 'Admin', 'ADMIN');
+insert into account (email, password, name, role) values ('user@mail.com', '$2y$13$rYTS3VoLkFRTItTyzMTqOeXNoD1cOH4BHmPdeyJ1gychkMywYxRZ.', 'User', 'USER');

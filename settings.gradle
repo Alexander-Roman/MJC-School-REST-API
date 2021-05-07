@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 rootProject.name = 'gift-certificates-system'
-include('web', 'service', 'persistence', 'logging')
+include('web', 'service', 'persistence', 'logging', 'security')

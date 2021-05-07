@@ -70,7 +70,7 @@ public class CertificateController {
         return new ResponseEntity<>(certificateDto, HttpStatus.OK);
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<PagedModel<CertificateDto>> getCertificatePage(
             @AllowedOrderProperties({
                     Certificate_.NAME,

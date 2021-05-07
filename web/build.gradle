@@ -14,6 +14,7 @@ dependencies {
     implementation project(':service')
     implementation project(':persistence')
     implementation project(':logging')
+    implementation project(':security')
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springBootVersion}"
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: "${springBootVersion}"
