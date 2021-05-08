@@ -36,7 +36,7 @@ public class Account implements Identifiable {
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
 
     @Column(name = "blocked")
     private Boolean blocked = false;
@@ -134,7 +134,7 @@ public class Account implements Identifiable {
         private String email;
         private String password;
         private String name;
-        private Role role;
+        private Role role = Role.USER;
         private Boolean blocked = false;
 
         public Builder() {

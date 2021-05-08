@@ -30,4 +30,6 @@ public interface AccountService {
      */
     Page<Account> findPage(Pageable pageable);
 
+    Account create(Account account);
+
 }

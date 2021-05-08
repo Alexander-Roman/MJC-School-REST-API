@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new JwtTokenVerifyFilter(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
 
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/v1/certificates").hasAuthority(Permission.CERTIFICATE_READ.getName())
+                .antMatchers(HttpMethod.GET, "/api/v1/certificates", "/api/v1/certificates/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/certificates").hasAuthority(Permission.CERTIFICATE_CREATE.getName())
                 .antMatchers(HttpMethod.PATCH, "/api/v1/certificates").hasAuthority(Permission.CERTIFICATE_UPDATE.getName())
                 .antMatchers(HttpMethod.DELETE, "/api/v1/certificates").hasAuthority(Permission.CERTIFICATE_DELETE.getName())
@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/v1/tags").hasAuthority(Permission.TAG_CREATE.getName())
                 .antMatchers(HttpMethod.DELETE, "/api/v1/tags").hasAuthority(Permission.TAG_DELETE.getName())
                 .antMatchers(HttpMethod.GET, "/api/v1/accounts").hasAuthority(Permission.ACCOUNT_READ.getName())
-                .antMatchers(HttpMethod.POST, "/api/v1/accounts").hasAuthority(Permission.ACCOUNT_CREATE.getName())
+                .antMatchers(HttpMethod.POST, "/api/v1/accounts").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/purchases").hasAuthority(Permission.PURCHASE_READ.getName())
                 .antMatchers(HttpMethod.POST, "/api/v1/purchases").hasAuthority(Permission.PURCHASE_CREATE.getName())
                 .antMatchers("/api/**").hasRole(Role.ADMIN.name())

@@ -18,12 +18,14 @@ import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolation;
@@ -183,6 +185,18 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(bindApiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ResponseStatusException.class)
+    protected ResponseEntity<Object> handleConflict(ResponseStatusException exception, WebRequest request) {
+        LOGGER.debug(exception.getMessage(), exception);
+
+        String message = exception.getReason();
+        int rawStatusCode = exception.getRawStatusCode();
+        HttpStatus status = exception.getStatus();
+        HttpHeaders responseHeaders = exception.getResponseHeaders();
+
+        ApiError apiError = new ApiError(message, rawStatusCode);
+        return new ResponseEntity<>(apiError, responseHeaders, status);
+    }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleConflict(Exception exception, WebRequest request) {
@@ -212,6 +226,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                     code,
                     field,
                     rejectedValue
+            );
+            errors.add(error);
+        }
+        List<ObjectError> globalErrors = bindingResult.getGlobalErrors();
+        for (ObjectError objectError : globalErrors) {
+            String code = objectError.getCode();
+            String localizedMessage = objectError.getDefaultMessage();
+
+            NestedError error = new ConstraintError(
+                    localizedMessage,
+                    code
             );
             errors.add(error);
         }

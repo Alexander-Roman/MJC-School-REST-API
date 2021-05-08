@@ -13,6 +13,7 @@ sourceSets {
 dependencies {
     implementation project(':persistence')
 
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${springBootVersion}"
     implementation group: 'com.google.guava', name: 'guava', version: "${guavaVersion}"
     implementation group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: "${mapstructVersion}"

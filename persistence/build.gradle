@@ -26,8 +26,6 @@ configurations {
 
 dependencies {
 
-    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: "${jasyptBootVersion}"
-
     runtimeOnly group: 'org.postgresql', name: 'postgresql', version: "${postgresqlVervion}"
 
     annotationProcessor group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: "${hibernateJpaModelGenVervion}"
