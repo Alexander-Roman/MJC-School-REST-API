@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpHeaders;
 
 import javax.crypto.SecretKey;
 
@@ -13,15 +12,21 @@ import javax.crypto.SecretKey;
 @ConfigurationProperties(prefix = "security.jwt")
 public class JwtConfig {
 
+
     private final String secretPhrase;
     private final String tokenPrefix;
     private final Integer tokenDaysExpirationPeriod;
+    private final String authorizationHeader;
 
     @ConstructorBinding
-    public JwtConfig(String secretPhrase, String tokenPrefix, Integer tokenDaysExpirationPeriod) {
+    public JwtConfig(String secretPhrase,
+                     String tokenPrefix,
+                     Integer tokenDaysExpirationPeriod,
+                     String authorizationHeader) {
         this.secretPhrase = secretPhrase;
         this.tokenPrefix = tokenPrefix;
         this.tokenDaysExpirationPeriod = tokenDaysExpirationPeriod;
+        this.authorizationHeader = authorizationHeader;
     }
 
     public String getTokenPrefix() {
@@ -38,7 +43,7 @@ public class JwtConfig {
     }
 
     public String authorizationHeader() {
-        return HttpHeaders.AUTHORIZATION;
+        return authorizationHeader;
     }
 
 }

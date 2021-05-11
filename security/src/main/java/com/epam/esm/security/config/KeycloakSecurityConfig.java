@@ -5,7 +5,7 @@ import com.epam.esm.persistence.entity.Role;
 import com.epam.esm.security.jwt.JwtConfig;
 import com.epam.esm.security.jwt.JwtTokenVerifyFilter;
 import com.epam.esm.security.jwt.JwtUsernameAndPasswordAuthenticationFilter;
-import com.epam.esm.security.provider.CustomKeycloakAuthenticationProvider;
+import com.epam.esm.security.keycloak.CustomKeycloakAuthenticationProvider;
 import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
@@ -45,7 +45,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 
     @Autowired
     public KeycloakSecurityConfig(JwtConfig jwtConfig,
-                          @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+                                  @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
         this.jwtConfig = jwtConfig;
     }
@@ -117,7 +117,6 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
     }
 
 
-
     @Bean
     @Override
     protected KeycloakAuthenticationProvider keycloakAuthenticationProvider() {
@@ -130,7 +129,6 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 //        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
 //        authenticationManagerBuilder.authenticationProvider(keycloakAuthenticationProvider);
 //    }
-
 
 
     @Bean

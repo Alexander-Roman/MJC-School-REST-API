@@ -1,4 +1,4 @@
-package com.epam.esm.security.provider;
+package com.epam.esm.security.keycloak;
 
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
