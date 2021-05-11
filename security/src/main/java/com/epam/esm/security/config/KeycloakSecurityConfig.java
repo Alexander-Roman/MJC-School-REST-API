@@ -116,20 +116,11 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         authenticationManagerBuilder.authenticationProvider(keycloakAuthenticationProvider);
     }
 
-
     @Bean
     @Override
     protected KeycloakAuthenticationProvider keycloakAuthenticationProvider() {
         return new CustomKeycloakAuthenticationProvider();
     }
-
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//        KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
-//        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
-//        authenticationManagerBuilder.authenticationProvider(keycloakAuthenticationProvider);
-//    }
-
 
     @Bean
     @Override

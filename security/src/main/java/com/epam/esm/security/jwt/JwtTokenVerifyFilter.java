@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -66,7 +67,7 @@ public class JwtTokenVerifyFilter extends OncePerRequestFilter {
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, grantedAuthorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (JwtException e) {
-            throw new SecurityException("Authorization token is not valid!");
+            throw new InsufficientAuthenticationException("Authorization token is not valid!");
         }
         filterChain.doFilter(request, response);
     }

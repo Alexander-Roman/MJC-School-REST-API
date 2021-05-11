@@ -4,28 +4,16 @@ plugins {
 
 dependencyManagement {
     imports {
-        mavenBom "org.keycloak.bom:keycloak-adapter-bom:13.0.0"
+        mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
     }
 }
 
 dependencies {
     implementation project(':persistence')
-    implementation project(':service')
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springBootVersion}"
+    implementation group: 'org.keycloak', name: 'keycloak-spring-boot-starter', version: "${keycloakVersion}"
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: "${jsonWebTokenVersion}"
-
-//    // https://mvnrepository.com/artifact/org.springframework.security.oauth.boot/spring-security-oauth2-autoconfigure
-//    implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.4.5'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-
-    // https://mvnrepository.com/artifact/org.keycloak/keycloak-spring-boot-starter
-    implementation group: 'org.keycloak', name: 'keycloak-spring-boot-starter', version: '13.0.0'
-
-
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: "${jsonWebTokenVersion}"
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: "${jsonWebTokenVersion}"
 
