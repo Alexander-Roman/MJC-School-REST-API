@@ -1,7 +1,7 @@
 package com.epam.esm.web.init;
 
 import com.epam.esm.persistence.config.PersistenceConfig;
-import com.epam.esm.security.config.SecurityConfig;
+import com.epam.esm.security.config.KeycloakSecurityConfig;
 import com.epam.esm.service.config.ServiceConfig;
 import com.epam.esm.web.config.WebConfig;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +15,7 @@ public class Application {
                 WebConfig.class,
                 PersistenceConfig.class,
                 ServiceConfig.class,
-                SecurityConfig.class
+                KeycloakSecurityConfig.class
         };
         SpringApplication.run(primarySources, args);
     }

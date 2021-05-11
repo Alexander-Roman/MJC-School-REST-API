@@ -22,10 +22,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration
-@EnableWebSecurity
-@ComponentScan(basePackages = "com.epam.esm.security")
-@EnableConfigurationProperties(JwtConfig.class)
+//@Configuration
+//@EnableWebSecurity
+//@ComponentScan(basePackages = "com.epam.esm.security")
+//@EnableConfigurationProperties(JwtConfig.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtConfig jwtConfig;
@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/v1/certificates").hasAuthority(Permission.CERTIFICATE_CREATE.getName())
                 .antMatchers(HttpMethod.PATCH, "/api/v1/certificates").hasAuthority(Permission.CERTIFICATE_UPDATE.getName())
                 .antMatchers(HttpMethod.DELETE, "/api/v1/certificates").hasAuthority(Permission.CERTIFICATE_DELETE.getName())
-                .antMatchers(HttpMethod.GET, "/api/v1/tags").hasAuthority(Permission.TAG_READ.getName())
+                .antMatchers(HttpMethod.GET, "/api/v1/tags").hasRole(Role.ADMIN.name())
                 .antMatchers(HttpMethod.POST, "/api/v1/tags").hasAuthority(Permission.TAG_CREATE.getName())
                 .antMatchers(HttpMethod.DELETE, "/api/v1/tags").hasAuthority(Permission.TAG_DELETE.getName())
                 .antMatchers(HttpMethod.GET, "/api/v1/accounts").hasAuthority(Permission.ACCOUNT_READ.getName())
