@@ -25,10 +25,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
 import javax.validation.groups.Default;
+import java.util.Collections;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -65,12 +67,13 @@ public class PurchaseController {
         Purchase purchase = purchaseService.findById(id);
         PurchaseDto purchaseDto = purchaseDtoAssembler.toModel(purchase);
 
-        purchaseDto.add(linkTo(methodOn(PurchaseController.class).getPurchasePage(null, null)).withRel(REL_ALL_PURCHASES));
+        purchaseDto.add(linkTo(methodOn(PurchaseController.class).getPurchasePage(null, null)).withRel(REL_ALL_PURCHASES).expand(Collections.emptyMap()));
         return new ResponseEntity<>(purchaseDto, HttpStatus.OK);
     }
 
     @GetMapping()
     public ResponseEntity<PagedModel<PurchaseDto>> getPurchasePage(
+            @RequestParam(required = false)
             @Min(value = MIN_ID, message = MSG_CODE_ID_INVALID) Long account,
             @AllowedOrderProperties({Purchase_.COST, Purchase_.DATE}) Pageable pageable) {
 
@@ -90,7 +93,7 @@ public class PurchaseController {
         Purchase created = purchaseService.createPurchase(purchaseRequest);
         PurchaseDto createdDto = purchaseDtoAssembler.toModel(created);
 
-        createdDto.add(linkTo(methodOn(PurchaseController.class).getPurchasePage(null, null)).withRel(REL_ALL_PURCHASES));
+        createdDto.add(linkTo(methodOn(PurchaseController.class).getPurchasePage(null, null)).withRel(REL_ALL_PURCHASES).expand(Collections.emptyMap()));
         return new ResponseEntity<>(createdDto, HttpStatus.OK);
     }
 

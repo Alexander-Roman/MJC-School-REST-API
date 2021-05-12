@@ -31,7 +31,7 @@ public final class PurchaseDto extends RepresentationModel<PurchaseDto> implemen
 
     @NotNull(message = "{purchase.dto.items.null}")
     @NotEmpty(message = "{purchase.dto.items.empty}")
-    private final List<@Valid @NotNull(message = "{certificate.dto.null}") CertificateDto> items;
+    private final List<@Valid @NotNull(message = "{certificate.dto.not.null}") CertificateDto> items;
 
     @JsonCreator
     public PurchaseDto(@JsonProperty("id") Long id,

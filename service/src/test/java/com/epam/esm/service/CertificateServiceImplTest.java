@@ -104,8 +104,8 @@ public class CertificateServiceImplTest {
     public void setUp() {
         //Positive scenario
         lenient().when(certificateRepository.findById(anyLong())).thenReturn(Optional.of(CERTIFICATE_WITH_ID));
-        lenient().when(certificateRepository.findSingle(any())).thenReturn(Optional.of(CERTIFICATE_WITH_ID));
-        lenient().when(certificateRepository.find(any(), any())).thenReturn(new PageImpl<>(Collections.singletonList(CERTIFICATE_WITH_ID)));
+        lenient().when(certificateRepository.findOne(any(Specification.class))).thenReturn(Optional.of(CERTIFICATE_WITH_ID));
+        lenient().when(certificateRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(Collections.singletonList(CERTIFICATE_WITH_ID)));
         lenient().when(certificateValidator.isValid(any())).thenReturn(true);
         lenient().when(certificateRepository.save(any())).thenReturn(CERTIFICATE_WITH_ID);
         lenient().when(tagService.createIfNotExist(any())).thenReturn(new HashSet<>(TAGS_WITH_ID));
@@ -144,7 +144,7 @@ public class CertificateServiceImplTest {
     @Test
     public void findById_WhenFoundNothing_ShouldThrowException() {
         //given
-        lenient().when(certificateRepository.findSingle(any())).thenReturn(Optional.empty());
+        lenient().when(certificateRepository.findOne(any(Specification.class))).thenReturn(Optional.empty());
         //when
         //then
         Assertions.assertThrows(EntityNotFoundException.class, () ->
@@ -182,7 +182,7 @@ public class CertificateServiceImplTest {
         //when
         certificateService.findPage(pageable, specification);
         //then
-        verify(certificateRepository).find(pageable, specification);
+        verify(certificateRepository).findAll(specification, pageable);
     }
 
     @Test
@@ -280,7 +280,7 @@ public class CertificateServiceImplTest {
     @Test
     public void selectiveUpdate_WhenCertificateDoesNotExists_ShouldThrowException() {
         //given
-        lenient().when(certificateRepository.findSingle(any())).thenReturn(Optional.empty());
+        lenient().when(certificateRepository.findOne(any(Specification.class))).thenReturn(Optional.empty());
         //when
         //then
         Assertions.assertThrows(EntityNotFoundException.class, () ->
@@ -359,7 +359,7 @@ public class CertificateServiceImplTest {
     @Test
     public void deleteById_WhenCertificateDoesNotExists_ShouldThrowException() {
         //given
-        lenient().when(certificateRepository.findSingle(any())).thenReturn(Optional.empty());
+        lenient().when(certificateRepository.findOne(any(Specification.class))).thenReturn(Optional.empty());
         //when
         //then
         Assertions.assertThrows(EntityNotFoundException.class, () ->
@@ -378,7 +378,7 @@ public class CertificateServiceImplTest {
         certificateService.deleteById(ID_VALID);
         //then
         verify(certificateRepository).save(deleted);
-        verify(certificateRepository, never()).delete(1L);
+        verify(certificateRepository, never()).deleteById(1L);
     }
 
 }

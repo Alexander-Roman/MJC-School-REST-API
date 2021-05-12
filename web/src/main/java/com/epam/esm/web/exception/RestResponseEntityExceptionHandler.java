@@ -1,5 +1,6 @@
 package com.epam.esm.web.exception;
 
+import com.epam.esm.service.exception.AccountExistsException;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.epam.esm.web.exception.model.ApiError;
 import com.epam.esm.web.exception.model.BindApiError;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolation;
@@ -46,7 +46,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     private static final Integer METHOD_ARGUMENT_NOT_VALID_EXCEPTION_CODE = 40004;
     private static final Integer ENTITY_NOT_FOUND_EXCEPTION_CODE = 40401;
     private static final Integer HTTP_REQUEST_METHOD_NOT_SUPPORTED_EXCEPTION_CODE = 40501;
-    private static final Integer HTTP_MEDIA_TYPE_NOT_SUPPORTED_EXCEPTION = 41501;
+    private static final Integer ACCOUNT_EXISTS_EXCEPTION_CODE = 40901;
+    private static final Integer HTTP_MEDIA_TYPE_NOT_SUPPORTED_EXCEPTION_CODE = 41501;
     private static final Integer UNHANDLED_EXCEPTION_CODE = 50000;
 
     private final MessageSource messageSource;
@@ -84,7 +85,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         String localizedMessage = this.getLocalizedMessage("http.media.type.not.supported.exception", null, request);
         ApiError apiError = new ApiError(
                 localizedMessage,
-                HTTP_MEDIA_TYPE_NOT_SUPPORTED_EXCEPTION
+                HTTP_MEDIA_TYPE_NOT_SUPPORTED_EXCEPTION_CODE
         );
         return new ResponseEntity<>(apiError, headers, status);
     }
@@ -185,17 +186,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(bindApiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ResponseStatusException.class)
-    protected ResponseEntity<Object> handleConflict(ResponseStatusException exception, WebRequest request) {
+    @ExceptionHandler(AccountExistsException.class)
+    protected ResponseEntity<Object> handleConflict(AccountExistsException exception, WebRequest request) {
         LOGGER.debug(exception.getMessage(), exception);
 
-        String message = exception.getReason();
-        int rawStatusCode = exception.getRawStatusCode();
-        HttpStatus status = exception.getStatus();
-        HttpHeaders responseHeaders = exception.getResponseHeaders();
+        String localizedMessage = this.getLocalizedMessage("account.exists.exception", null, request);
 
-        ApiError apiError = new ApiError(message, rawStatusCode);
-        return new ResponseEntity<>(apiError, responseHeaders, status);
+        ApiError apiError = new ApiError(localizedMessage, ACCOUNT_EXISTS_EXCEPTION_CODE);
+        return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(Exception.class)

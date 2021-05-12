@@ -49,7 +49,7 @@ public class CertificateServiceImpl implements CertificateService {
         Preconditions.checkArgument(id >= MIN_ID_VALUE, ERROR_MESSAGE_ID_INVALID + id);
 
         Specification<Certificate> specification = new FindNotDeletedByIdSpecification(id);
-        Optional<Certificate> certificate = certificateRepository.findSingle(specification);
+        Optional<Certificate> certificate = certificateRepository.findOne(specification);
         return certificate
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
     }
@@ -59,7 +59,7 @@ public class CertificateServiceImpl implements CertificateService {
         Preconditions.checkNotNull(pageable, "Pageable argument invalid: " + pageable);
         Preconditions.checkNotNull(specification, "Specification argument invalid: " + specification);
 
-        return certificateRepository.find(pageable, specification);
+        return certificateRepository.findAll(specification, pageable);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class CertificateServiceImpl implements CertificateService {
         }
         Specification<Certificate> specification = new FindNotDeletedByIdSpecification(id);
         Certificate target = certificateRepository
-                .findSingle(specification)
+                .findOne(specification)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
 
         Certificate certificate = certificateMapper.merge(source, target);
@@ -123,7 +123,7 @@ public class CertificateServiceImpl implements CertificateService {
 
         Specification<Certificate> specification = new FindNotDeletedByIdSpecification(id);
         Certificate target = certificateRepository
-                .findSingle(specification)
+                .findOne(specification)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_CERTIFICATE_NOT_FOUND + id));
         Certificate deleted = Certificate.Builder
                 .from(target)

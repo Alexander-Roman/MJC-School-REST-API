@@ -133,7 +133,7 @@ public class PurchaseServiceImplTest {
         //when
         purchaseService.findPage(pageable, specification);
         //then
-        verify(purchaseRepository).find(pageable, specification);
+        verify(purchaseRepository).findAll(specification, pageable);
     }
 
     @Test

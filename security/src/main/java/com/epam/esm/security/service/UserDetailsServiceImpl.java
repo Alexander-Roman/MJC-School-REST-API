@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Specification<Account> specification = new FindByEmailSpecification(email);
-        Account account = accountRepository.findSingle(specification)
+        Account account = accountRepository.findOne(specification)
                 .orElseThrow(() -> new UsernameNotFoundException("Account does not exists! Email: " + email));
 
         String verifiedEmail = account.getEmail();

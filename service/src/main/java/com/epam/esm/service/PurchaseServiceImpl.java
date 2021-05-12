@@ -54,7 +54,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         Preconditions.checkNotNull(pageable, "Pageable argument invalid: " + pageable);
         Preconditions.checkNotNull(specification, "Specification argument invalid: " + specification);
 
-        return purchaseRepository.find(pageable, specification);
+        return purchaseRepository.findAll(specification, pageable);
     }
 
     @Override

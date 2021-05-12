@@ -55,10 +55,10 @@ public class TagServiceImplTest {
     public void setUp() {
         //Positive scenario
         lenient().when(tagRepository.findById(anyLong())).thenReturn(Optional.of(TAG_WITH_ID));
-        lenient().when(tagRepository.find(any(), any())).thenReturn(new PageImpl<>(Collections.singletonList(TAG_WITH_ID)));
+        lenient().when(tagRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(new PageImpl<>(Collections.singletonList(TAG_WITH_ID)));
         lenient().when(tagValidator.isValid(any())).thenReturn(true);
         lenient().when(tagRepository.save(any())).thenReturn(TAG_WITH_ID);
-        lenient().when(tagRepository.findSingle(any())).thenReturn(Optional.of(TAG_WITH_ID));
+        lenient().when(tagRepository.findOne(any(Specification.class))).thenReturn(Optional.of(TAG_WITH_ID));
         lenient().when(tagRepository.findMostPurchasedByTopAccount()).thenReturn(Optional.of(TAG_WITH_ID));
     }
 
@@ -128,7 +128,7 @@ public class TagServiceImplTest {
     @Test
     public void create_ShouldCreateTag() {
         //given
-        lenient().when(tagRepository.findSingle(any())).thenReturn(Optional.empty());
+        lenient().when(tagRepository.findOne(any(Specification.class))).thenReturn(Optional.empty());
         //when
         tagService.create(TAG_WITHOUT_ID);
         //then
@@ -181,7 +181,7 @@ public class TagServiceImplTest {
         //when
         tagService.deleteById(ID_VALID);
         //then
-        verify(tagRepository).delete(1L);
+        verify(tagRepository).deleteById(1L);
     }
 
     @Test
@@ -214,7 +214,7 @@ public class TagServiceImplTest {
         //when
         tagService.createIfNotExist(Collections.emptySet());
         //then
-        verify(tagRepository, never()).findSingle(any());
+        verify(tagRepository, never()).findOne(any(Specification.class));
         verify(tagRepository, never()).save(any());
     }
 
@@ -249,7 +249,7 @@ public class TagServiceImplTest {
     @Test
     public void createIfNotExist_WhenNotFound_ShouldCreateTag() {
         //given
-        lenient().when(tagRepository.findSingle(any())).thenReturn(Optional.empty());
+        lenient().when(tagRepository.findOne(any(Specification.class))).thenReturn(Optional.empty());
         //when
         tagService.createIfNotExist(TAG_SET_WITHOUT_ID);
         //then
@@ -259,7 +259,7 @@ public class TagServiceImplTest {
     @Test
     public void createIfNotExist_WhenNotFound_ShouldReturnCreated() {
         //given
-        lenient().when(tagRepository.findSingle(any())).thenReturn(Optional.empty());
+        lenient().when(tagRepository.findOne(any(Specification.class))).thenReturn(Optional.empty());
         //when
         Set<Tag> actual = tagService.createIfNotExist(TAG_SET_WITHOUT_ID);
         //then

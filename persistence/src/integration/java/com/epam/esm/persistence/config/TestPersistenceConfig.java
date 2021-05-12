@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -31,6 +32,7 @@ import java.util.Properties;
                 value = Configuration.class
         )
 )
+@EnableJpaRepositories("com.epam.esm.persistence.repository")
 public class TestPersistenceConfig {
 
     private static final String SQL_H2_DDL = "classpath:sql.h2/ddl.sql";

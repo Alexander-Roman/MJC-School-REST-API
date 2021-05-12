@@ -51,7 +51,7 @@ public class TagServiceImpl implements TagService {
         Preconditions.checkNotNull(pageable, "Pageable argument invalid: " + pageable);
         Preconditions.checkNotNull(specification, "Specification argument invalid: " + specification);
 
-        return tagRepository.find(pageable, specification);
+        return tagRepository.findAll(specification, pageable);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class TagServiceImpl implements TagService {
         }
         String name = tag.getName();
         Specification<Tag> specification = new FindByNameSpecification(name);
-        Optional<Tag> found = tagRepository.findSingle(specification);
+        Optional<Tag> found = tagRepository.findOne(specification);
         return found.orElseGet(() -> tagRepository.save(tag));
     }
 
@@ -80,7 +80,7 @@ public class TagServiceImpl implements TagService {
         for (Tag tag : tags) {
             String name = tag.getName();
             Specification<Tag> specification = new FindByNameSpecification(name);
-            Optional<Tag> result = tagRepository.findSingle(specification);
+            Optional<Tag> result = tagRepository.findOne(specification);
             if (result.isPresent()) {
                 Tag found = result.get();
                 results.add(found);
@@ -101,7 +101,7 @@ public class TagServiceImpl implements TagService {
         Tag target = tagRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ERROR_MESSAGE_TAG_NOT_FOUND + id));
-        tagRepository.delete(id);
+        tagRepository.deleteById(id);
         return target;
     }
 

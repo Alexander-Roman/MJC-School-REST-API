@@ -57,7 +57,7 @@ public class TagRepositoryImplTest {
         //given
         Specification<Tag> specification = new FindByNameSpecification("tag1");
         //when
-        Optional<Tag> actual = tagRepository.findSingle(specification);
+        Optional<Tag> actual = tagRepository.findOne(specification);
         //then
         Optional<Tag> expected = Optional.of(TAG_FIRST);
         Assertions.assertEquals(expected, actual);
@@ -68,7 +68,7 @@ public class TagRepositoryImplTest {
         //given
         Specification<Tag> specification = new FindByNameSpecification("such name does not exists");
         //when
-        Optional<Tag> actual = tagRepository.findSingle(specification);
+        Optional<Tag> actual = tagRepository.findOne(specification);
         //then
         Optional<Tag> expected = Optional.empty();
         Assertions.assertEquals(expected, actual);
@@ -80,7 +80,7 @@ public class TagRepositoryImplTest {
         Pageable pageable = PageRequest.of(0, 20);
         Specification<Tag> specification = new FindAllSpecification<>();
         //when
-        Page<Tag> results = tagRepository.find(pageable, specification);
+        Page<Tag> results = tagRepository.findAll(specification, pageable);
         //then
         int size = results.getNumberOfElements();
         Assertions.assertEquals(5, size);
@@ -116,7 +116,7 @@ public class TagRepositoryImplTest {
     public void delete_ShouldDeleteTagFromDatabase() {
         //given
         //when
-        tagRepository.delete(1L);
+        tagRepository.deleteById(1L);
         Optional<Tag> found = tagRepository.findById(1L);
         //then
         boolean actual = found.isPresent();

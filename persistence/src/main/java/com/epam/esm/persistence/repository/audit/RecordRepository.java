@@ -1,11 +1,13 @@
 package com.epam.esm.persistence.repository.audit;
 
 import com.epam.esm.persistence.audit.entity.Record;
-import com.epam.esm.persistence.repository.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository interface for audit Record entity
  */
-public interface RecordRepository extends Repository<Record> {
+@Repository
+public interface RecordRepository extends JpaRepository<Record, Long> {
 
 }

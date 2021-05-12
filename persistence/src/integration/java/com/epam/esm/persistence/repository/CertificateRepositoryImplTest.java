@@ -149,7 +149,7 @@ public class CertificateRepositoryImplTest {
         //given
         Specification<Certificate> specification = new FindNotDeletedByIdSpecification(2L);
         //when
-        Optional<Certificate> actual = certificateRepository.findSingle(specification);
+        Optional<Certificate> actual = certificateRepository.findOne(specification);
         //then
         Optional<Certificate> expected = Optional.of(SECOND);
         Assertions.assertEquals(expected, actual);
@@ -162,7 +162,7 @@ public class CertificateRepositoryImplTest {
         Pageable pageable = PageRequest.of(0, 4, sort);
         Specification<Certificate> specification = new FindAllSpecification<>();
         //when
-        Page<Certificate> actual = certificateRepository.find(pageable, specification);
+        Page<Certificate> actual = certificateRepository.findAll(specification, pageable);
         //then
         Page<Certificate> expected = new PageImpl<>(Arrays.asList(THIRD, SECOND, FIRST, FIFTH), pageable, 5);
         Assertions.assertEquals(expected, actual);
@@ -218,7 +218,7 @@ public class CertificateRepositoryImplTest {
     public void delete_ShouldDeleteCertificateFromDatabase() {
         //given
         //when
-        certificateRepository.delete(5L);
+        certificateRepository.deleteById(5L);
         Optional<Certificate> found = certificateRepository.findById(5L);
         //then
         boolean actual = found.isPresent();

@@ -4,16 +4,15 @@ import com.epam.esm.persistence.entity.Account;
 import com.epam.esm.persistence.repository.AccountRepository;
 import com.epam.esm.persistence.specification.FindAllSpecification;
 import com.epam.esm.persistence.specification.account.FindByEmailSpecification;
+import com.epam.esm.service.exception.AccountExistsException;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -49,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
         Preconditions.checkNotNull(pageable, "Pageable argument invalid: " + pageable);
 
         Specification<Account> specification = new FindAllSpecification<>();
-        return accountRepository.find(pageable, specification);
+        return accountRepository.findAll(specification, pageable);
     }
 
     @Override
@@ -58,9 +57,9 @@ public class AccountServiceImpl implements AccountService {
 
         String email = account.getEmail();
         Specification<Account> specification = new FindByEmailSpecification(email);
-        Optional<Account> found = accountRepository.findSingle(specification);
+        Optional<Account> found = accountRepository.findOne(specification);
         if (found.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account already exists!");
+            throw new AccountExistsException("Account with specified email already exists: " + email);
         }
 
         String password = account.getPassword();
