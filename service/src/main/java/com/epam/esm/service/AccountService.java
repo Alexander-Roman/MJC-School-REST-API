@@ -1,6 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.persistence.entity.Account;
+import com.epam.esm.service.exception.AccountExistsException;
 import com.epam.esm.service.exception.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,14 @@ public interface AccountService {
      */
     Page<Account> findPage(Pageable pageable);
 
+    /**
+     * Creates new Account and returns created
+     *
+     * @param account to create
+     * @return Account what been created
+     * @throws NullPointerException   when account is null
+     * @throws AccountExistsException when account with specified email already exists
+     */
     Account create(Account account);
 
 }
