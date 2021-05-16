@@ -15,6 +15,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -44,6 +45,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     private static final Integer BIND_EXCEPTION_CODE = 40002;
     private static final Integer CONSTRAINT_VIOLATION_EXCEPTION_CODE = 40003;
     private static final Integer METHOD_ARGUMENT_NOT_VALID_EXCEPTION_CODE = 40004;
+    private static final Integer HTTP_MESSAGE_NOT_READABLE_EXCEPTION_CODE = 40005;
     private static final Integer ENTITY_NOT_FOUND_EXCEPTION_CODE = 40401;
     private static final Integer HTTP_REQUEST_METHOD_NOT_SUPPORTED_EXCEPTION_CODE = 40501;
     private static final Integer ACCOUNT_EXISTS_EXCEPTION_CODE = 40901;
@@ -55,6 +57,22 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @Autowired
     public RestResponseEntityExceptionHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
+    }
+
+    @Override
+    @NonNull
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(@NonNull HttpMessageNotReadableException exception,
+                                                                  @NonNull HttpHeaders headers,
+                                                                  @NonNull HttpStatus status,
+                                                                  @NonNull WebRequest request) {
+        LOGGER.debug(exception.getMessage(), exception);
+
+        String localizedMessage = this.getLocalizedMessage("http.message.not.readable.exception", null, request);
+        ApiError apiError = new ApiError(
+                localizedMessage,
+                HTTP_MESSAGE_NOT_READABLE_EXCEPTION_CODE
+        );
+        return new ResponseEntity<>(apiError, headers, status);
     }
 
     @Override
@@ -72,7 +90,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         BindApiError bindApiError = new BindApiError(localizedMessage, METHOD_ARGUMENT_NOT_VALID_EXCEPTION_CODE, errors);
         return new ResponseEntity<>(bindApiError, headers, HttpStatus.BAD_REQUEST);
     }
-
 
     @Override
     @NonNull
