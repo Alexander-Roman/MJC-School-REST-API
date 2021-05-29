@@ -1,5 +1,6 @@
 plugins {
     id 'com.epam.esm.java-spring-boot-common-conventions'
+    id 'war'
 }
 
 sourceSets {
