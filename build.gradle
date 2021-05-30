@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' apply false
     id 'io.spring.dependency-management' apply false
+    id "org.sonarqube"
 }
 
 group = 'com.epam.esm'
