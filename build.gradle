@@ -1,7 +1,15 @@
 plugins {
     id 'org.springframework.boot' apply false
     id 'io.spring.dependency-management' apply false
-    id "org.sonarqube"
+    id 'org.sonarqube'
+}
+
+sonarqube {
+    properties {
+        property 'sonar.projectKey', 'com.epam.esm'
+        property 'sonar.host.url', 'http://localhost:9000'
+        property 'sonar.login', '8ba7adbcd90f30fc2983c3d55132ac0095a19619'
+    }
 }
 
 group = 'com.epam.esm'
