@@ -3,6 +3,7 @@ pluginManagement {
         id 'org.springframework.boot' version "${springBootVersion}"
         id 'io.spring.dependency-management' version "${dependencyManagementVersion}"
         id "org.sonarqube" version "${sonarQubeVersion}"
+        id 'com.carepay.sonar-qualitygate' version "${carepaySonarQualityGateVersion}"
     }
 }
 rootProject.name = 'gift-certificates-system'
