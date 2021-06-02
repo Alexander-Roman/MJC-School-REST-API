@@ -1,9 +1,6 @@
 package com.epam.esm.web.config;
 
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
-import org.jasypt.encryption.StringEncryptor;
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,13 +20,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new SpecificationArgumentResolver());
-    }
-
-    @Bean("jasyptStringEncryptor")
-    public StringEncryptor stringEncryptor(@Value("${password}") String password) {
-        StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-        standardPBEStringEncryptor.setPassword(password);
-        return standardPBEStringEncryptor;
     }
 
     @Bean

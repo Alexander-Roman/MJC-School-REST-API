@@ -26,6 +26,8 @@ dependencies {
     implementation group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: "${mapstructVersion}"
 
+    providedRuntime group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: "${springBootVersion}"
+
 }
 
 tasks.withType(JavaCompile) {
