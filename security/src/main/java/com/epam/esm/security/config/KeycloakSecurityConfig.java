@@ -102,6 +102,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 .antMatchers(HttpMethod.GET, "/api/v1/purchases", "/api/v1/purchases/*").hasAuthority(Permission.PURCHASE_READ.getName())
                 .antMatchers(HttpMethod.POST, "/api/v1/purchases").hasAuthority(Permission.PURCHASE_CREATE.getName())
                 .antMatchers("/api/**").hasRole(Role.ADMIN.name())
+                .antMatchers("/test/**").permitAll()
                 .anyRequest()
                 .authenticated();
     }
